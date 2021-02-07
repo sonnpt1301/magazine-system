@@ -12,6 +12,7 @@ import Contribution from './containers/Contribution';
 import { isUserLoggedIn } from './actions/auth.action'
 import Profile from './containers/Profile';
 import { PrivateRoute } from './components/HOC/PrivateRoute'
+import { getFaculty } from './actions';
 
 function App() {
 
@@ -22,7 +23,8 @@ function App() {
     if (!auth.authenticate) {
       dispatch(isUserLoggedIn())
     }
-  }, [auth.authenticate])
+    dispatch(getFaculty())
+  }, [])
 
   return (
     <Router>

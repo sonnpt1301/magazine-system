@@ -6,6 +6,10 @@ const facultySchema = new mongoose.Schema({
         min: 3,
         required: true,
         unique: true
+    },
+    is_deleted: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true })
 

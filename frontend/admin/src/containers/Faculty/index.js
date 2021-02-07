@@ -1,31 +1,65 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { Button, Col, Row, Spinner, Table } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
+import { getFaculty, addFaculty } from '../../actions/faculty.action'
 import Layout from '../../components/Layout'
-import { useSelector } from 'react-redux'
+import Input from '../../components/UI/Input'
+import Modal from '../../components/UI/Modal'
 
 const Faculty = () => {
-    const auth = useSelector(state => state.auth)
-    const { user } = auth
 
-    const renderStudentPage = () => {
-        return (
-            <>
-            <div>Student</div>
-            </>
-        )
+    const dispatch = useDispatch()
+    const faculty = useSelector(state => state.faculty)
+    const [showCreateModal, setShowCreateModal] = useState(false)
+    const [facultyName, setFacultyName] = useState('')
+    const [faculties, setFaculties] = useState(faculty.faculties)
+    const handleShowCreateModal = () => setShowCreateModal(true)
+
+    const createFaculty = () => {
+        const body = {
+            name: facultyName
+        }
+        dispatch(addFaculty(body))
+        setShowCreateModal(false)
     }
-    
-    const renderAdminPage = () => {
+
+    useEffect(() => {
+        setFaculties(faculty.faculties)
+    }, [faculty.faculties])
+
+    if (faculty.loading) {
         return (
-            <>
-            <div>Admin</div>
-            </>
+            <Spinner className="spinner" animation="border" variant="primary" />
         )
     }
 
     return (
         <Layout>
-            { user.role === 'admin' && renderAdminPage()}
-            { user.role === 'student' && renderStudentPage()}
+            <button onClick={handleShowCreateModal}>Add</button>
+            {
+                faculties.length > 0 &&
+                faculties.map((faculty, index) => (
+                    <Input
+                        size={'sm'}
+                        value={faculty.name}
+                        placeholder={'Category Name'}
+                    />
+                ))
+            }
+
+
+            <Modal
+                show={showCreateModal}
+                handleClose={() => setShowCreateModal(false)}
+                modalTitle={'Add Faculty'}
+                onSubmit={createFaculty}
+            >
+                <Input
+                    value={facultyName}
+                    placeholder={'Enter faculty name'}
+                    onChange={(e) => setFacultyName(e.target.value)}
+                />
+            </Modal>
         </Layout>
     )
 }

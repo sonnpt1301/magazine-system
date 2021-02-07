@@ -1,13 +1,24 @@
 import Faculty from '../models/faculty.js'
 
+export const getFaculty = async (req, res) => {
+    try {
+        const faculty = await Faculty.find({ is_deleted: { $ne: true } })
+        res.status(200).json({ faculty })
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
+}
+
 export const createFaculty = async (req, res) => {
     try {
+        console.log(req.body)
         const newFaculty = new Faculty({
             name: req.body.name
         });
         const faculty = await newFaculty.save()
-        res.status(200).json({ faculty })
+        res.status(201).json({ faculty })
     } catch (error) {
+        console.log(error)
         res.status(400).json({ error: error.message })
     }
 }

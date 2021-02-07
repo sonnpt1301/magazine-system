@@ -1,22 +1,51 @@
 import React from 'react'
-import { Form } from 'react-bootstrap'
+import { Button, Form, InputGroup } from 'react-bootstrap'
 
 
 const Input = (props) => {
-    return (
-        <Form.Group>
-            <Form.Label>{props.label}</Form.Label>
-            <Form.Control
-                type={props.type}
-                placeholder={props.placeholder}
-                value={props.value}
-                onChange={props.onChange}
-            />
-            <Form.Text className="text-muted">
-                {props.errorMessage}
-            </Form.Text>
-        </Form.Group>
-    )
+    let input = null
+
+    switch (props.type) {
+        case 'select':
+            input = <Form.Group>
+                {props.label && <Form.Label>{props.label}</Form.Label>}
+                <select
+                    className="form-control form-control-sm"
+                    value={props.value}
+                    onChange={props.onChange}
+                    {...props}
+                >
+                    <option value="">{props.placeholder}</option>
+                    {
+                        props.options.length > 0 ?
+                            props.options.map((option, index) =>
+                                <option key={option.index} value={option.value}>{option.name}</option>
+                            ) : null
+                    }
+                </select>
+            </Form.Group>
+            break;
+        case 'text':
+            break;
+        default:
+            input = <Form.Group>
+                {props.label && <Form.Label>{props.label}</Form.Label>}
+                <Form.Control
+                    size={props.type}
+                    type={props.type}
+                    placeholder={props.placeholder}
+                    value={props.value}
+                    onChange={props.onChange}
+                    {...props}
+                />
+                <Form.Text className="text-muted">
+                    {props.errorMessage}
+                </Form.Text>
+            </Form.Group>
+            break;
+    }
+
+    return input
 }
 
 export default Input

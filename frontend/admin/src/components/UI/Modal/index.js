@@ -19,9 +19,25 @@ const NewModal = (props) => {
                 {props.children}
             </Body>
             <Footer>
-                <Button variant="primary" onClick={props.handleClose}>
-                    Save Changes
-            </Button>
+                <Footer>
+                    {
+                        props.buttons ? props.buttons.map((btn, index) =>
+                            <Button key={index} variant={btn.color} onClick={btn.onClick}>
+                                {btn.label}
+                            </Button>
+                        ) :
+                            <Button
+                                variant="primary"
+                                {...props}
+                                style={{ backgroundColor: '#333' }}
+                                className="btn-sm"
+                                onClick={props.onSubmit}
+                            >
+                                Save
+                        </Button>
+                    }
+
+                </Footer>
             </Footer>
         </Modal>
     )
