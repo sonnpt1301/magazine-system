@@ -1,6 +1,5 @@
 import React from 'react'
-import { Button, Form, InputGroup } from 'react-bootstrap'
-
+import { Form } from 'react-bootstrap'
 
 const Input = (props) => {
     let input = null
@@ -19,7 +18,7 @@ const Input = (props) => {
                     {
                         props.options.length > 0 ?
                             props.options.map((option, index) =>
-                                <option key={option.index} value={option.value}>{option.name}</option>
+                                <option key={option.index} value={option._id}>{option.name}</option>
                             ) : null
                     }
                 </select>

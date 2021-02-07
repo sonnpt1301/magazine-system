@@ -11,8 +11,7 @@ const LeftMenu = () => {
             <Nav defaultActiveKey="/home" className="flex-column">
                 <NavLink to="" className="nav-link">Home</NavLink>
                 <NavLink to="faculty" className="nav-link">Faculty</NavLink>
-                <NavLink to="contribution" className="nav-link">Contribution</NavLink>
-                <NavLink to="profile" className="nav-link">Profile</NavLink>
+                <NavLink to="user" className="nav-link">User</NavLink>
             </Nav>
         </>
     )

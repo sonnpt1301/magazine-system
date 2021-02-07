@@ -1,9 +1,9 @@
 import express from 'express'
-import { requireSignIn } from '../common-middleware/index.js'
-import { getProfile } from '../controllers/user.js'
+import { requireSignIn, checkRole } from '../common-middleware/index.js'
+import { getUsers } from '../controllers/user.js'
 
 const router = express.Router()
 
-router.get('/profile', requireSignIn, getProfile)
+router.get('/get-users', requireSignIn, checkRole('admin'), getUsers)   
 
 export default router
