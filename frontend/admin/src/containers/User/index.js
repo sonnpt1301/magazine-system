@@ -7,14 +7,15 @@ import { IoTrashOutline } from 'react-icons/io5'
 import { MdEdit, MdAddCircle } from "react-icons/md"
 import Modal from '../../components/UI/Modal'
 import { Row, Col } from 'react-bootstrap'
-import { addUser } from '../../actions'
+import { addUser, updateUser } from '../../actions'
 
-const User = () => {
+const User = (props) => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.user)
     const { faculties } = useSelector(state => state.faculty)
     const [users, setUsers] = useState(user.users)
     const [showCreateModal, setShowCreateModal] = useState(false)
+    const [showUpdateModal, setShowUpdateModal] = useState(false)
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
@@ -24,8 +25,24 @@ const User = () => {
     const [contact, setContact] = useState('')
     const [role, setRole] = useState('')
     const [facultyId, setFacultyId] = useState('')
+    const [userId, setUserId] = useState('')
 
     const handleShowCreateModal = () => setShowCreateModal(true)
+    const handleShowUpdateModal = (e, id) => {
+        e.preventDefault()
+        setShowUpdateModal(true)
+        const user = users.find((user) => user._id === id)
+        setFirstName(user.firstName)
+        setLastName(user.lastName)
+        setEmail(user.email)
+        setPassword(user.password)
+        setAddress(user.address)
+        setCity(user.city)
+        setContact(user.contact)
+        setRole(user.role)
+        setFacultyId(user.facultyId)
+        setUserId(user._id)
+    }
 
     const createUser = (e) => {
         const body = {
@@ -41,6 +58,26 @@ const User = () => {
         }
         dispatch(addUser(body))
         setShowCreateModal(false)
+    }
+
+    const editUser = () => {
+        const params = {
+            userId
+        }
+
+        const body = {
+            firstName,
+            lastName,
+            email,
+            password,
+            address,
+            city,
+            contact,
+            role,
+            facultyId
+        }
+        dispatch(updateUser(params, body))
+        setShowUpdateModal(false)
     }
 
     useEffect(() => {
@@ -68,63 +105,29 @@ const User = () => {
                 {
                     users.length > 0 &&
                     users.map((user, index) => (
-                        <tbody>
+                        <tbody key={index}>
                             <tr>
-                                <td>1</td>
-                                <td>
-                                    <Input
-                                        size={'sm'}
-                                        value={user.firstName}
-                                    />
-                                </td>
-                                <td>
-                                    <Input
-                                        size={'sm'}
-                                        value={user.lastName}
-                                    />
-                                </td>
-                                <td>
-                                    <Input
-                                        size={'sm'}
-                                        value={user.email}
-                                    />
-                                </td>
-                                <td>
-                                    <Input
-                                        size={'sm'}
-                                        value={user.address}
-                                    />
-                                </td>
-                                <td>
-                                    <Input
-                                        size={'sm'}
-                                        value={user.city}
-                                    />
-                                </td>
-                                <td>
-                                    <Input
-                                        size={'sm'}
-                                        value={user.contact}
-                                    />
-                                </td>
-                                <td>
-                                    <Input
-                                        size={'sm'}
-                                        value={user.role}
-                                    />
-                                </td>
-                                <td><MdEdit /></td>
-                                <td><IoTrashOutline /></td>
+                                <td></td>
+                                <td>{user.firstName}</td>
+                                <td>{user.lastName}</td>
+                                <td>{user.email}</td>
+                                <td>{user.address}</td>
+                                <td>{user.city}</td>
+                                <td>{user.contact}</td>
+                                <td>{user.role}</td>
+                                <td><button onClick={(e) => handleShowUpdateModal(e, user._id)}><MdEdit /></button></td>
+                                <td><button><IoTrashOutline /></button></td>
                             </tr>
                         </tbody>
                     ))
                 }
             </Table>
 
+            {/* Add Modal */}
             <Modal
                 show={showCreateModal}
                 handleClose={() => setShowCreateModal(false)}
-                modalTitle={'Add user'}
+                modaltitle={'Add user'}
                 onSubmit={createUser}
             >
                 <Row>
@@ -199,6 +202,86 @@ const User = () => {
                     </Col>
                     <Col sm={6}>
                         <Input
+                            type='select'
+                            value={facultyId}
+                            onChange={(e) => setFacultyId(e.target.value)}
+                            options={faculties}
+                            placeholder={'Select Faculty'}
+                        />
+                    </Col>
+                </Row>
+            </Modal>
+
+            {/* Update Modal */}
+            <Modal
+                show={showUpdateModal}
+                handleClose={() => setShowUpdateModal(false)}
+                modaltitle={'Update user'}
+                onSubmit={editUser}
+            >
+                <Row>
+                    <Col sm={6}>
+                        <Input
+                            label={'First Name'}
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                        />
+                    </Col>
+                    <Col sm={6}>
+                        <Input
+                            label={'Last Name'}
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                        />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Input
+                            label={'Contact'}
+                            value={contact}
+                            onChange={(e) => setContact(e.target.value)}
+                        />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Input
+                            label={'Email'}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Input
+                            label={'Address'}
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                        />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Input
+                            label={'City'}
+                            value={city}
+                            onChange={(e) => setCity(e.target.value)}
+                        />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col sm={6}>
+                        <Input
+                            label={'Role'}
+                            value={role}
+                            onChange={(e) => setRole(e.target.value)}
+                        />
+                    </Col>
+                    <Col sm={6}>
+                        <Input
+                            label={'Faculty'}
                             type='select'
                             value={facultyId}
                             onChange={(e) => setFacultyId(e.target.value)}

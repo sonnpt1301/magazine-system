@@ -13,7 +13,7 @@ const NewModal = (props) => {
     return (
         <Modal size={props.size} show={props.show} onHide={props.handleClose}>
             <Header closeButton>
-                <Title>{props.modalTitle}</Title>
+                <Title>{props.modaltitle}</Title>
             </Header>
             <Body>
                 {props.children}

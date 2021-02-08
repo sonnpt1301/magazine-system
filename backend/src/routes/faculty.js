@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.post('/createFaculty', createFaculty)
 router.put('/updateFaculty/:id', updateFaculty)
-router.patch('/deleteFaculty:/id', deleteFaculty)
+router.patch('/deleteFaculty/:id', deleteFaculty)
 router.get('/getFaculty', getFaculty)
 
 export default router

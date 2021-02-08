@@ -32,7 +32,7 @@ function App() {
       <Switch>
         <PrivateRoute exact path="/" component={Home} />
         <PrivateRoute path="/faculty" component={Faculty} />
-        <PrivateRoute path="/user" component={User} />
+        <PrivateRoute path="/user" component={User} />  
 
         <Route path="/login" component={Login} />
         <Route path="*" component={() => "404 NOT FOUND"} />

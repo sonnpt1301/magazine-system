@@ -54,8 +54,28 @@ export default (state = initState, action) => {
                 loading: false
             }
             break;
-
-
+        case userConstants.UPDATE_USER_REQUEST:
+            state = {
+                ...state,
+                loading: true
+            }
+            break;
+        case userConstants.UPDATE_USER_SUCCESS:
+            newUser = [...state.users]
+            const updateUser = newUser.findIndex(user => user._id === action.payload.user._id)
+            newUser[updateUser] = action.payload.user
+            state = {
+                ...state,
+                users: newUser,
+                loading: false
+            }
+            break;
+        case userConstants.UPDATE_USER_FAILURE:
+            state = {
+                ...state,
+                error: action.payload.error,
+                loading: false
+            }
     }
     return state
 }

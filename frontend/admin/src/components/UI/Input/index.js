@@ -10,7 +10,7 @@ const Input = (props) => {
                 {props.label && <Form.Label>{props.label}</Form.Label>}
                 <select
                     className="form-control form-control-sm"
-                    value={props.value}
+                    defaultValue={props.value}
                     onChange={props.onChange}
                     {...props}
                 >
@@ -33,7 +33,7 @@ const Input = (props) => {
                     size={props.type}
                     type={props.type}
                     placeholder={props.placeholder}
-                    value={props.value}
+                    defaultValue={props.value}
                     onChange={props.onChange}
                     {...props}
                 />

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { Button, Col, Row, Spinner, Table } from 'react-bootstrap'
+import React, { useEffect, useState } from 'react'
+import { Spinner } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import { getFaculty, addFaculty } from '../../actions/faculty.action'
+import { addFaculty } from '../../actions/faculty.action'
 import Layout from '../../components/Layout'
 import Input from '../../components/UI/Input'
 import Modal from '../../components/UI/Modal'
@@ -40,22 +40,21 @@ const Faculty = () => {
                 faculties.length > 0 &&
                 faculties.map((faculty, index) => (
                     <Input
+                        key={index}
                         size={'sm'}
-                        value={faculty.name}
+                        defaultValue={faculty.name}
                         placeholder={'Category Name'}
                     />
                 ))
             }
-
-
             <Modal
                 show={showCreateModal}
                 handleClose={() => setShowCreateModal(false)}
-                modalTitle={'Add Faculty'}
+                modaltitle={'Add Faculty'}
                 onSubmit={createFaculty}
             >
                 <Input
-                    value={facultyName}
+                    defaultValue={facultyName}
                     placeholder={'Enter faculty name'}
                     onChange={(e) => setFacultyName(e.target.value)}
                 />

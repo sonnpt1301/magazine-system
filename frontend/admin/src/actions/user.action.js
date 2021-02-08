@@ -40,3 +40,25 @@ export const addUser = (body) => {
         }
     }
 }
+
+export const updateUser = (params, body) => {
+    return async dispatch => {
+        dispatch({ type: userConstants.UPDATE_USER_REQUEST })
+        const { userId } = params
+        const res = await axios.put(`user/update/${userId}`, body)
+        console.log(res)
+        const { user, error } = res.data
+        if (res.status === 200) {
+            dispatch({
+                type: userConstants.UPDATE_USER_SUCCESS,
+                payload: { user }
+            })
+        }
+        if(res.status === 400){
+            dispatch({
+                type: userConstants.UPDATE_USER_FAILURE,
+                payload: { error }
+            })
+        }
+    }
+}
