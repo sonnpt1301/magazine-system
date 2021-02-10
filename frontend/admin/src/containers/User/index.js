@@ -141,7 +141,7 @@ const User = (props) => {
                                 <td><button onClick={(e) => handleShowDeleteModal(e, user._id)}><IoTrashOutline /></button></td>
                             </tr>
                         </tbody>
-                    ))  
+                    ))
                 }
             </Table>
 
@@ -313,7 +313,7 @@ const User = (props) => {
                     </Col>
                 </Row>
             </Modal>
-
+            {/* Delete Modal */}
             <Modal
                 show={showDeleteModal}
                 handleClose={() => setShowDeleteModal(false)}

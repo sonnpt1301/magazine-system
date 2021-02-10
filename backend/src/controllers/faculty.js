@@ -1,4 +1,5 @@
 import Faculty from '../models/faculty.js'
+import shortid from 'shortid'
 
 export const getFaculty = async (req, res) => {
     try {
@@ -39,7 +40,8 @@ export const deleteFaculty = async (req, res) => {
     try {
         const id = req.params.id;
         const faculty = await Faculty.findOneAndUpdate({ _id: id }, {
-            is_deleted: true
+            is_deleted: true,
+            name: 'deleted' + shortid()
         }, { new: true })
         res.status(200).json({ faculty, message: 'Delete Faculty Successfully!!!' })
     } catch (error) {

@@ -2,14 +2,13 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { facultyConstants } from '../actions/constants'
 
-
 const initState = {
     faculties: [],
     loading: false,
     error: null
 }
 
-let newFaculties = []
+let newFaculty = []
 
 export default (state = initState, action) => {
     switch (action.type) {
@@ -39,11 +38,11 @@ export default (state = initState, action) => {
             }
             break;
         case facultyConstants.ADD_FACULTY_SUCCESS:
-            newFaculties = [...state.faculties]
-            newFaculties.push(action.payload.faculty)
+            newFaculty = [...state.faculties]
+            newFaculty.push(action.payload.faculty)
             state = {
                 ...state,
-                faculties: newFaculties,    
+                faculties: newFaculty,
                 loading: false
             }
             break;
@@ -54,8 +53,52 @@ export default (state = initState, action) => {
                 loading: false
             }
             break;
-
+        case facultyConstants.UPDATE_FACULTY_REQUEST:
+            state = {
+                ...state,
+                loading: true
+            }
+            break;
+        case facultyConstants.UPDATE_FACULTY_SUCCESS:
+            newFaculty = [...state.faculties]
+            const updateFaculty = newFaculty.findIndex(fac => fac._id === action.payload.faculty._id)
+            newFaculty[updateFaculty] = action.payload.faculty
+            state = {
+                ...state,
+                faculties: newFaculty,
+                loading: false
+            }
+            break;
+        case facultyConstants.UPDATE_FACULTY_FAILURE:
+            state = {
+                ...state,
+                loading: false
+            }
+            break;
+        case facultyConstants.DELETE_FACULTY_REQUEST:
+            state = {
+                ...state,
+                loading: true,
+            }
+            break;
+        case facultyConstants.DELETE_FACULTY_SUCCESS:
+            newFaculty = [...state.faculties]
+            const updateFacultyArr = newFaculty.filter(fac => fac._id !== action.payload.faculty._id)
+            state = {
+                ...state,
+                faculties: updateFacultyArr,
+                loading: false
+            }
+            break;
+        case facultyConstants.DELETE_FACULTY_FAILURE:
+            state = {
+                ...state,
+                error: action.payload.error,
+                loading: false
+            }
+            break;
 
     }
     return state
 }
+
