@@ -7,7 +7,7 @@ import { IoTrashOutline } from 'react-icons/io5'
 import { MdEdit, MdAddCircle } from "react-icons/md"
 import Modal from '../../components/UI/Modal'
 import { Row, Col } from 'react-bootstrap'
-import { addUser, updateUser } from '../../actions'
+import { addUser, updateUser, deleteUser } from '../../actions'
 
 const User = (props) => {
     const dispatch = useDispatch()
@@ -16,6 +16,7 @@ const User = (props) => {
     const [users, setUsers] = useState(user.users)
     const [showCreateModal, setShowCreateModal] = useState(false)
     const [showUpdateModal, setShowUpdateModal] = useState(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
@@ -27,9 +28,14 @@ const User = (props) => {
     const [facultyId, setFacultyId] = useState('')
     const [userId, setUserId] = useState('')
 
+
+    const facultyById = (id) => {
+        const faculty = faculties.find((fac) => fac._id === id)
+        return faculty.name
+    }
+
     const handleShowCreateModal = () => setShowCreateModal(true)
     const handleShowUpdateModal = (e, id) => {
-        e.preventDefault()
         setShowUpdateModal(true)
         const user = users.find((user) => user._id === id)
         setFirstName(user.firstName)
@@ -41,6 +47,12 @@ const User = (props) => {
         setContact(user.contact)
         setRole(user.role)
         setFacultyId(user.facultyId)
+        setUserId(user._id)
+    }
+
+    const handleShowDeleteModal = (e, id) => {
+        setShowDeleteModal(true)
+        const user = users.find((user) => user._id === id)
         setUserId(user._id)
     }
 
@@ -80,6 +92,14 @@ const User = (props) => {
         setShowUpdateModal(false)
     }
 
+    const _deleteUser = (e) => {
+        const params = {
+            userId
+        }
+        dispatch(deleteUser(params))
+        setShowDeleteModal(false)
+    }
+
     useEffect(() => {
         setUsers(user.users)
     }, [user.users])
@@ -98,6 +118,7 @@ const User = (props) => {
                         <th>City</th>
                         <th>Contact</th>
                         <th>Role</th>
+                        <th>Faculty</th>
                         <th></th>
                         <th></th>
                     </tr>
@@ -115,11 +136,12 @@ const User = (props) => {
                                 <td>{user.city}</td>
                                 <td>{user.contact}</td>
                                 <td>{user.role}</td>
+                                <td>{facultyById(user.facultyId)}</td>
                                 <td><button onClick={(e) => handleShowUpdateModal(e, user._id)}><MdEdit /></button></td>
-                                <td><button><IoTrashOutline /></button></td>
+                                <td><button onClick={(e) => handleShowDeleteModal(e, user._id)}><IoTrashOutline /></button></td>
                             </tr>
                         </tbody>
-                    ))
+                    ))  
                 }
             </Table>
 
@@ -290,6 +312,15 @@ const User = (props) => {
                         />
                     </Col>
                 </Row>
+            </Modal>
+
+            <Modal
+                show={showDeleteModal}
+                handleClose={() => setShowDeleteModal(false)}
+                modaltitle={'Are you sure to delete this user?'}
+                onSubmit={_deleteUser}
+            >
+
             </Modal>
 
 

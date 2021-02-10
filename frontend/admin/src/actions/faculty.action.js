@@ -11,8 +11,7 @@ export const getFaculty = () => {
                 type: facultyConstants.GET_FACULTY_SUCCESS,
                 payload: { faculty }
             })
-        }
-        if (res.status === 400) {
+        } else {
             dispatch({
                 type: facultyConstants.GET_FACULTY_FAILURE,
                 payload: { error }
@@ -23,7 +22,7 @@ export const getFaculty = () => {
 
 export const addFaculty = (body) => {
     return async dispatch => {
-        dispatch({  type: facultyConstants.ADD_FACULTY_REQUEST })
+        dispatch({ type: facultyConstants.ADD_FACULTY_REQUEST })
         const res = await axios.post('/faculty/createFaculty', body)
         const { faculty, error } = res.data
         if (res.status === 201) {
@@ -31,8 +30,7 @@ export const addFaculty = (body) => {
                 type: facultyConstants.ADD_FACULTY_SUCCESS,
                 payload: { faculty }
             })
-        }
-        if (res.status === 400) {
+        } else {
             dispatch({
                 type: facultyConstants.ADD_FACULTY_FAILURE,
                 payload: { error }

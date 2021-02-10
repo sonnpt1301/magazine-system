@@ -26,10 +26,13 @@ export const register = async (req, res) => {
         }
         const _user = new User(newUser)
         await _user.save()
-        res.status(201).json({ _user, messages: 'User created successfully!!!' })
+        if (_user) {
+            res.status(201).json({ _user, messages: 'User created successfully!!!' })
+        } else {
+            res.status(400).json({ error })
+        }
     } catch (error) {
-        res.status(400).json({ message: error.message })
-        console.log(error)
+        res.status(400).json({ error })
     }
 }
 

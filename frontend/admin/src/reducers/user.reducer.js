@@ -76,6 +76,29 @@ export default (state = initState, action) => {
                 error: action.payload.error,
                 loading: false
             }
+            break;
+        case userConstants.DELETE_USER_REQUEST:
+            state = {
+                ...state,
+                loading: true,
+            }
+            break;
+        case userConstants.DELETE_USER_SUCCESS:
+            newUser = [...state.users]
+            const updateUserArr = newUser.filter(user => user._id !== action.payload.user._id)
+            state = {
+                ...state,
+                users: updateUserArr,
+                loading: false
+            }
+            break;
+        case userConstants.DELETE_USER_FAILURE:
+            state = {
+                ...state,
+                error: action.payload.error,
+                loading: false
+            }
+            break;
     }
     return state
 }
