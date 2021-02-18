@@ -9,6 +9,7 @@ import { isUserLoggedIn } from './actions/auth.action';
 import { getUsers } from './actions/user.action';
 import './App.css';
 import { PrivateRoute } from './components/HOC/PrivateRoute';
+import LeftMenu from './components/LeftMenu';
 import Faculty from './containers/Faculty';
 import Home from './containers/Home';
 import Login from './containers/Login';

@@ -17,41 +17,6 @@ const Home = (props) => {
                     <Button variant="primary">Learn more</Button>
                 </p>
             </Jumbotron>
-            <Card>
-                <Card.Header>
-                    <Nav variant="tabs" defaultActiveKey="#first">
-                        <Nav.Item>
-                            <Nav.Link href="#first">Active</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link href="#link">Link</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link href="#disabled" disabled>
-                                Disabled
-                            </Nav.Link>
-                        </Nav.Item>
-                    </Nav>
-                </Card.Header>
-                <Card.Body>
-                    <Card.Title>Special title treatment</Card.Title>
-                    <Card.Text>
-                        With supporting text below as a natural lead-in to additional content.
-                    </Card.Text>
-                    <Button variant="primary">Go somewhere</Button>
-                </Card.Body>
-            </Card>
-            <br></br>
-            <Card border="success" style={{ width: '18rem' }}>
-                <Card.Header>Header</Card.Header>
-                <Card.Body>
-                    <Card.Title>Success Card Title</Card.Title>
-                    <Card.Text>
-                        Some quick example text to build on the card title and make up the bulk
-                        of the card's content.
-                    </Card.Text>
-                </Card.Body>
-            </Card>
         </Layout>
     )
 }

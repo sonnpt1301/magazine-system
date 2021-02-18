@@ -27,20 +27,12 @@ const Input = (props) => {
         case 'text':
             break;
         default:
-            input = <Form.Group>
-                {props.label && <Form.Label>{props.label}</Form.Label>}
-                <Form.Control
-                    size={props.type}
-                    type={props.type}
-                    placeholder={props.placeholder}
+            input = <div class="form-group">
+                <label for="input-1">{props.label}</label>
+                <input type={props.type} className="form-control" id="input-1" placeholder={props.placeholder}
                     defaultValue={props.value}
-                    onChange={props.onChange}
-                    {...props}
-                />
-                <Form.Text className="text-muted">
-                    {props.errorMessage}
-                </Form.Text>
-            </Form.Group>
+                    onChange={props.onChange} />
+            </div>
             break;
     }
 

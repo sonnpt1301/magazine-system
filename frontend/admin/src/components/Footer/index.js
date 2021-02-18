@@ -4,11 +4,15 @@ import './style.css'
 
 const Footer = () => {
     return (
-        <>
-            <Card className="text-center" position="fixed" style={{ bottom: 0 }}>
-                <Card.Footer className="text-muted">Version 1.0</Card.Footer>
-            </Card>
-        </>
+        <div>
+            <footer className="footer">
+                <div className="container">
+                    <div className="text-center">
+                        Magazine System
+                    </div>
+                </div>
+            </footer>
+        </div>
     )
 }
 

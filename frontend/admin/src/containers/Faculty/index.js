@@ -1,47 +1,35 @@
 import React, { useEffect, useState } from 'react'
-import { Spinner, Table } from 'react-bootstrap'
-import { IoTrashOutline } from 'react-icons/io5'
-import { MdEdit } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteFaculty } from '../../actions'
-import { updateFaculty } from '../../actions/faculty.action'
-import { addFaculty } from '../../actions/faculty.action'
+import { addFaculty, updateFaculty } from '../../actions/faculty.action'
 import Layout from '../../components/Layout'
 import Input from '../../components/UI/Input'
-import Modal from '../../components/UI/Modal'
 
 const Faculty = () => {
 
     const dispatch = useDispatch()
     const faculty = useSelector(state => state.faculty)
-    const [showCreateModal, setShowCreateModal] = useState(false)
-    const [showUpdateModal, setShowUpdateModal] = useState(false)
-    const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [facultyName, setFacultyName] = useState('')
     const [facultyId, setFacultyId] = useState('')
     const [faculties, setFaculties] = useState(faculty.faculties)
 
-    const handleShowCreateModal = () => setShowCreateModal(true)
 
     const handleShowUpdateModal = (e, id) => {
-        setShowUpdateModal(true)
         const faculty = faculties.find((fac) => fac._id === id)
         setFacultyName(faculty.name)
         setFacultyId(faculty._id)
     }
 
     const handleShowDeleteModal = (e, id) => {
-        setShowDeleteModal(true)
         const faculty = faculties.find((fac) => fac._id === id)
         setFacultyId(faculty._id)
     }
 
-    const createFaculty = () => {
+    const createFaculty = (e) => {
         const body = {
             name: facultyName
         }
         dispatch(addFaculty(body))
-        setShowCreateModal(false)
     }
 
     const _updateFaculty = () => {
@@ -52,13 +40,11 @@ const Faculty = () => {
             name: facultyName
         }
         dispatch(updateFaculty(params, body))
-        setShowUpdateModal(false)
     }
 
     const _deleteFaculty = () => {
         const params = { facultyId }
         dispatch(deleteFaculty(params))
-        setShowDeleteModal(false)
     }
 
     useEffect(() => {
@@ -73,65 +59,120 @@ const Faculty = () => {
 
     return (
         <Layout>
-            <button onClick={handleShowCreateModal}>Add</button>
-            <Table striped bordered hover size="sm">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Faculty</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                {
-                    faculties.length > 0 &&
-                    faculties.map((faculty, index) => (
-                        <tbody key={index}>
-                            <tr>
-                                <td></td>
-                                <td>{faculty.name}</td>
-                                <td><button onClick={(e) => handleShowUpdateModal(e, faculty._id)}><MdEdit /></button></td>
-                                <td><button onClick={(e) => handleShowDeleteModal(e, faculty._id)}><IoTrashOutline /></button></td>
-                            </tr>
-                        </tbody>
-                    ))
-                }
-            </Table>
-            {/* Add Modal */}
-            <Modal
-                show={showCreateModal}
-                handleClose={() => setShowCreateModal(false)}
-                modaltitle={'Add Faculty'}
-                onSubmit={createFaculty}
-            >
-                <Input
-                    defaultValue={facultyName}
-                    placeholder={'Enter faculty name'}
-                    onChange={(e) => setFacultyName(e.target.value)}
-                />
-            </Modal>
-            {/* Update Modal */}
-            <Modal
-                show={showUpdateModal}
-                handleClose={() => setShowUpdateModal(false)}
-                modaltitle={'Update Faculty'}
-                onSubmit={_updateFaculty}
-            >
-                <Input
-                    defaultValue={facultyName}
-                    onChange={(e) => setFacultyName(e.target.value)}
-                />
-            </Modal>
-            {/* Delete Modal */}
-            <Modal
-                show={showDeleteModal}
-                handleClose={() => setShowDeleteModal(false)}
-                modaltitle={'Are you sure to delete this faculty?'}
-                onSubmit={_deleteFaculty}
-            >
+            <div className="content-wrapper">
+                <div className="container-fluid">
+                    <div className="row">
+                        <div class="col-lg-12">
+                            <button type="button" className="btn btn-light waves-effect waves-light m-1" data-toggle="modal" data-target="#createModal">Create Faculty</button>
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Hover Table</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Faculty</th>
+                                                    <th scope="col"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    faculties.length > 0 &&
+                                                    faculties.map((faculty, index) => (
+                                                        <tr key={index}>
+                                                            <td>{faculty.name}</td>
+                                                            <td><button data-toggle="modal" data-target="#updateModal" className="btn btn-light btn-sm waves-effect waves-light m-1" onClick={(e) => handleShowUpdateModal(e, faculty._id)}><i className="fa fa-edit"></i></button>
+                                                                <button data-toggle="modal" data-target="#deleteModal" className="btn btn-light btn-sm waves-effect waves-light m-1" onClick={(e) => handleShowDeleteModal(e, faculty._id)}><i className="fa fa-trash-o"></i></button>
+                                                            </td>
+                                                        </tr>
+                                                    ))
+                                                }
+                                            </tbody>
+                                        </table>
 
-            </Modal>
-        </Layout>
+                                        {/* Create Modal */}
+                                        <div className="modal fade" id="createModal" style={{ display: 'none', paddingRight: '17px' }} aria-modal="true">
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title">Your modal title here</h5>
+                                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <form>
+                                                            <Input
+                                                                label="Faculty name"
+                                                                placeholder={'Enter name'}
+                                                                defaultValue={facultyName}
+                                                                onChange={(e) => setFacultyName(e.target.value)}
+                                                            />
+                                                            <div className="form-group">
+                                                                <button type="submit" className="btn btn-light px-5" onClick={createFaculty} data-dismiss="modal" aria-label="Close" aria-hidden="true"><i className="icon-lock"></i> Create</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Update Modal */}
+                                        <div className="modal fade" id="updateModal" style={{ display: 'none', paddingRight: '17px' }} aria-modal="true">
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title">Your modal title here</h5>
+                                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <form>
+                                                            <Input
+                                                                label="Faculty name"
+                                                                placeholder={'Enter name'}
+                                                                value={facultyName}
+                                                                onChange={(e) => setFacultyName(e.target.value)}
+                                                            />
+                                                            <div className="form-group">
+                                                                <button type="submit" className="btn btn-light px-5" onClick={_updateFaculty} data-dismiss="modal" aria-label="Close" aria-hidden="true"><i className="icon-lock"></i> Update</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Delete Modal */}
+                                        <div class="modal fade" id="deleteModal" style={{ display: 'none', paddingRight: '17px' }} aria-modal="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Delete</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Are you sure to delete? This action can't be restore</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-white" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                                                        <button type="button" class="btn btn-danger" onClick={_deleteFaculty} data-dismiss="modal" aria-label="Close" aria-hidden="true"><i class="fa fa-check-square-o"></i> Delete</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Layout >
     )
 }
 
