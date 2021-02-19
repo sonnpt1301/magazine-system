@@ -4,6 +4,7 @@ import { deleteFaculty } from '../../actions'
 import { addFaculty, updateFaculty } from '../../actions/faculty.action'
 import Layout from '../../components/Layout'
 import Input from '../../components/UI/Input'
+import Modal from '../../components/UI/Modal'
 
 const Faculty = () => {
 
@@ -66,13 +67,13 @@ const Faculty = () => {
                             <button type="button" className="btn btn-light waves-effect waves-light m-1" data-toggle="modal" data-target="#createModal">Create Faculty</button>
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Hover Table</h5>
+                                    <h5 class="card-title">Faculty</h5>
                                     <div class="table-responsive">
-                                        <table class="table table-hover">
+                                        <table class="table table-hover" style={{ textAlign: 'center' }}>
                                             <thead>
                                                 <tr>
                                                     <th scope="col">Faculty</th>
-                                                    <th scope="col"></th>
+                                                    <th scope="col">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -91,58 +92,36 @@ const Faculty = () => {
                                         </table>
 
                                         {/* Create Modal */}
-                                        <div className="modal fade" id="createModal" style={{ display: 'none', paddingRight: '17px' }} aria-modal="true">
-                                            <div className="modal-dialog">
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title">Your modal title here</h5>
-                                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">×</span>
-                                                        </button>
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        <form>
-                                                            <Input
-                                                                label="Faculty name"
-                                                                placeholder={'Enter name'}
-                                                                defaultValue={facultyName}
-                                                                onChange={(e) => setFacultyName(e.target.value)}
-                                                            />
-                                                            <div className="form-group">
-                                                                <button type="submit" className="btn btn-light px-5" onClick={createFaculty} data-dismiss="modal" aria-label="Close" aria-hidden="true"><i className="icon-lock"></i> Create</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
+                                        <Modal
+                                            id={'createModal'}
+                                            modaltitle={'Create Faculty'}
+                                        >
+                                            <Input
+                                                label="Faculty name"
+                                                placeholder={'Enter name'}
+                                                defaultValue={facultyName}
+                                                onChange={(e) => setFacultyName(e.target.value)}
+                                            />
+                                            <div className="form-group">
+                                                <button type="submit" className="btn btn-light px-5" onClick={createFaculty} data-dismiss="modal" aria-label="Close" aria-hidden="true"><i className="icon-lock"></i> Create</button>
                                             </div>
-                                        </div>
+                                        </Modal>
 
                                         {/* Update Modal */}
-                                        <div className="modal fade" id="updateModal" style={{ display: 'none', paddingRight: '17px' }} aria-modal="true">
-                                            <div className="modal-dialog">
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title">Your modal title here</h5>
-                                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">×</span>
-                                                        </button>
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        <form>
-                                                            <Input
-                                                                label="Faculty name"
-                                                                placeholder={'Enter name'}
-                                                                value={facultyName}
-                                                                onChange={(e) => setFacultyName(e.target.value)}
-                                                            />
-                                                            <div className="form-group">
-                                                                <button type="submit" className="btn btn-light px-5" onClick={_updateFaculty} data-dismiss="modal" aria-label="Close" aria-hidden="true"><i className="icon-lock"></i> Update</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
+                                        <Modal
+                                            id={'updateModal'}
+                                            modaltitle={'Update Faculty'}
+                                        >
+                                            <Input
+                                                label="Faculty name"
+                                                placeholder={'Enter name'}
+                                                value={facultyName}
+                                                onChange={(e) => setFacultyName(e.target.value)}
+                                            />
+                                            <div className="form-group">
+                                                <button type="submit" className="btn btn-light px-5" onClick={_updateFaculty} data-dismiss="modal" aria-label="Close" aria-hidden="true"><i className="icon-lock"></i> Update</button>
                                             </div>
-                                        </div>
+                                        </Modal>
 
                                         {/* Delete Modal */}
                                         <div class="modal fade" id="deleteModal" style={{ display: 'none', paddingRight: '17px' }} aria-modal="true">

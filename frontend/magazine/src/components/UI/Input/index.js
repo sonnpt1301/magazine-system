@@ -28,12 +28,10 @@ const Input = (props) => {
             break;
         default:
             input = <div class="form-group">
-                <label>{props.label}</label>
-                <input type={props.type} className="form-control" placeholder={props.placeholder}
+                <label for="input-1">{props.label}</label>
+                <input type={props.type} className="form-control" id="input-1" placeholder={props.placeholder}
                     defaultValue={props.value}
-                    onChange={props.onChange}
-                    {...props}
-                />
+                    onChange={props.onChange} />
             </div>
             break;
     }

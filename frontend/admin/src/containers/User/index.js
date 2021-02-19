@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
+import { Col, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { addUser, deleteUser, updateUser } from '../../actions'
 import Layout from '../../components/Layout'
 import Input from '../../components/UI/Input'
+import Modal from '../../components/UI/Modal'
 
 const User = (props) => {
     const dispatch = useDispatch()
@@ -101,7 +103,7 @@ const User = (props) => {
                                 <div className="card-body">
                                     <h5 className="card-title">Hover Table</h5>
                                     <div className="table-responsive">
-                                        <table className="table table-hover">
+                                        <table className="table table-hover" style={{ textAlign: 'center' }}>
                                             <thead>
                                                 <tr>
                                                     <th scope="col">First Name</th>
@@ -112,7 +114,7 @@ const User = (props) => {
                                                     <th scope="col">Contact</th>
                                                     <th scope="col">Role</th>
                                                     <th scope="col">Faculty</th>
-                                                    <th scope="col"></th>
+                                                    <th scope="col">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -137,191 +139,234 @@ const User = (props) => {
                                             </tbody>
                                         </table>
                                         {/* Create Modal */}
-                                        <div className="modal fade" id="createModal" style={{ display: 'none', paddingRight: '17px' }} aria-modal="true">
+                                        <Modal
+                                            id={'createModal'}
+                                            modaltitle={'Create User'}
+                                        >
+                                            <Row>
+                                                <Col sm={6}>
+                                                    <Input
+                                                        label="First Name"
+                                                        placeholder={'Enter name'}
+                                                        defaultValue={firstName}
+                                                        onChange={(e) => setFirstName(e.target.value)}
+                                                    />
+                                                </Col>
+                                                <Col sm={6}>
+                                                    <Input
+                                                        label="Last Name"
+                                                        defaultValue={lastName}
+                                                        placeholder={'Last Name'}
+                                                        onChange={(e) => setLastName(e.target.value)}
+                                                    />
+                                                </Col>
+                                            </Row>
+
+                                            <Row>
+                                                <Col sm={6}>
+                                                    <Input
+                                                        label="Contact"
+                                                        defaultValue={contact}
+                                                        placeholder={'Contact'}
+                                                        onChange={(e) => setContact(e.target.value)}
+                                                    />
+                                                </Col>
+                                                <Col sm={6}>
+                                                    <Input
+                                                        label="Email"
+                                                        defaultValue={email}
+                                                        placeholder={'Email'}
+                                                        onChange={(e) => setEmail(e.target.value)}
+                                                    />
+                                                </Col>
+                                            </Row>
+
+                                            <Row>
+                                                <Col sm={6}>
+                                                    <Input
+                                                        label="Password"
+                                                        type={'password'}
+                                                        defaultValue={password}
+                                                        placeholder={'Password'}
+                                                        onChange={(e) => setPassword(e.target.value)}
+                                                    />
+                                                </Col>
+                                                <Col sm={6}>
+                                                    <Input
+                                                        label="Role"
+                                                        defaultValue={role}
+                                                        placeholder={'Role'}
+                                                        onChange={(e) => setRole(e.target.value)}
+                                                    />
+                                                </Col>
+                                            </Row>
+
+                                            <Row>
+                                                <Col sm={6}>
+                                                    <Input
+                                                        label="Address"
+                                                        defaultValue={address}
+                                                        placeholder={'Address'}
+                                                        onChange={(e) => setAddress(e.target.value)}
+                                                    />
+                                                </Col>
+                                                <Col sm={6}>
+                                                    <Input
+                                                        label="City"
+                                                        defaultValue={city}
+                                                        placeholder={'City'}
+                                                        onChange={(e) => setCity(e.target.value)}
+                                                    />
+                                                </Col>
+                                            </Row>
+
+                                            <Row>
+                                                <Col sm={6}>
+                                                    <Input
+                                                        label="Faculty"
+                                                        type='select'
+                                                        defaultValue={facultyId}
+                                                        onChange={(e) => setFacultyId(e.target.value)}
+                                                        options={faculties}
+                                                        placeholder={'Select Faculty'}
+                                                    />
+                                                </Col>
+                                            </Row>
+
+                                            <div className="form-group">
+                                                <button type="submit" className="btn btn-light px-5" onClick={createUser} data-dismiss="modal" aria-label="Close" aria-hidden="true"><i className="icon-lock"></i> Create</button>
+                                            </div>
+                                        </Modal>
+
+                                        {/* Update Modal */}
+
+                                        <Modal
+                                            id={'updateModal'}
+                                            modaltitle={'Update User'}
+                                        >
+                                            <Row>
+                                                <Col sm={6}>
+                                                    <Input
+                                                        label="First Name"
+                                                        placeholder={'Enter name'}
+                                                        value={firstName}
+                                                        onChange={(e) => setFirstName(e.target.value)}
+                                                    />
+                                                </Col>
+                                                <Col sm={6}>
+                                                    <Input
+                                                        label="Last Name"
+                                                        value={lastName}
+                                                        placeholder={'Last Name'}
+                                                        onChange={(e) => setLastName(e.target.value)}
+                                                    />
+                                                </Col>
+                                            </Row>
+
+                                            <Row>
+                                                <Col sm={6}>
+                                                    <Input
+                                                        label="Contact"
+                                                        value={contact}
+                                                        placeholder={'Contact'}
+                                                        onChange={(e) => setContact(e.target.value)}
+                                                    />
+                                                </Col>
+                                                <Col sm={6}>
+                                                    <Input
+                                                        label="Email"
+                                                        value={email}
+                                                        placeholder={'Email'}
+                                                        onChange={(e) => setEmail(e.target.value)}
+                                                    />
+                                                </Col>
+                                            </Row>
+
+                                            <Row>
+                                                <Col sm={6}>
+                                                    <Input
+                                                        label="Password"
+                                                        type={'password'}
+                                                        value={password}
+                                                        placeholder={'Password'}
+                                                        onChange={(e) => setPassword(e.target.value)}
+                                                        disabled
+                                                    />
+                                                </Col>
+                                                <Col sm={6}>
+                                                    <Input
+                                                        label="Role"
+                                                        value={role}
+                                                        placeholder={'Role'}
+                                                        onChange={(e) => setRole(e.target.value)}
+                                                    />
+                                                </Col>
+                                            </Row>
+
+                                            <Row>
+                                                <Col sm={6}>
+                                                    <Input
+                                                        label="Address"
+                                                        value={address}
+                                                        placeholder={'Address'}
+                                                        onChange={(e) => setAddress(e.target.value)}
+                                                    />
+                                                </Col>
+                                                <Col sm={6}>
+                                                    <Input
+                                                        label="City"
+                                                        value={city}
+                                                        placeholder={'City'}
+                                                        onChange={(e) => setCity(e.target.value)}
+                                                    />
+                                                </Col>
+                                            </Row>
+
+                                            <Row>
+                                                <Col sm={6}>
+                                                    <Input
+                                                        label="Faculty"
+                                                        type='select'
+                                                        value={facultyId}
+                                                        onChange={(e) => setFacultyId(e.target.value)}
+                                                        options={faculties}
+                                                        placeholder={'Select Faculty'}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                            <div className="form-group">
+                                                <button type="submit" className="btn btn-light px-5" onClick={editUser} data-dismiss="modal" aria-label="Close" aria-hidden="true"><i className="icon-lock"></i> Update</button>
+                                            </div>
+                                        </Modal>
+
+                                        {/* Delete Modal */}
+                                        <div className="modal fade" id="deleteModal" style={{ display: 'none', paddingRight: '17px' }} aria-modal="true">
                                             <div className="modal-dialog">
                                                 <div className="modal-content">
                                                     <div className="modal-header">
-                                                        <h5 className="modal-title">Your modal title here</h5>
-                                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                                        <h5 className="modal-title">Delete</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">×</span>
                                                         </button>
                                                     </div>
                                                     <div className="modal-body">
-                                                        <form>
-                                                            <Input
-                                                                label="First Name"
-                                                                placeholder={'Enter name'}
-                                                                defaultValue={firstName}
-                                                                onChange={(e) => setFirstName(e.target.value)}
-                                                            />
-                                                            <Input
-                                                                label="Last Name"
-                                                                defaultValue={lastName}
-                                                                placeholder={'Last Name'}
-                                                                onChange={(e) => setLastName(e.target.value)}
-                                                            />
-                                                            <Input
-                                                                label="Contact"
-                                                                defaultValue={contact}
-                                                                placeholder={'Contact'}
-                                                                onChange={(e) => setContact(e.target.value)}
-                                                            />
-                                                            <Input
-                                                                label="Email"
-                                                                defaultValue={email}
-                                                                placeholder={'Email'}
-                                                                onChange={(e) => setEmail(e.target.value)}
-                                                            />
-                                                            <Input
-                                                                label="Password"
-                                                                type={'password'}
-                                                                defaultValue={password}
-                                                                placeholder={'Password'}
-                                                                onChange={(e) => setPassword(e.target.value)}
-                                                            />
-                                                            <Input
-                                                                label="Address"
-                                                                defaultValue={address}
-                                                                placeholder={'Address'}
-                                                                onChange={(e) => setAddress(e.target.value)}
-                                                            />
-                                                            <Input
-                                                                label="City"
-                                                                defaultValue={city}
-                                                                placeholder={'City'}
-                                                                onChange={(e) => setCity(e.target.value)}
-                                                            />
-                                                            <Input
-                                                                label="Role"
-                                                                defaultValue={role}
-                                                                placeholder={'Role'}
-                                                                onChange={(e) => setRole(e.target.value)}
-                                                            />
-                                                            <Input
-                                                                label="Faculty"
-                                                                type='select'
-                                                                defaultValue={facultyId}
-                                                                onChange={(e) => setFacultyId(e.target.value)}
-                                                                options={faculties}
-                                                                placeholder={'Select Faculty'}
-                                                            />
-                                                            <div className="form-group">
-                                                                <button type="submit" className="btn btn-light px-5" onClick={createUser} data-dismiss="modal" aria-label="Close" aria-hidden="true"><i className="icon-lock"></i> Create</button>
-                                                            </div>
-                                                        </form>
+                                                        <p>Are you sure to delete? This action can't be restore</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" className="btn btn-white" data-dismiss="modal"><i className="fa fa-times"></i> Close</button>
+                                                        <button type="button" className="btn btn-danger" onClick={_deleteUser} data-dismiss="modal" aria-label="Close" aria-hidden="true"><i className="fa fa-check-square-o"></i> Delete</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
-
-                                    {/* Update Modal */}
-
-                                    <div className="modal fade" id="updateModal" style={{ display: 'none', paddingRight: '17px' }} aria-modal="true">
-                                        <div className="modal-dialog">
-                                            <div className="modal-content">
-                                                <div className="modal-header">
-                                                    <h5 className="modal-title">Your modal title here</h5>
-                                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                </div>
-                                                <div className="modal-body">
-                                                    <form>
-                                                        <Input
-                                                            label="First Name"
-                                                            placeholder={'Enter name'}
-                                                            value={firstName}
-                                                            onChange={(e) => setFirstName(e.target.value)}
-                                                        />
-                                                        <Input
-                                                            label="Last Name"
-                                                            value={lastName}
-                                                            placeholder={'Last Name'}
-                                                            onChange={(e) => setLastName(e.target.value)}
-                                                        />
-                                                        <Input
-                                                            label="Contact"
-                                                            value={contact}
-                                                            placeholder={'Contact'}
-                                                            onChange={(e) => setContact(e.target.value)}
-                                                        />
-                                                        <Input
-                                                            label="Email"
-                                                            value={email}
-                                                            placeholder={'Email'}
-                                                            onChange={(e) => setEmail(e.target.value)}
-                                                        />
-                                                        <Input
-                                                            label="Password"
-                                                            type={'password'}
-                                                            value={password}
-                                                            placeholder={'Password'}
-                                                            onChange={(e) => setPassword(e.target.value)}
-                                                        />
-                                                        <Input
-                                                            label="Address"
-                                                            value={address}
-                                                            placeholder={'Address'}
-                                                            onChange={(e) => setAddress(e.target.value)}
-                                                        />
-                                                        <Input
-                                                            label="City"
-                                                            value={city}
-                                                            placeholder={'City'}
-                                                            onChange={(e) => setCity(e.target.value)}
-                                                        />
-                                                        <Input
-                                                            label="Role"
-                                                            value={role}
-                                                            placeholder={'Role'}
-                                                            onChange={(e) => setRole(e.target.value)}
-                                                        />
-                                                        <Input
-                                                            label="Faculty"
-                                                            type='select'
-                                                            value={facultyId}
-                                                            onChange={(e) => setFacultyId(e.target.value)}
-                                                            options={faculties}
-                                                            placeholder={'Select Faculty'}
-                                                        />
-                                                        <div className="form-group">
-                                                            <button type="submit" className="btn btn-light px-5" onClick={editUser} data-dismiss="modal" aria-label="Close" aria-hidden="true"><i className="icon-lock"></i> Update</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Delete Modal */}
-                                    <div className="modal fade" id="deleteModal" style={{ display: 'none', paddingRight: '17px' }} aria-modal="true">
-                                        <div className="modal-dialog">
-                                            <div className="modal-content">
-                                                <div className="modal-header">
-                                                    <h5 className="modal-title">Delete</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                </div>
-                                                <div className="modal-body">
-                                                    <p>Are you sure to delete? This action can't be restore</p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" className="btn btn-white" data-dismiss="modal"><i className="fa fa-times"></i> Close</button>
-                                                    <button type="button" className="btn btn-danger" onClick={_deleteUser} data-dismiss="modal" aria-label="Close" aria-hidden="true"><i className="fa fa-check-square-o"></i> Delete</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </Layout >
     )
 }

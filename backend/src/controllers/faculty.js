@@ -12,15 +12,22 @@ export const getFaculty = async (req, res) => {
 
 export const createFaculty = async (req, res) => {
     try {
-        console.log(req.body)
-        const newFaculty = new Faculty({
-            name: req.body.name
-        });
-        const faculty = await newFaculty.save()
-        res.status(201).json({ faculty })
+        const exist = await Faculty.findOne({ name: req.body.name })
+        if (exist) {
+            res.status(400).send({ message: 'Duplicate name' })
+        } else {
+            const newFaculty = new Faculty({
+                name: req.body.name
+            });
+            const faculty = await newFaculty.save()
+            if (faculty) {
+                res.status(201).json({ faculty })
+            } else {
+                res.status(500).send({ error: error.message })
+            }
+        }
     } catch (error) {
         console.log(error)
-        res.status(400).json({ error: error.message })
     }
 }
 
