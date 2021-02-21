@@ -1,8 +1,17 @@
 import mongoose from 'mongoose'
 
 const contributionSchema = new mongoose.Schema({
-    fileName: String,
-    filePath: String,
+    title: {
+        type: String,
+        required: true,
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    filesUpload: [
+        { filePath: String, fileName: String }
+    ],
     facultyId: {
         type: mongoose.Schema.ObjectId, ref: 'Faculty',
         required: true

@@ -1,45 +1,26 @@
 import React from 'react'
-import { Modal, Button } from 'react-bootstrap'
 
-const {
-    Title,
-    Header,
-    Body,
-    Footer
-} = Modal
 
 
 const NewModal = (props) => {
     return (
-        <Modal size={props.size} show={props.show} onHide={props.handleClose}>
-            <Header closeButton>
-                <Title>{props.modaltitle}</Title>
-            </Header>
-            <Body>
-                {props.children}
-            </Body>
-            <Footer>
-                <Footer>
-                    {
-                        props.buttons ? props.buttons.map((btn, index) =>
-                            <Button key={index} variant={btn.color} onClick={btn.onClick}>
-                                {btn.label}
-                            </Button>
-                        ) :
-                            <Button
-                                variant="primary"
-                                {...props}
-                                style={{ backgroundColor: '#333' }}
-                                className="btn-sm"
-                                onClick={props.onSubmit}
-                            >
-                                Save
-                        </Button>
-                    }
-
-                </Footer>
-            </Footer>
-        </Modal>
+        <div className="modal fade" id={props.id} style={{ display: 'none', paddingRight: '17px' }} aria-modal="true">
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title">{props.modaltitle}</h5>
+                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div className="modal-body">
+                        <form>
+                            {props.children}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     )
 }
 

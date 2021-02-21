@@ -24,12 +24,11 @@ const Login = () => {
         dispatch(login(user))
     }
     // set time out 
-    // if (auth.authenticating) {
-    //     return (
-    //         <Spinner className="spinner" animation="border" variant="primary" />
-    //     )
-
-    // }
+    if (auth.authenticating) {
+        return (
+            <Spinner className="spinner" animation="border" variant="primary" />
+        )
+    }
 
     if (auth.authenticate) {
         return <Redirect to={`/`} />
