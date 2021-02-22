@@ -3,29 +3,6 @@ import swal from 'sweetalert';
 
 const token = localStorage.getItem('token')
 
-
-export const getPublicContribution = () => {
-    return async dispatch => {
-        dispatch({ type: contributionConstants.GET_PUBLIC_CONTRIBUTION_REQUEST })
-        const res = await fetch('http://localhost:5000/api/contribution/get-public-contributions', {
-            method: 'GET',
-        })
-        const data = await res.json()
-        const { contributions, error } = data
-        if (res.status === 200) {
-            dispatch({
-                type: contributionConstants.GET_PUBLIC_CONTRIBUTION_SUCCESS,
-                payload: { contributions }
-            })
-        } else {
-            dispatch({
-                type: contributionConstants.GET_PUBLIC_CONTRIBUTION_FAILURE,
-                payload: { error }
-            })
-        }
-    }
-}
-
 export const getAllContributions = () => {
     return async dispatch => {
         dispatch({ type: contributionConstants.GET_ALL_CONTRIBUTION_REQUEST })
@@ -48,27 +25,59 @@ export const getAllContributions = () => {
     }
 }
 
-export const getContributionsByFaculty = () => {
+export const addContribution = (form) => {
     return async dispatch => {
-        dispatch({ type: contributionConstants.GET_CONTRIBUTION_BY_FACULTY_REQUEST })
-        const res = await fetch('http://localhost:5000/api/contribution/contributions-by-faculty', {
-            method: 'GET',
+        dispatch({ type: contributionConstants.ADD_CONTRIBUTION_REQUEST })
+        const res = await fetch('http://localhost:5000/api/contribution//upload-file', {
+            method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}`
-            }
+                "Authorization": `Bearer ${token}`
+            },
+            body: form
         })
         const data = await res.json()
-        const { contributions, error } = data
-        if (res.status === 200) {
+        const { contribution, error } = data
+        if (res.status === 201) {
             dispatch({
-                type: contributionConstants.GET_CONTRIBUTION_BY_FACULTY_SUCCESS,
-                payload: { contributions }
+                type: contributionConstants.ADD_CONTRIBUTION_SUCCESS,
+                payload: { contribution }
             })
+            return await swal("Congratulation", "You have been created successfully", "success")
         } else {
             dispatch({
-                type: contributionConstants.GET_CONTRIBUTION_BY_FACULTY_FAILURE,
+                type: contributionConstants.ADD_CONTRIBUTION_FAILURE,
                 payload: { error }
             })
+            return await swal("Failed", error, "error")
+        }
+    }
+}
+
+export const updateContribution = (params, form) => {
+    return async dispatch => {
+        dispatch({ type: contributionConstants.UPDATE_CONTRIBUTION_REQUEST })
+        const { id } = params
+        const res = await fetch(`http://localhost:5000/api/contribution/update-contribution/${id}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: form
+        })
+        const data = await res.json()
+        const { contribution, error } = data
+        if (res.status === 200) {
+            dispatch({
+                type: contributionConstants.UPDATE_CONTRIBUTION_SUCCESS,
+                payload: { contribution }
+            })
+            return await swal("Congratulation", "You have been updated successfully", "success")
+        } else {
+            dispatch({
+                type: contributionConstants.UPDATE_CONTRIBUTION_FAILURE,
+                payload: { error }
+            })
+            return await swal("Failed", error, "error")
         }
     }
 }
@@ -126,30 +135,52 @@ export const downloadFile = (params) => {
     }
 }
 
-export const addContribution = (form) => {
+export const addComment = (params, body) => {
     return async dispatch => {
-        dispatch({ type: contributionConstants.ADD_CONTRIBUTION_REQUEST })
-        const res = await fetch('http://localhost:5000/api/contribution//upload-file', {
+        dispatch({ type: contributionConstants.ADD_COMMENT_REQUEST })
+        const { contributionId } = params
+        const res = await fetch(`http://localhost:5000/api/contribution/${contributionId}/comment`, {
             method: 'POST',
             headers: {
-                "Authorization": `Bearer ${token}`
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
-            body: form
+            body: JSON.stringify(body)
         })
         const data = await res.json()
-        const { contribution, error } = data
+        const { comment, error } = data
         if (res.status === 201) {
             dispatch({
-                type: contributionConstants.ADD_CONTRIBUTION_SUCCESS,
-                payload: { contribution }
+                type: contributionConstants.ADD_COMMENT_SUCCESS,
+                payload: { comment }
             })
-            return await swal("Congratulation", "You have been created successfully", "success")
         } else {
             dispatch({
-                type: contributionConstants.ADD_CONTRIBUTION_FAILURE,
+                type: contributionConstants.ADD_COMMENT_FAILURE,
                 payload: { error }
             })
-            return await swal("Failed", error, "error")
+        }
+    }
+}
+
+export const listComment = () => {
+    return async dispatch => {
+        dispatch({ type: contributionConstants.GET_COMMENT_REQUEST })
+        const res = await fetch('http://localhost:5000/api/contribution/list-comment', {
+            method: 'GET',
+        })
+        const data = await res.json()
+        const { listComment, error } = data
+        if (res.status === 200) {
+            dispatch({
+                type: contributionConstants.GET_COMMENT_SUCCESS,
+                payload: { listComment }
+            })
+        } else {
+            dispatch({
+                type: contributionConstants.GET_ALL_CONTRIBUTION_FAILURE,
+                payload: { error }
+            })
         }
     }
 }

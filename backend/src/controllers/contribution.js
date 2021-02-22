@@ -1,56 +1,22 @@
 import Contribution from '../models/contribution.js'
 import User from '../models/user.js'
+import Comment from '../models/comment.js'
 import nodemailer from 'nodemailer'
 import AdmZip from 'adm-zip'
-
-
-
+import mongoose from 'mongoose'
 
 export const getAllContributions = async (req, res) => {
     try {
-        const contributions = await Contribution.find({ is_deleted: { $ne: true } })
+        const contributions = await Contribution.aggregate([
+            { $match: { is_deleted: { $ne: true } } },
+            { $lookup: { from: 'users', localField: 'author', foreignField: '_id', as: 'user_info' } },
+            { $unwind: "$user_info" },
+        ])
         res.status(200).json({ contributions })
     } catch (error) {
         console.log(error)
     }
 }
-
-export const getPublicContributions = async (req, res) => {
-    try {
-        const contributions = await Contribution.find({
-            is_public: true
-        })
-        res.status(200).json({
-            contributions
-        })
-    } catch (error) {
-        res.status(400).json({
-            error: error.message
-        })
-    }
-}
-
-export const getContributionsByFaculty = async (req, res) => {
-    try {
-        const {
-            _id
-        } = req.user
-        const coordinator = await User.findOne({
-            _id
-        })
-        const contributions = await Contribution.find({
-            facultyId: coordinator.facultyId,
-        })
-        res.status(200).json({
-            contributions
-        })
-    } catch (error) {
-        res.status(400).json({
-            error: error.message
-        })
-    }
-}
-
 
 export const uploadFile = async (req, res) => {
     try {
@@ -59,6 +25,7 @@ export const uploadFile = async (req, res) => {
         const sender = await User.findOne({
             _id: req.user._id
         })
+        console.log(sender.fullName)
         const filesUpload = files.map(({ filename, path }) => ({ fileName: filename, filePath: path }))
         const receiver = await User.findOne({
             facultyId: sender.facultyId,
@@ -66,13 +33,19 @@ export const uploadFile = async (req, res) => {
         })
 
         const newContribution = new Contribution({
+            author: req.user._id,
             title: req.body.title,
             description: req.body.description,
             filesUpload: filesUpload,
             facultyId: sender.facultyId
         })
 
-        const contribution = await newContribution.save()
+        const contri = await newContribution.save()
+        const contribution = await Contribution.aggregate([
+            { $match: { _id: contri._id } },
+            { $lookup: { from: 'users', localField: 'author', foreignField: '_id', as: 'user_info' } },
+            { $unwind: "$user_info" },
+        ])
 
         const {
             fullName
@@ -97,6 +70,61 @@ export const uploadFile = async (req, res) => {
         });
         res.status(201).json({
             contribution
+        })
+    } catch (error) {
+        res.status(400).json({
+            error: error.message
+        })
+    }
+}
+
+export const updateContribution = async (req, res) => {
+    try {
+        const { id } = req.params
+        const files = req.files
+        const filesUpload = files.map(({ filename, path }) => ({ fileName: filename, filePath: path }))
+        const contri = await Contribution.findOneAndUpdate({ _id: id }, {
+            $set: {
+                ...req.body,
+                filesUpload
+            }
+        }, { new: true })
+        const contribution = await Contribution.aggregate([
+            { $match: { _id: contri._id } },
+            { $lookup: { from: 'users', localField: 'author', foreignField: '_id', as: 'user_info' } },
+            { $unwind: "$user_info" },
+        ])
+        res.status(200).json({ contribution })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const publicContribution = async (req, res) => {
+    try {
+        let {
+            ids
+        } = req.body
+        await Contribution.updateMany({
+            _id: {
+                $in: ids
+            }
+        }, {
+            is_public: true
+        }, {
+            multi: true
+        });
+
+        ids = ids.map(function (el) { return mongoose.Types.ObjectId(el) })
+
+        const publishedContribution = await Contribution.aggregate([
+            { $match: { "_id": { "$in": ids } } },
+            { $lookup: { from: 'users', localField: 'author', foreignField: '_id', as: 'user_info' } },
+            { $unwind: "$user_info" },
+        ])
+
+        res.status(200).json({
+            publishedContribution, message: 'Public successfully'
         })
     } catch (error) {
         res.status(400).json({
@@ -135,6 +163,31 @@ export const downloadFile = async (req, res) => {
     }
 }
 
+export const listComment = async (req, res) => {
+    try {
+        const listComment = await Comment.find()
+        res.status(200).json({ listComment })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const addComment = async (req, res) => {
+    try {
+        const { contributionId } = req.params
+        const newComment = new Comment({
+            author: req.user._id,
+            contributionId: contributionId,
+            content: req.body.content
+        })
+
+        const comment = await newComment.save()
+        res.status(201).json({ comment })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const statistic = async (req, res) => {
     try {
         const contribution = await Contribution.aggregate([{
@@ -164,33 +217,6 @@ export const statistic = async (req, res) => {
         console.log(contribution)
         res.status(200).json({
             contribution
-        })
-    } catch (error) {
-        res.status(400).json({
-            error: error.message
-        })
-    }
-}
-
-export const publicContribution = async (req, res) => {
-    try {
-        const {
-            ids
-        } = req.body
-        await Contribution.updateMany({
-            _id: {
-                $in: ids
-            }
-        }, {
-            is_public: true
-        }, {
-            multi: true
-        });
-
-        const publishedContribution = await Contribution.find({ _id: { $in: ids } })
-
-        res.status(200).json({
-            publishedContribution, message: 'Public successfully'
         })
     } catch (error) {
         res.status(400).json({

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { isUserLoggedIn } from './actions';
-import { getAllContributions, getPublicContribution, getContributionsByFaculty } from './actions/contribution.action';
+import { getAllContributions, listComment } from './actions/contribution.action';
 import { PrivateRoute } from './components/HOC/PrivateRoute';
 import Contribution from './containers/Contribution';
 import Home from './containers/Home';
@@ -16,11 +16,11 @@ function App() {
   useEffect(() => {
     if (!auth.authenticate) {
       dispatch(isUserLoggedIn())
+    } else {
+      dispatch(getAllContributions())
+      dispatch(listComment())
     }
-    dispatch(getPublicContribution())
-    dispatch(getAllContributions())
-    dispatch(getContributionsByFaculty())
-  }, [])
+  }, [dispatch, auth.authenticate])
 
   return (
 

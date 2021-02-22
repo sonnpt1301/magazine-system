@@ -16,7 +16,14 @@ const contributionSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId, ref: 'Faculty',
         required: true
     },
+    author: {
+        type: mongoose.Schema.ObjectId, ref: 'User'
+    },
     is_public: {
+        type: Boolean,
+        default: false
+    },
+    is_deleted: {
         type: Boolean,
         default: false
     }

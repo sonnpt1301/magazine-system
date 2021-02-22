@@ -46,6 +46,7 @@ const Login = () => {
                                 <label for="exampleInputUsername" class="sr-only">Username</label>
                                 <div class="position-relative has-icon-right">
                                     <input type="text" id="exampleInputUsername" class="form-control input-shadow" placeholder="Enter Username"
+                                        defaultValue={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                     />
                                     <div class="form-control-position">
@@ -57,6 +58,7 @@ const Login = () => {
                                 <label for="exampleInputPassword" class="sr-only">Password</label>
                                 <div class="position-relative has-icon-right">
                                     <input type="password" id="exampleInputPassword" class="form-control input-shadow" placeholder="Enter Password"
+                                        defaultValue={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                     />
                                     <div class="form-control-position">

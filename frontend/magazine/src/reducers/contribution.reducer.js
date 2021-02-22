@@ -3,40 +3,18 @@ import { contributionConstants } from '../actions/constants'
 /* eslint-disable import/no-anonymous-default-export */
 const initState = {
     allContributions: [],
-    publicContributions: [],
-    contributionByFaculties: [],
+    comments: [],
     loading: false,
     error: null
 }
 
 let newContribution
+let updateContribution
 let allContribution
-let publishedContribution
-let contributionByFaculty
+let newComment
 
 export default (state = initState, action) => {
     switch (action.type) {
-        // GET_PUBLIC_CONTRIBUTION
-        case contributionConstants.GET_PUBLIC_CONTRIBUTION_REQUEST:
-            state = {
-                ...state,
-                loading: true
-            }
-            break;
-        case contributionConstants.GET_PUBLIC_CONTRIBUTION_SUCCESS:
-            state = {
-                ...state,
-                publicContributions: action.payload.contributions,
-                loading: true
-            }
-            break;
-        case contributionConstants.GET_PUBLIC_CONTRIBUTION_FAILURE:
-            state = {
-                ...state,
-                loading: false,
-                error: action.payload.error
-            }
-            break;
         // GET_ALL_CONTRIBUTION
         case contributionConstants.GET_ALL_CONTRIBUTION_REQUEST:
             state = {
@@ -58,27 +36,6 @@ export default (state = initState, action) => {
                 error: action.payload.error
             }
             break;
-        // GET_CONTRIBUTION_BY_FACULTY
-        case contributionConstants.GET_CONTRIBUTION_BY_FACULTY_REQUEST:
-            state = {
-                ...state,
-                loading: true
-            }
-            break;
-        case contributionConstants.GET_CONTRIBUTION_BY_FACULTY_SUCCESS:
-            state = {
-                ...state,
-                contributionByFaculties: action.payload.contributions,
-                loading: true
-            }
-            break;
-        case contributionConstants.GET_CONTRIBUTION_BY_FACULTY_FAILURE:
-            state = {
-                ...state,
-                loading: false,
-                error: action.payload.error
-            }
-            break;
 
         // ADD_CONTRIBUTION
         case contributionConstants.ADD_CONTRIBUTION_REQUEST:
@@ -89,7 +46,7 @@ export default (state = initState, action) => {
             break;
         case contributionConstants.ADD_CONTRIBUTION_SUCCESS:
             newContribution = [...state.allContributions]
-            newContribution.push(action.payload.contribution)
+            newContribution.push(action.payload.contribution[0])
             state = {
                 ...state,
                 allContributions: newContribution,
@@ -97,6 +54,31 @@ export default (state = initState, action) => {
             }
             break;
         case contributionConstants.ADD_CONTRIBUTION_FAILURE:
+            state = {
+                ...state,
+                loading: false,
+                error: action.payload.error
+            }
+            break;
+
+        //UPDATE_CONTRIBUTION
+        case contributionConstants.UPDATE_CONTRIBUTION_REQUEST:
+            state = {
+                ...state,
+                loading: true
+            }
+            break;
+        case contributionConstants.UPDATE_CONTRIBUTION_SUCCESS:
+            updateContribution = [...state.allContributions]
+            const indexUpdatedContribution = updateContribution.findIndex(contr => contr._id === action.payload.contribution[0]._id)
+            updateContribution[indexUpdatedContribution] = action.payload.contribution[0]
+            state = {
+                ...state,
+                allContributions: updateContribution,
+                loading: false
+            }
+            break;
+        case contributionConstants.UPDATE_CONTRIBUTION_FAILURE:
             state = {
                 ...state,
                 loading: false,
@@ -115,22 +97,57 @@ export default (state = initState, action) => {
             allContribution = [...state.allContributions]
             const updatedContribution = allContribution.findIndex(x => x._id === action.payload.publishedContribution[0]._id)
             allContribution[updatedContribution] = action.payload.publishedContribution[0]
-
-            publishedContribution = [...state.publicContributions]
-            publishedContribution.push(action.payload.publishedContribution[0])
-            
-            contributionByFaculty = [...state.contributionByFaculties]
-            const updatedContributionByFaculty = contributionByFaculty.findIndex(x => x._id === action.payload.publishedContribution[0]._id)
-            contributionByFaculty[updatedContributionByFaculty] = action.payload.publishedContribution[0]
             state = {
                 ...state,
                 allContributions: allContribution,
-                publicContributions: publishedContribution,
-                contributionByFaculties: contributionByFaculty,
                 loading: false
             }
             break;
         case contributionConstants.PUBLISH_CONTRIBUTION_FAILURE:
+            state = {
+                ...state,
+                loading: false,
+                error: action.payload.error
+            }
+            break;
+
+        // GET_COMMENT
+        case contributionConstants.GET_COMMENT_REQUEST:
+            state = {
+                ...state,
+                loading: true
+            }
+            break; case contributionConstants.GET_COMMENT_SUCCESS:
+            state = {
+                ...state,
+                comments: action.payload.listComment,
+                loading: false
+            }
+            break;
+        case contributionConstants.GET_COMMENT_FAILURE:
+            state = {
+                ...state,
+                loading: false
+            }
+            break;
+
+        // ADD_COMMENT
+        case contributionConstants.ADD_COMMENT_REQUEST:
+            state = {
+                ...state,
+                loading: true
+            }
+            break;
+        case contributionConstants.ADD_COMMENT_SUCCESS:
+            newComment = [...state.comments]
+            newComment.push(action.payload.comment)
+            state = {
+                ...state,
+                comments: newComment,
+                loading: false
+            }
+            break;
+        case contributionConstants.ADD_COMMENT_FAILURE:
             state = {
                 ...state,
                 loading: false,

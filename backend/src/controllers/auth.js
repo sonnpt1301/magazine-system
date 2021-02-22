@@ -43,7 +43,7 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: 'Authentication failed. User not found.' })
         } else {
             if (user.comparePassword(req.body.password)) {
-                const token = jwt.sign({ _id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '365d' })
+                const token = jwt.sign({ _id: user._id, role: user.role, fullName: user.fullName }, process.env.JWT_SECRET, { expiresIn: '365d' })
                 res.status(200).json({
                     token,
                     user

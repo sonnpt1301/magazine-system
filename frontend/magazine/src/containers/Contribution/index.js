@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addContribution, downloadFile, publishContribution } from '../../actions/contribution.action'
+import { addComment, addContribution, downloadFile, publishContribution, updateContribution } from '../../actions/contribution.action'
 import Layout from '../../components/Layout'
 import Modal from '../../components/UI/Modal'
 const Contribution = () => {
@@ -9,13 +9,15 @@ const Contribution = () => {
     const { user } = auth
     const contribution = useSelector(state => state.contribution)
     const dispatch = useDispatch()
+    const [author, setAuthor] = useState('')
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [fileUpload, setFileUpload] = useState([])
-    const [publicContribution, setPublicContribution] = useState(contribution.publicContributions)
+    const [updateFileUpload, setUpdateFileUpload] = useState([])
     const [allContribution, setAllContribution] = useState(contribution.allContributions)
-    const [contributionByFaculty, setContributionByFaculty] = useState(contribution.contributionByFaculties)
+    const [comment, setComment] = useState(contribution.comments)
     const [contributionId, setContributionId] = useState('')
+    const [content, setContent] = useState('')
 
 
     const handleUploadFile = (e) => {
@@ -27,24 +29,42 @@ const Contribution = () => {
             )
         }
     }
+    const handleUpdateUploadFile = (e) => {
+        let file = e.target.files
+        for (let i = 0; i < file.length; i++) {
+            updateFileUpload.push(file[i])
+            setUpdateFileUpload(
+                updateFileUpload
+            )
+        }
+    }
 
-    const uploadFile = (e) => {
-        e.preventDefault()
+
+    const uploadFile = () => {
         const form = new FormData()
         form.append('title', title)
         form.append('description', description)
         for (let file of fileUpload) {
             form.append('filesUpload', file)
         }
-        dispatch(addContribution(form)).then(() => {
-            setTitle('')
-            setDescription('')
-            setFileUpload([])
-        })
+        dispatch(addContribution(form))
+    }
+
+    const _updateContribution = (id) => {
+        const form = new FormData()
+        const params = { id }
+        console.log(params)
+        form.append('title', title)
+        form.append('description', description)
+        for (let file of updateFileUpload) {
+            form.append('filesUpload', file)
+        }
+        dispatch(updateContribution(params, form))
     }
 
     const handleShowDetailModal = (id) => {
-        const contribution = contributionByFaculty.find(x => x._id === id)
+        const contribution = allContribution.find(x => x._id === id)
+        setAuthor(contribution.user_info.lastName)
         setTitle(contribution.title)
         setDescription(contribution.description)
         setFileUpload(contribution.filesUpload)
@@ -62,16 +82,21 @@ const Contribution = () => {
         const fileId = file._id
         console.log(fileId)
         const params = { fileName, contributionId, fileId }
-        // console.log(params)
         dispatch(downloadFile(params))
+    }
+
+    const _addComment = (id) => {
+        const params = { contributionId: id }
+        const body = { content }
+        dispatch(addComment(params, body))
+
     }
 
 
     useEffect(() => {
-        setPublicContribution(contribution.publicContributions)
         setAllContribution(contribution.allContributions)
-        setContributionByFaculty(contribution.contributionByFaculties)
-    }, [contribution.publicContributions, contribution.allContributions, contribution.contributionByFaculties])
+        setComment(contribution.comments)
+    }, [contribution.allContributions, contribution.comments])
 
 
 
@@ -112,6 +137,7 @@ const Contribution = () => {
                                                         <input type="file" className="form-control" name={fileUpload} multiple="multiple" onChange={handleUploadFile} required />
                                                     </div>
                                                 </div>
+
                                                 <div className="form-footer">
                                                     <button type="submit" className="btn btn-danger"><i className="fa fa-times"></i> CANCEL</button>
                                                     <button type="submit" className="btn btn-success" onClick={uploadFile}><i className="fa fa-check-square-o"></i> Upload</button>
@@ -123,22 +149,95 @@ const Contribution = () => {
                             </div>
 
                             {/* List Contribution */}
-                            <div class="row">
-                                {
-                                    publicContribution.map((x) => (
-                                        <div class="col-12 col-lg-3">
-                                            <div class="card">
-                                                <img src="https://via.placeholder.com/800x500" class="card-img-top" alt="Card image cap" />
-                                                <div class="card-body">
-                                                    <h4 class="card-title">{x.title}</h4>
-                                                    <p>{x.description}</p>
-                                                    <hr />
-                                                    <a href="javascript:void();" class="btn btn-light btn-sm text-white"><i class="fa fa-star mr-1"></i> Download</a>
-                                                </div>
+                            <div className="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header text-uppercase">Contributions</div>
+                                        <div class="card-body">
+                                            {
+                                                allContribution.filter((contr => contr.author === user._id && contr.facultyId === contr.user_info.facultyId)).map(contr =>
+                                                (
+                                                    <ul class="list-unstyled">
+                                                        <li class="media">
+                                                            <img class="mr-3 rounded" src="https://via.placeholder.com/110x110" alt="user avatar" />
+                                                            <div class="media-body">
+                                                                <h5 class="mt-0 mb-1">{contr.title}
+                                                                    <span>
+                                                                        <button data-toggle="modal" data-target="#detailModal" className="btn btn-light btn-sm waves-effect waves-light m-1 pull-right" onClick={(e) => { handleShowDetailModal(contr._id) }}><i className="fa fa-edit"></i></button>
+                                                                    </span>
+                                                                </h5>
+                                                                <p>{contr.description}</p>
+                                                                {
+                                                                    contr.is_public ?
+                                                                        <span className="badge badge-success shadow-success m-1">Published</span> :
+                                                                        <span className="badge badge-light shadow-light m-1">Pending</span>
+                                                                }
+                                                                <hr />
+                                                                <div class="card-header">Comments</div>
+                                                                {
+                                                                    comment.filter(cmt => cmt.contributionId === contr._id).map(cmt => (
+                                                                        <div>
+                                                                            <div class="card-body">
+                                                                                <ul class="list-unstyled">
+                                                                                    <li class="media">
+                                                                                        <span class="user-profile"><img src="https://via.placeholder.com/110x110" class="img-circle user-profile" alt="user avatar" /></span>
+                                                                                        <div class="media-body" style={{ height: '10px' }}>
+                                                                                            <h5 class="mt-1 mb-1 ml-2">{user.lastName}</h5>
+                                                                                            <p style={{ paddingLeft: '7px' }}>{cmt.content}</p>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div>
+                                                                    ))
+                                                                }
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                )).reverse()
+                                            }
+
+                                        </div>
+                                    </div>
+
+                                    <Modal
+                                        id={'detailModal'}
+                                        modaltitle={'Contribution Detail'}
+                                    >
+                                        <div class="form-group row">
+                                            <label for="input-1" class="col-sm-3 col-form-label">Title</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" id="input-1" defaultValue={title} onChange={(e) => setTitle(e.target.value)} required />
                                             </div>
                                         </div>
-                                    )).reverse()
-                                }
+                                        <div class="form-group row">
+                                            <label for="input-9" class="col-sm-3 col-form-label">Description</label>
+                                            <div class="col-sm-9">
+                                                <textarea class="form-control" rows="4" id="input-9" defaultValue={description} onChange={(e) => setDescription(e.target.value)} required></textarea>
+                                            </div>
+                                        </div>
+                                        <div className="form-group row">
+                                            <label className="col-sm-3 col-form-label">Select File</label>
+                                            <div className="col-sm-9">
+                                                <input type="file" className="form-control" name={updateFileUpload} multiple="multiple" onChange={handleUpdateUploadFile} required />
+                                            </div>
+                                        </div>
+                                        {
+                                            fileUpload.map((file) => (
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <div style={{ cursor: 'pointer' }} onClick={() => { _downloadFile(file.fileName, file._id) }}>{file.fileName} <i aria-hidden="true" class="fa fa-download pull-right"></i> </div>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        }
+
+                                        <div className="form-group">
+                                            <button type="submit" className="btn btn-light px-5" onClick={() => { _updateContribution(contributionId) }} data-dismiss="modal" aria-label="Close" aria-hidden="true"><i className="icon-lock"></i> Update</button>
+                                        </div>
+                                    </Modal>
+
+                                </div>
                             </div>
 
                         </div>
@@ -163,27 +262,56 @@ const Contribution = () => {
                                     <div class="card-header text-uppercase">Contributions</div>
                                     <div class="card-body">
                                         {
-                                            contributionByFaculty.map((x) => (
+                                            allContribution.filter(x => x.facultyId === user.facultyId).map(x =>
+                                            (
                                                 <ul class="list-unstyled">
                                                     <li class="media">
                                                         <img class="mr-3 rounded" src="https://via.placeholder.com/110x110" alt="user avatar" />
                                                         <div class="media-body">
-                                                            <h5 class="mt-0 mb-1">{x.title}
+                                                            <h5 class="mt-0 mb-1">{x.user_info.lastName}
                                                                 <span>
                                                                     <button data-toggle="modal" data-target="#detailModal" className="btn btn-light btn-sm waves-effect waves-light m-1 pull-right" onClick={(e) => { handleShowDetailModal(x._id) }}><i className="fa fa-edit"></i></button>
                                                                 </span>
                                                             </h5>
-                                                            <p>{x.description}</p>
+                                                            <p>{x.title}</p>
                                                             {
                                                                 x.is_public ?
                                                                     <span className="badge badge-success shadow-success m-1">Published</span> :
                                                                     <span className="badge badge-light shadow-light m-1">Pending</span>
                                                             }
+                                                            <hr />
+                                                            <div class="card-header">Comments</div>
+                                                            {
+                                                                comment.filter(cmt => cmt.contributionId === x._id).map(cmt => (
+                                                                    <div>
+                                                                        <div class="card-body">
+                                                                            <ul class="list-unstyled">
+                                                                                <li class="media">
+                                                                                    <span class="user-profile"><img src="https://via.placeholder.com/110x110" class="img-circle user-profile" alt="user avatar" /></span>
+                                                                                    <div class="media-body" style={{ height: '10px' }}>
+                                                                                        <h5 class="mt-1 mb-1 ml-2">{user.lastName}</h5>
+                                                                                        <p style={{ paddingLeft: '7px' }}>{cmt.content}</p>
+                                                                                    </div>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                            <input type="text" class="form-control form-control-rounded mt-3"
+                                                                placeholder="Write comment here..."
+                                                                defaultValue={content}
+                                                                onChange={(e) => setContent(e.target.value)}
+                                                                onKeyPress={event => event.key === 'Enter' && _addComment(x._id)}
+                                                            >
+                                                            </input>
+
                                                         </div>
                                                     </li>
                                                 </ul>
                                             )).reverse()
                                         }
+
                                     </div>
                                 </div>
 
@@ -191,11 +319,12 @@ const Contribution = () => {
                                     id={'detailModal'}
                                     modaltitle={'Contribution Detail'}
                                 >
-                                    <h3 className="mb-0">{title}</h3>
+                                    <h4 className="mb-0">{author}</h4>
+                                    <h4 className="mb-0">{title}</h4>
                                     <br />
                                     <p>{description}</p>
 
-                                    
+
                                     {
                                         fileUpload.map((file) => (
                                             <div class="card">
@@ -220,6 +349,17 @@ const Contribution = () => {
             }
             {/* -------------------------------------------------------------------------------------------------------------------------------------------------------- */}
             {/* End Coordinator Display */}
+            {/* -------------------------------------------------------------------------------------------------------------------------------------------------------- */}
+
+
+
+
+            {/* -------------------------------------------------------------------------------------------------------------------------------------------------------- */}
+            {/* Start Manager Display */}
+            {/* -------------------------------------------------------------------------------------------------------------------------------------------------------- */}
+
+            {/* -------------------------------------------------------------------------------------------------------------------------------------------------------- */}
+            {/* End Manager Display */}
             {/* -------------------------------------------------------------------------------------------------------------------------------------------------------- */}
 
         </Layout >

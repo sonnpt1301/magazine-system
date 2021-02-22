@@ -2,7 +2,6 @@ import authRoutes from './auth.js'
 import facultyRoutes from './faculty.js'
 import contributionRoutes from './contribution.js'
 import userRoutes from './user.js'
-
 import { requireSignIn, checkRole } from '../common-middleware/index.js'
 
 
