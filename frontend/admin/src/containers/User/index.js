@@ -345,14 +345,14 @@ const User = (props) => {
                                                 <div className="modal-content">
                                                     <div className="modal-header">
                                                         <h5 className="modal-title">Delete</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">×</span>
                                                         </button>
                                                     </div>
                                                     <div className="modal-body">
                                                         <p>Are you sure to delete? This action can't be restore</p>
                                                     </div>
-                                                    <div class="modal-footer">
+                                                    <div className="modal-footer">
                                                         <button type="button" className="btn btn-white" data-dismiss="modal"><i className="fa fa-times"></i> Close</button>
                                                         <button type="button" className="btn btn-danger" onClick={_deleteUser} data-dismiss="modal" aria-label="Close" aria-hidden="true"><i className="fa fa-check-square-o"></i> Delete</button>
                                                     </div>

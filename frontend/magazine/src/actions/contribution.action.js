@@ -1,9 +1,9 @@
 import { contributionConstants } from './constants'
 import swal from 'sweetalert';
 
-const token = localStorage.getItem('token')
 
 export const getAllContributions = () => {
+    
     return async dispatch => {
         dispatch({ type: contributionConstants.GET_ALL_CONTRIBUTION_REQUEST })
         const res = await fetch('http://localhost:5000/api/contribution/get-all-contributions', {
@@ -27,6 +27,8 @@ export const getAllContributions = () => {
 
 export const addContribution = (form) => {
     return async dispatch => {
+        const token = localStorage.getItem('token')
+
         dispatch({ type: contributionConstants.ADD_CONTRIBUTION_REQUEST })
         const res = await fetch('http://localhost:5000/api/contribution//upload-file', {
             method: 'POST',
@@ -54,6 +56,8 @@ export const addContribution = (form) => {
 }
 
 export const updateContribution = (params, form) => {
+    const token = localStorage.getItem('token')
+
     return async dispatch => {
         dispatch({ type: contributionConstants.UPDATE_CONTRIBUTION_REQUEST })
         const { id } = params
@@ -83,6 +87,8 @@ export const updateContribution = (params, form) => {
 }
 
 export const publishContribution = (body) => {
+    const token = localStorage.getItem('token')
+
     return async dispatch => {
         dispatch({ type: contributionConstants.PUBLISH_CONTRIBUTION_REQUEST })
         const res = await fetch('http://localhost:5000/api/contribution/public-contribution', {
@@ -114,6 +120,8 @@ export const publishContribution = (body) => {
 }
 
 export const downloadFile = (params) => {
+    const token = localStorage.getItem('token')
+
     return async dispatch => {
         const { contributionId, fileId, fileName } = params
         const res = await fetch(`http://localhost:5000/api/contribution/${contributionId}/download/${fileId}`, {
@@ -136,6 +144,8 @@ export const downloadFile = (params) => {
 }
 
 export const addComment = (params, body) => {
+    const token = localStorage.getItem('token')
+
     return async dispatch => {
         dispatch({ type: contributionConstants.ADD_COMMENT_REQUEST })
         const { contributionId } = params

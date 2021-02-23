@@ -40,22 +40,21 @@ export const login = async (req, res) => {
     try {
         const user = await User.findOne({ email: req.body.email })
         if (!user) {
-            return res.status(400).json({ message: 'Authentication failed. User not found.' })
+            return res.status(401).json({ message: 'Authentication failed. User not found.' })
         } else {
             if (user.comparePassword(req.body.password)) {
-                const token = jwt.sign({ _id: user._id, role: user.role, fullName: user.fullName }, process.env.JWT_SECRET, { expiresIn: '365d' })
+                const token = jwt.sign({ _id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '365d' })
                 res.status(200).json({
                     token,
                     user
                 })
+                res.cookie('token', token, { expiresIn: '3d'})
             } else {
-                return res.status(400).json({ message: 'Invalid password' })
+                return res.status(401).json({ message: 'Invalid password' })
             }
         }
     } catch (error) {
         console.log(error)
-        return res.status(401).json({ message: error.message })
-
     }
 }
 

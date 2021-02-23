@@ -23,7 +23,7 @@ const Login = () => {
         console.log(user)
         dispatch(login(user))
     }
-    // set time out 
+
     if (auth.authenticating) {
         return (
             <Spinner className="spinner" animation="border" variant="primary" />
@@ -31,69 +31,47 @@ const Login = () => {
     }
 
     if (auth.authenticate) {
-        return <Redirect to={`/`} />
+        return (<Redirect to={`/`} />)
     }
+
 
     return (
         <div>
-            <div class="card card-authentication1 mx-auto my-5">
-                <div class="card-body">
-                    <div class="card-content p-2">
-                        <div class="text-center">
+            <div className="card card-authentication1 mx-auto my-5">
+                <div className="card-body">
+                    <div className="card-content p-2">
+                        <div className="text-center">
                             <img src="assets/images/logo-icon.png" alt="logo icon" />
                         </div>
-                        <div class="card-title text-uppercase text-center py-3">Sign In</div>
+                        <div className="card-title text-uppercase text-center py-3">Sign In</div>
                         <form onSubmit={userLogin}>
-                            <div class="form-group">
-                                <label for="exampleInputUsername" class="sr-only">Username</label>
-                                <div class="position-relative has-icon-right">
-                                    <input type="text" id="exampleInputUsername" class="form-control input-shadow" placeholder="Enter Username"
+                            <div className="form-group">
+                                <label htmlFor="exampleInputUsername" className="sr-only">Username</label>
+                                <div className="position-relative has-icon-right">
+                                    <input type="text" id="exampleInputUsername" className="form-control input-shadow" placeholder="Enter Username"
                                         onChange={(e) => setEmail(e.target.value)}
                                     />
-                                    <div class="form-control-position">
-                                        <i class="icon-user"></i>
+                                    <div className="form-control-position">
+                                        <i className="icon-user"></i>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="exampleInputPassword" class="sr-only">Password</label>
-                                <div class="position-relative has-icon-right">
-                                    <input type="password" id="exampleInputPassword" class="form-control input-shadow" placeholder="Enter Password"
+                            <div className="form-group">
+                                <label htmlFor="exampleInputPassword" className="sr-only">Password</label>
+                                <div className="position-relative has-icon-right">
+                                    <input type="password" id="exampleInputPassword" className="form-control input-shadow" placeholder="Enter Password"
                                         onChange={(e) => setPassword(e.target.value)}
                                     />
-                                    <div class="form-control-position">
-                                        <i class="icon-lock"></i>
+                                    <div className="form-control-position">
+                                        <i className="icon-lock"></i>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-6">
-                                    <div class="icheck-material-white">
-                                        <input type="checkbox" id="user-checkbox" checked="" />
-                                        <label for="user-checkbox">Remember me</label>
-                                    </div>
-                                </div>
-                                <div class="form-group col-6 text-right">
-                                    <a href="authentication-reset-password.html">Reset Password</a>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-light btn-block" onClick={() => { }}>Sign In</button>
-                            <div class="text-center mt-3">Sign In With</div>
-
-                            <div class="form-row mt-4">
-                                <div class="form-group mb-0 col-6">
-                                    <button type="button" class="btn btn-light btn-block"><i class="fa fa-facebook-square"></i> Facebook</button>
-                                </div>
-                                <div class="form-group mb-0 col-6 text-right">
-                                    <button type="button" class="btn btn-light btn-block"><i class="fa fa-twitter-square"></i> Twitter</button>
-                                </div>
-                            </div>
                         </form>
                     </div>
                 </div>
-                <div class="card-footer text-center py-3">
-                    <p class="text-warning mb-0">Do not have an account? <a href="authentication-signup.html"> Sign Up here</a></p>
-                </div>
+
             </div>
 
 

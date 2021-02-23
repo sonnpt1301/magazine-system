@@ -9,7 +9,6 @@ import { isUserLoggedIn } from './actions/auth.action';
 import { getUsers } from './actions/user.action';
 import './App.css';
 import { PrivateRoute } from './components/HOC/PrivateRoute';
-import LeftMenu from './components/LeftMenu';
 import Faculty from './containers/Faculty';
 import Home from './containers/Home';
 import Login from './containers/Login';
@@ -23,10 +22,11 @@ function App() {
   useEffect(() => {
     if (!auth.authenticate) {
       dispatch(isUserLoggedIn())
+    } else {
+      dispatch(getFaculty())
+      dispatch(getUsers())
     }
-    dispatch(getFaculty())
-    dispatch(getUsers())
-  }, [])
+  }, [dispatch, auth.authenticate])
 
   return (
     <Router>

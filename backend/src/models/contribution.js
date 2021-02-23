@@ -12,6 +12,9 @@ const contributionSchema = new mongoose.Schema({
     filesUpload: [
         { filePath: String, fileName: String }
     ],
+    contributionImage: [
+        { img: { type: String } }
+    ],
     facultyId: {
         type: mongoose.Schema.ObjectId, ref: 'Faculty',
         required: true

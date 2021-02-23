@@ -30,7 +30,7 @@ const Input = (props) => {
             input = <div class="form-group">
                 <label>{props.label}</label>
                 <input type={props.type} className="form-control" placeholder={props.placeholder}
-                    defaultValue={props.value}
+                    value={props.value}
                     onChange={props.onChange}
                     {...props}
                 />

@@ -5,6 +5,7 @@ const initState = {
     allContributions: [],
     comments: [],
     loading: false,
+    load: false,
     error: null
 }
 
@@ -26,7 +27,7 @@ export default (state = initState, action) => {
             state = {
                 ...state,
                 allContributions: action.payload.contributions,
-                loading: true
+                loading: false
             }
             break;
         case contributionConstants.GET_ALL_CONTRIBUTION_FAILURE:
@@ -41,7 +42,7 @@ export default (state = initState, action) => {
         case contributionConstants.ADD_CONTRIBUTION_REQUEST:
             state = {
                 ...state,
-                loading: true
+                load: true
             }
             break;
         case contributionConstants.ADD_CONTRIBUTION_SUCCESS:
@@ -50,13 +51,15 @@ export default (state = initState, action) => {
             state = {
                 ...state,
                 allContributions: newContribution,
-                loading: false
+                loading: false,
+                load: false
             }
             break;
         case contributionConstants.ADD_CONTRIBUTION_FAILURE:
             state = {
                 ...state,
                 loading: false,
+                load: false,
                 error: action.payload.error
             }
             break;

@@ -21,12 +21,13 @@ export const getAllContributions = async (req, res) => {
 export const uploadFile = async (req, res) => {
     try {
 
-        const files = req.files
+        const files = req.files['filesUpload']
+        const background = req.files['contributionImage']
         const sender = await User.findOne({
             _id: req.user._id
         })
-        console.log(sender.fullName)
         const filesUpload = files.map(({ filename, path }) => ({ fileName: filename, filePath: path }))
+        const bgUpload = background.map(({ filename }) => ({ img: filename }))
         const receiver = await User.findOne({
             facultyId: sender.facultyId,
             role: 'coordinator'
@@ -37,6 +38,7 @@ export const uploadFile = async (req, res) => {
             title: req.body.title,
             description: req.body.description,
             filesUpload: filesUpload,
+            contributionImage: bgUpload,
             facultyId: sender.facultyId
         })
 

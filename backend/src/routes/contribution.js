@@ -9,9 +9,9 @@ router.post('/update-contribution/:id', upload.array('filesUpload'), requireSign
 router.get('/list-comment', listComment)
 router.post('/:contributionId/comment', requireSignIn, addComment)
 router.get('/get-all-contributions', getAllContributions)
-router.post('/upload-file', upload.array('filesUpload'), requireSignIn, checkRole('student'), uploadFile)
-router.get('/:contributionId/download/:id', requireSignIn, downloadFile)
-router.post('/public-contribution', publicContribution)
+router.post('/upload-file', upload.fields([{ name: 'filesUpload' }, { name: 'contributionImage' }]), requireSignIn, checkRole('student'), uploadFile)
+router.get('/:contributionId/download/:id', downloadFile)
+router.post('/public-contribution', requireSignIn, checkRole('coordinator'), publicContribution)
 router.get('/statistic', statistic)
 
 export default router

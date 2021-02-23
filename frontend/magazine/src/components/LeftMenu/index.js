@@ -20,7 +20,7 @@ const LeftMenu = () => {
         <div>
             <div id="sidebar-wrapper" data-simplebar="init" data-simplebar-auto-hide="true" className="active">
                 <div className="brand-logo">
-                    <a href="index.html">
+                    <a href="/">
                         <img src="assets/images/logo-icon.png" className="logo-icon" alt="logo icon" />
                         <h5 className="logo-text">Magazine</h5></a>
                 </div>

@@ -1,12 +1,11 @@
 import { facultyConstants } from './constants';
-import axios from '../helper/axios'
 import swal from 'sweetalert';
 
 
-const token = localStorage.getItem('token')
 
 export const getFaculty = () => {
     return async dispatch => {
+        const token = localStorage.getItem('token')
         dispatch({ type: facultyConstants.GET_FACULTY_REQUEST })
         const res = await fetch('http://localhost:5000/api/faculty/getFaculty', {
             method: 'GET',
@@ -33,6 +32,8 @@ export const getFaculty = () => {
 
 export const addFaculty = (body) => {
     return async dispatch => {
+        const token = localStorage.getItem('token')
+
         dispatch({ type: facultyConstants.ADD_FACULTY_REQUEST })
         const res = await fetch('http://localhost:5000/api/faculty/createFaculty', {
             method: 'POST',
@@ -64,6 +65,8 @@ export const addFaculty = (body) => {
 
 export const updateFaculty = (params, body) => {
     return async dispatch => {
+        const token = localStorage.getItem('token')
+
         dispatch({ type: facultyConstants.UPDATE_FACULTY_REQUEST })
         const { facultyId } = params
         const res = await fetch(`http://localhost:5000/api/faculty/updateFaculty/${facultyId}`, {
@@ -93,6 +96,8 @@ export const updateFaculty = (params, body) => {
 }
 
 export const deleteFaculty = (params) => {
+    const token = localStorage.getItem('token')
+
     return async dispatch => {
         dispatch({ type: facultyConstants.DELETE_FACULTY_REQUEST })
         const { facultyId } = params

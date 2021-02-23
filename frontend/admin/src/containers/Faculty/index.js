@@ -63,13 +63,13 @@ const Faculty = () => {
             <div className="content-wrapper">
                 <div className="container-fluid">
                     <div className="row">
-                        <div class="col-lg-12">
+                        <div className="col-lg-12">
                             <button type="button" className="btn btn-light waves-effect waves-light m-1" data-toggle="modal" data-target="#createModal">Create Faculty</button>
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Faculty</h5>
-                                    <div class="table-responsive">
-                                        <table class="table table-hover" style={{ textAlign: 'center' }}>
+                            <div className="card">
+                                <div className="card-body">
+                                    <h5 className="card-title">Faculty</h5>
+                                    <div className="table-responsive">
+                                        <table className="table table-hover" style={{ textAlign: 'center' }}>
                                             <thead>
                                                 <tr>
                                                     <th scope="col">Faculty</th>
@@ -82,8 +82,11 @@ const Faculty = () => {
                                                     faculties.map((faculty, index) => (
                                                         <tr key={index}>
                                                             <td>{faculty.name}</td>
-                                                            <td><button data-toggle="modal" data-target="#updateModal" className="btn btn-light btn-sm waves-effect waves-light m-1" onClick={(e) => handleShowUpdateModal(e, faculty._id)}><i className="fa fa-edit"></i></button>
-                                                                <button data-toggle="modal" data-target="#deleteModal" className="btn btn-light btn-sm waves-effect waves-light m-1" onClick={(e) => handleShowDeleteModal(e, faculty._id)}><i className="fa fa-trash-o"></i></button>
+                                                            <td>
+                                                                <button data-toggle="modal" data-target="#updateModal" className="btn btn-light btn-sm waves-effect waves-light m-1"
+                                                                    onClick={(e) => handleShowUpdateModal(e, faculty._id)}><i className="fa fa-edit"></i></button>
+                                                                <button data-toggle="modal" data-target="#deleteModal" className="btn btn-light btn-sm waves-effect waves-light m-1"
+                                                                    onClick={(e) => handleShowDeleteModal(e, faculty._id)}><i className="fa fa-trash-o"></i></button>
                                                             </td>
                                                         </tr>
                                                     ))
@@ -124,21 +127,21 @@ const Faculty = () => {
                                         </Modal>
 
                                         {/* Delete Modal */}
-                                        <div class="modal fade" id="deleteModal" style={{ display: 'none', paddingRight: '17px' }} aria-modal="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Delete</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <div className="modal fade" id="deleteModal" style={{ display: 'none', paddingRight: '17px' }} aria-modal="true">
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title">Delete</h5>
+                                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">×</span>
                                                         </button>
                                                     </div>
-                                                    <div class="modal-body">
+                                                    <div className="modal-body">
                                                         <p>Are you sure to delete? This action can't be restore</p>
                                                     </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-white" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                                                        <button type="button" class="btn btn-danger" onClick={_deleteFaculty} data-dismiss="modal" aria-label="Close" aria-hidden="true"><i class="fa fa-check-square-o"></i> Delete</button>
+                                                    <div className="modal-footer">
+                                                        <button type="button" className="btn btn-white" data-dismiss="modal"><i className="fa fa-times"></i> Close</button>
+                                                        <button type="button" className="btn btn-danger" onClick={_deleteFaculty} data-dismiss="modal" aria-label="Close" aria-hidden="true"><i className="fa fa-check-square-o"></i> Delete</button>
                                                     </div>
                                                 </div>
                                             </div>

@@ -18,13 +18,12 @@ const Login = () => {
             email,
             password
         }
-        console.log(user)
         dispatch(login(user))
     }
     // set time out 
     if (auth.authenticating) {
         return (
-            <Spinner className="spinner" animation="border" variant="primary" />
+            <Spinner className="spinner" style={{ position: 'fixed', top: '50%', left: '50%' }} animation="border" variant="primary" />
         )
     }
 
@@ -66,37 +65,11 @@ const Login = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group col-6">
-                                    <div class="icheck-material-white">
-                                        <input type="checkbox" id="user-checkbox" checked="" />
-                                        <label for="user-checkbox">Remember me</label>
-                                    </div>
-                                </div>
-                                <div class="form-group col-6 text-right">
-                                    <a href="authentication-reset-password.html">Reset Password</a>
-                                </div>
-                            </div>
                             <button type="submit" class="btn btn-light btn-block" onClick={() => { }}>Sign In</button>
-                            <div class="text-center mt-3">Sign In With</div>
-
-                            <div class="form-row mt-4">
-                                <div class="form-group mb-0 col-6">
-                                    <button type="button" class="btn btn-light btn-block"><i class="fa fa-facebook-square"></i> Facebook</button>
-                                </div>
-                                <div class="form-group mb-0 col-6 text-right">
-                                    <button type="button" class="btn btn-light btn-block"><i class="fa fa-twitter-square"></i> Twitter</button>
-                                </div>
-                            </div>
                         </form>
                     </div>
                 </div>
-                <div class="card-footer text-center py-3">
-                    <p class="text-warning mb-0">Do not have an account? <a href="authentication-signup.html"> Sign Up here</a></p>
-                </div>
             </div>
-
-
         </div>
     )
 }

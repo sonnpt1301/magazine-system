@@ -9,7 +9,7 @@ const route = (app) => {
     app.use('/api/auth', authRoutes)
     app.use('/api/faculty', requireSignIn, checkRole('admin'), facultyRoutes)
     app.use('/api/contribution', contributionRoutes)
-    app.use('/api/user', userRoutes)
+    app.use('/api/user', requireSignIn, checkRole('admin'), userRoutes)
 }
 
 export default route
