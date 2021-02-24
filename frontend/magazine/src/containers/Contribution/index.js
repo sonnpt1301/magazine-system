@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { Spinner } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
+import swal from 'sweetalert'
 import { addComment, addContribution, downloadFile, publishContribution, updateContribution } from '../../actions/contribution.action'
 import Layout from '../../components/Layout'
+import Input from '../../components/UI/Input'
 import Modal from '../../components/UI/Modal'
 import { generatePublicUrl } from '../../urlConfig'
+import moment from 'moment'
 const Contribution = () => {
 
     const auth = useSelector(state => state.auth)
     const { user } = auth
     const contribution = useSelector(state => state.contribution)
     const dispatch = useDispatch()
-    const [author, setAuthor] = useState('')
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [fileUpload, setFileUpload] = useState([])
@@ -23,8 +25,9 @@ const Contribution = () => {
     const [allContribution, setAllContribution] = useState(contribution.allContributions)
     const [comment, setComment] = useState(contribution.comments)
     const [contributionId, setContributionId] = useState('')
-    const [content, setContent] = useState('')
+    const [content, setContent] = useState([])
     const [checkbox, setCheckbox] = useState(false)
+
 
     const handleUploadFile = (e) => {
         let file = e.target.files
@@ -58,6 +61,9 @@ const Contribution = () => {
 
     const _uploadFile = (e) => {
         e.preventDefault()
+        if (title1 === '' || description1 === '' || fileUpload1 === []) {
+            return swal('Oops!', 'Please fill the bank', 'warning')
+        }
         const form = new FormData()
         form.append('title', title1)
         form.append('description', description1)
@@ -89,34 +95,45 @@ const Contribution = () => {
 
     const handleShowDetailModal = (id) => {
         const contribution = allContribution.find(x => x._id === id)
-        setAuthor(contribution.user_info.lastName)
         setTitle(contribution.title)
         setDescription(contribution.description)
         setFileUpload(contribution.filesUpload)
         setContributionId(contribution._id)
     }
 
-    const _publishContribution = () => {
+    const _publishContribution = (contributionId) => {
         const body = { ids: [contributionId] }
         dispatch(publishContribution(body))
     }
 
-    const _downloadFile = (fileName, id) => {
-        const file = fileUpload.find(x => x._id === id)
-        const fileId = file._id
+    const _downloadFile = (fileName, contributionId, fileId) => {
         const params = { fileName, contributionId, fileId }
+        console.log(params)
         dispatch(downloadFile(params))
     }
 
-    const _addComment = (id) => {
+    const _addComment = (index, id) => {
         const params = { contributionId: id }
-        const body = { content }
-        dispatch(addComment(params, body)).then(() => setContent(''))
+        const body = { content: getCommentByIndex(index) }
+        dispatch(addComment(params, body))
+        setContent(content.map(cmt => cmt.id === index ? { id: index, value: '' } : cmt))
     }
 
     const handleCheckbox = () => {
         setCheckbox(!checkbox)
     }
+
+    const getCommentByIndex = (index) => content.find(({ id }) => id === index)?.value
+
+    const onChangeComment = (index, text) => {
+        const comment = getCommentByIndex(index)
+        if (comment) {
+            setContent(content.map(cmt => cmt.id === index ? { id: index, value: text } : cmt))
+        } else {
+            content.push({ id: index, value: text })
+        }
+    }
+
 
     useEffect(() => {
         setAllContribution(contribution.allContributions)
@@ -137,132 +154,158 @@ const Contribution = () => {
                     <div className="content-wrapper">
                         <div className="container-fluid">
                             <div className="row">
-                                <div className="col-lg-6">
-                                    <div className="card">
-                                        <div className="card-body">
-                                            <form id="personal-info">
-                                                <h4 className="form-header text-uppercase">
-                                                    <i className="fa fa-user-circle-o"></i>
-                                                Upload Contribution
-                                                </h4>
-                                                <div class="form-group row">
-                                                    <label for="input-1" class="col-sm-2 col-form-label">Title</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="input-1" value={title1} onChange={(e) => setTitle1(e.target.value)} required />
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label for="input-9" class="col-sm-2 col-form-label">Description</label>
-                                                    <div class="col-sm-10">
-                                                        <textarea class="form-control" rows="4" id="input-9" value={description1} onChange={(e) => setDescription1(e.target.value)} required></textarea>
-                                                    </div>
-                                                </div>
-                                                <div className="form-group row">
-                                                    <label className="col-sm-2 col-form-label">Select background</label>
-                                                    <div className="col-sm-10">
-                                                        <input type="file" className="form-control" name={backgroundContribution} multiple="multiple" onChange={handleUploadBg} required />
-                                                    </div>
-                                                </div>
-                                                <div className="form-group row">
-                                                    <label className="col-sm-2 col-form-label">Select File</label>
-                                                    <div className="col-sm-10">
-                                                        <input type="file" className="form-control" name={fileUpload1} multiple="multiple" onChange={handleUploadFile} required />
-                                                    </div>
-                                                </div>
-                                                <div class="icheck-material-white">
-                                                    <input type="checkbox" id="terms_and_conditions" onClick={handleCheckbox} />
-                                                    <label for="terms_and_conditions">I have read and agree to Terms and Conditions</label>
-                                                </div>
-                                                <div className="form-footer">
-                                                    <button type="submit" id="btn-upload" disabled={checkbox ? false : true} className="btn btn-success"
-                                                        onClick={_uploadFile}><i className="fa fa-check-square-o"></i> Upload</button>
-                                                </div>
-                                            </form>
+                                <div className="col-lg-12">
+                                    <button type="button" className="btn btn-light waves-effect waves-light m-1" data-toggle="modal" data-target="#uploadModal">Upload Contribution</button>
+                                    <Modal id='uploadModal' modaltitle='Upload contribution'>
+                                        <Input
+                                            label='Title'
+                                            value={title1}
+                                            onChange={(e) => setTitle1(e.target.value)}
+                                            required
+                                        />
+                                        <Input
+                                            type='textarea'
+                                            row='5'
+                                            label='Description'
+                                            value={description1}
+                                            onChange={(e) => setDescription1(e.target.value)}
+                                            required
+                                        />
+                                        <Input
+                                            label='Select background'
+                                            type='file'
+                                            name={backgroundContribution}
+                                            onChange={handleUploadBg}
+                                            multiple="multiple"
+                                            required
+                                        />
+                                        <Input
+                                            label='Select File'
+                                            type='file'
+                                            name={fileUpload1}
+                                            onChange={handleUploadFile}
+                                            multiple="multiple"
+                                            required
+                                        />
+                                        <div className="icheck-material-white">
+                                            <input type="checkbox" id="terms_and_conditions" onClick={handleCheckbox} />
+                                            <label for="terms_and_conditions">I have read and agree to Terms and Conditions</label>
                                         </div>
-                                    </div>
+                                        <div className="form-footer">
+                                            <button type="submit" id="btn-upload" disabled={checkbox ? false : true} data-dismiss="modal" aria-label="Close" aria-hidden="true" className="btn btn-success"
+                                                onClick={_uploadFile}><i className="fa fa-check-square-o"></i> Upload</button>
+                                        </div>
+                                    </Modal>
                                 </div>
                             </div>
 
                             {/* List Contribution */}
                             <div className="row">
-                                <div class="col-lg-12">
-                                    <div class="card">
-                                        <div class="card-header text-uppercase">Contributions</div>
-                                        <div class="card-body">
-                                            {
-                                                allContribution.filter((contr => contr.author === user._id && contr.facultyId === contr.user_info.facultyId)).map(contr =>
-                                                (
-                                                    <ul class="list-unstyled">
-                                                        <li class="media">
-                                                            <img class="mr-3 rounded" style={{ height: '185px', width: '200px' }} src={generatePublicUrl(contr.contributionImage[0].img)} alt="user avatar" />
-                                                            <div class="media-body">
-                                                                <h5 class="mt-0 mb-1">{contr.title}
+                                <div className="col-lg-12">
+                                    {
+                                        allContribution.filter((contr => contr.author === user._id && contr.facultyId === contr.user_info.facultyId)).map((contr, index) =>
+                                        (
+                                            <div className="card">
+                                                <div className="card-body">
+                                                    <img className="rounded" style={{ height: '100%', width: '100%' }} src={generatePublicUrl(contr.contributionImage[0].img)} alt="user avatar" />
+                                                    <ul className="list-unstyled" key={index}>
+                                                        <li className="media">
+                                                            <div className="media-body">
+                                                                <h5 className="mt-0 mb-0">{contr.title}
+                                                                    {
+                                                                        contr.is_public ?
+                                                                            <span className="badge badge-success shadow-success m-1">Published</span> :
+                                                                            <span className="badge badge-light shadow-light m-1">Pending</span>
+                                                                    }
                                                                     <span>
                                                                         <button data-toggle="modal" data-target="#detailModal" className="btn btn-light btn-sm waves-effect waves-light m-1 pull-right"
                                                                             onClick={(e) => handleShowDetailModal(contr._id)}><i className="fa fa-edit"></i>
                                                                         </button>
                                                                     </span>
                                                                 </h5>
+                                                                <small>
+                                                                    {
+                                                                        moment([moment('2021-02-23T04:09:00.620Z').format()]).fromNow()
+                                                                    }
+                                                                </small>
                                                                 <p>{contr.description}</p>
                                                                 {
-                                                                    contr.is_public ?
-                                                                        <span className="badge badge-success shadow-success m-1">Published</span> :
-                                                                        <span className="badge badge-light shadow-light m-1">Pending</span>
-                                                                }
-                                                                <hr />
-                                                                <div class="card-header">Comments</div>
-                                                                {
-                                                                    comment.filter(cmt => cmt.contributionId === contr._id).map(cmt => (
-                                                                        <div>
-                                                                            <div class="card-body">
-                                                                                <ul class="list-unstyled">
-                                                                                    <li class="media">
-                                                                                        <span class="user-profile"><img src="https://via.placeholder.com/110x110" class="img-circle user-profile" alt="user avatar" /></span>
-                                                                                        <div class="media-body" style={{ height: '10px' }}>
-                                                                                            <h5 class="mt-1 mb-1 ml-2">{user.lastName}</h5>
-                                                                                            <p style={{ paddingLeft: '7px' }}>{cmt.content}</p>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                </ul>
+                                                                    contr.filesUpload.map((file) => (
+                                                                        <div className="card">
+                                                                            <div className="card-body">
+                                                                                <div style={{ cursor: 'pointer' }} onClick={() => { _downloadFile(file.fileName, contr._id, file._id) }}>{file.fileName} <i aria-hidden="true" className="fa fa-download pull-right"></i> </div>
                                                                             </div>
                                                                         </div>
                                                                     ))
                                                                 }
+                                                                <hr />
+                                                                <div>Comments</div>
+                                                                <hr />
+                                                                <input type="text" className="form-control form-control-rounded mt-3"
+                                                                    placeholder="Write comment here..."
+                                                                    value={getCommentByIndex(index)}
+                                                                    onChange={(e) => onChangeComment(index, e.target.value)}
+                                                                    onKeyPress={event => event.key === 'Enter' && _addComment(index, contr._id)}
+                                                                >
+                                                                </input>
+                                                                {
+                                                                    comment.filter(cmt => cmt.contributionId === contr._id).map(cmt => (
+                                                                        <div>
+                                                                            <div className="user-profile"><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" /></div>
+                                                                            <span className="card">
+                                                                                <div className="card-body">
+                                                                                    <ul className="list-unstyled">
+                                                                                        <li className="media">
+                                                                                            <div className="media-body">
+                                                                                                <h5 className="mt-1 mb-1 ml-2">{cmt.user_info.lastName}</h5>
+                                                                                                <p style={{ paddingLeft: '7px' }}>{cmt.content}</p>
+                                                                                            </div>
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                </div>
+                                                                            </span>
+                                                                        </div>
+                                                                    )).reverse()
+                                                                }
                                                             </div>
                                                         </li>
                                                     </ul>
-                                                )).reverse()
-                                            }
-                                        </div>
-                                    </div>
-
+                                                </div>
+                                            </div>
+                                        )).reverse()
+                                    }
                                     <Modal
                                         id={'detailModal'}
                                         modaltitle={'Contribution Detail'}
                                     >
-                                        <div class="form-group row">
-                                            <label for="input-1" class="col-sm-3 col-form-label">Title</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="input-1" value={title} onChange={(e) => setTitle(e.target.value)} required />
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label for="input-9" class="col-sm-3 col-form-label">Description</label>
-                                            <div class="col-sm-9">
-                                                <textarea class="form-control" rows="4" id="input-9" value={description} onChange={(e) => setDescription(e.target.value)} required></textarea>
-                                            </div>
-                                        </div>
-                                        <div className="form-group row">
-                                            <label className="col-sm-3 col-form-label">Select File</label>
-                                            <div className="col-sm-9">
-                                                <input type="file" className="form-control" name={updateFileUpload} multiple="multiple" onChange={handleUpdateUploadFile} required />
-                                            </div>
-                                        </div>
+                                        <Input
+                                            label='Title'
+                                            value={title}
+                                            onChange={(e) => setTitle(e.target.value)}
+                                            required
+                                        />
+                                        <Input
+                                            type='textarea'
+                                            row='5'
+                                            label='Description'
+                                            value={description}
+                                            onChange={(e) => setDescription(e.target.value)}
+                                            required
+                                        />
+
+                                        <Input
+                                            label='Select File'
+                                            type='file'
+                                            name={updateFileUpload}
+                                            onChange={handleUpdateUploadFile}
+                                            multiple="multiple"
+                                            required
+                                        />
                                         {
                                             fileUpload.map((file) => (
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <div style={{ cursor: 'pointer' }} onClick={() => { _downloadFile(file.fileName, file._id) }}>{file.fileName} <i aria-hidden="true" class="fa fa-download pull-right"></i> </div>
+                                                <div className="card">
+                                                    <div className="card-body">
+                                                        <div style={{ cursor: 'pointer' }} onClick={() => { _downloadFile(file.fileName, contributionId, file._id) }}>{file.fileName} <i aria-hidden="true" className="fa fa-download pull-right"></i> </div>
                                                     </div>
                                                 </div>
                                             ))
@@ -292,82 +335,84 @@ const Contribution = () => {
                     <div className="content-wrapper">
                         <div className="container-fluid">
                             <div className="row">
-                                <div class="col-lg-12">
-                                    <div class="card">
-                                        <div class="card-header text-uppercase">Contributions</div>
-                                        <div class="card-body">
-                                            {
-                                                allContribution.filter(x => x.facultyId === user.facultyId).map(x =>
-                                                (
-                                                    <ul class="list-unstyled">
-                                                        <li class="media">
-                                                            <img class="mr-3 rounded" style={{ height: '185px', width: '200px' }} src={generatePublicUrl(x.contributionImage[0].img)} alt="user avatar" />
-                                                            <div class="media-body">
-                                                                <h5 class="mt-0 mb-1">{x.user_info.lastName}
-                                                                    <span>
-                                                                        <button data-toggle="modal" data-target="#detailModal" className="btn btn-light btn-sm waves-effect waves-light m-1 pull-right" onClick={(e) => { handleShowDetailModal(x._id) }}><i className="fa fa-edit"></i></button>
-                                                                    </span>
-                                                                </h5>
-                                                                <p>{x.title}</p>
+                                <div className="col-lg-12">
+                                    {
+                                        allContribution.filter(x => x.facultyId === user.facultyId).map((contr, index) =>
+                                        (
+                                            <div className="card" key={index}>
+                                                <div className="card-body" >
+                                                    <ul className="list-unstyled" >
+                                                        <div className="user-profile">
+                                                            <img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
+                                                            <span><h5 className="mt-0 mb-1">{contr.user_info.lastName}</h5></span>
+                                                        </div>
+
+                                                        <img className="rounded" style={{ height: '100%', width: '100%' }} src={generatePublicUrl(contr.contributionImage[0].img)} alt="user avatar" />
+                                                        <li className="media">
+                                                            <div className="media-body">
                                                                 {
-                                                                    x.is_public ?
-                                                                        <span className="badge badge-success shadow-success m-1">Published</span> :
-                                                                        <span className="badge badge-light shadow-light m-1">Pending</span>
+                                                                    contr.is_public === false ?
+                                                                        <span>
+                                                                            <button data-toggle="modal" data-target="#detailModal" className="btn btn-light btn-sm waves-effect waves-light m-1 pull-right"
+                                                                                onClick={(e) => { _publishContribution(contr._id) }}>Publish
+                                                                    </button>
+                                                                        </span> : null
                                                                 }
-                                                                <hr />
-                                                                <div class="card-header">Comments</div>
+
+                                                                <h4>{contr.title}
+                                                                    {
+                                                                        contr.is_public ?
+                                                                            <span className="badge badge-success shadow-success m-1">Published</span> :
+                                                                            <span className="badge badge-light shadow-light m-1">Pending</span>
+                                                                    }
+                                                                </h4>
+                                                                <p>{contr.description}</p>
                                                                 {
-                                                                    comment.filter(cmt => cmt.contributionId === x._id).map(cmt => (
-                                                                        <div>
-                                                                            <div class="card-body">
-                                                                                <ul class="list-unstyled">
-                                                                                    <li class="media">
-                                                                                        <span class="user-profile"><img src="https://via.placeholder.com/110x110" class="img-circle user-profile" alt="user avatar" /></span>
-                                                                                        <div class="media-body" style={{ height: '10px' }}>
-                                                                                            <h5 class="mt-1 mb-1 ml-2">{user.lastName}</h5>
-                                                                                            <p style={{ paddingLeft: '7px' }}>{cmt.content}</p>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                </ul>
+                                                                    contr.filesUpload.map((file) => (
+                                                                        <div className="card">
+                                                                            <div className="card-body">
+                                                                                <div style={{ cursor: 'pointer' }} onClick={() => { _downloadFile(file.fileName, contr._id, file._id) }}>{file.fileName} <i aria-hidden="true" className="fa fa-download pull-right"></i> </div>
                                                                             </div>
                                                                         </div>
                                                                     ))
                                                                 }
-                                                                <input type="text" class="form-control form-control-rounded mt-3"
+                                                                <hr />
+                                                                <div>Comments</div>
+                                                                <hr />
+                                                                <input type="text" className="form-control form-control-rounded mt-3"
                                                                     placeholder="Write comment here..."
-                                                                    value={content}
-                                                                    onChange={(e) => setContent(e.target.value)}
-                                                                    onKeyPress={event => event.key === 'Enter' && _addComment(x._id)}
+                                                                    value={getCommentByIndex(index)}
+                                                                    onChange={(e) => onChangeComment(index, e.target.value)}
+                                                                    onKeyPress={event => event.key === 'Enter' && _addComment(index, contr._id)}
                                                                 >
                                                                 </input>
+                                                                {
+                                                                    comment.filter(cmt => cmt.contributionId === contr._id).map(cmt => (
+                                                                        <>
+                                                                            <span className="user-profile"><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
+                                                                                <div className="card">
+                                                                                    <div className="card-body">
+                                                                                        <ul className="list-unstyled">
+                                                                                            <li className="media">
+                                                                                                <div className="media-body">
+                                                                                                    <h5>{cmt.user_info.lastName}</h5>
+                                                                                                    <p>{cmt.content}</p>
+                                                                                                </div>
+                                                                                            </li>
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </span>
+                                                                        </>
+                                                                    )).reverse()
+                                                                }
                                                             </div>
                                                         </li>
                                                     </ul>
-                                                )).reverse()
-                                            }
-                                        </div>
-                                    </div>
-                                    <Modal
-                                        id={'detailModal'}
-                                        modaltitle={'Contribution Detail'}
-                                    >
-                                        <h4 className="mb-0">{author}</h4>
-                                        <h4 className="mb-0">{title}</h4>
-                                        <br />
-                                        <p>{description}</p>
-                                        {
-                                            fileUpload.map((file) => (
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <div style={{ cursor: 'pointer' }} onClick={() => { _downloadFile(file.fileName, file._id) }}>{file.fileName} <i aria-hidden="true" class="fa fa-download pull-right"></i> </div>
-                                                    </div>
                                                 </div>
-                                            ))
-                                        }
-                                        <div className="form-group">
-                                            <button type="submit" className="btn btn-light px-5" onClick={_publishContribution} data-dismiss="modal" aria-label="Close" aria-hidden="true"><i className="icon-lock"></i> Publish</button>
-                                        </div>
-                                    </Modal>
+                                            </div>
+                                        )).reverse()
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -389,60 +434,50 @@ const Contribution = () => {
                     <div className="content-wrapper">
                         <div className="container-fluid">
                             <div className="row">
+                                <div className="col-lg-12">
 
-                                {
-                                    allContribution.filter(contr => contr.is_public === true).map(contr => (
-                                        <div class="col-lg-4">
-                                            <div class="card">
-                                                <div class="card-header text-uppercase">Contributions</div>
-                                                <div class="card-body">
-                                                    <ul class="list-unstyled">
-                                                        <li class="media">
-                                                            <img class="mr-3 rounded" style={{ height: '185px', width: '200px' }} src={generatePublicUrl(contr.contributionImage[0].img)} alt="user avatar" />
-                                                            <div class="media-body">
-                                                                <h5 class="mt-0 mb-1">{contr.user_info.lastName}
-                                                                    <span>
-                                                                        <button data-toggle="modal" data-target="#detailModal" className="btn btn-light btn-sm waves-effect waves-light m-1 pull-right"
-                                                                            onClick={(e) => { handleShowDetailModal(contr._id) }}><i className="fa fa-edit"></i></button>
-                                                                    </span>
-                                                                </h5>
-                                                                <p>{contr.title}</p>
+                                    {
+                                        allContribution.filter(contr => contr.is_public === true).map(contr => (
+                                            <div className="card">
+                                                <div className="card-body">
+                                                    <div className="user-profile">
+                                                        <img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
+                                                        <span><h5 className="mt-0 mb-0">{contr.user_info.lastName}</h5></span>
+                                                    </div>
+
+                                                    <img className="rounded" style={{ height: '100%', width: '100%' }} src={generatePublicUrl(contr.contributionImage[0].img)} alt="user avatar" />
+                                                    <ul className="list-unstyled">
+                                                        <li className="media">
+                                                            <div className="media-body">
+                                                                <h4>{contr.title}
+                                                                    {
+                                                                        contr.is_public ?
+                                                                            <span className="badge badge-success shadow-success m-1">Published</span> :
+                                                                            <span className="badge badge-light shadow-light m-1">Pending</span>
+                                                                    }
+                                                                </h4>
+                                                                <p>{contr.description}</p>
                                                                 {
-                                                                    contr.is_public ?
-                                                                        <span className="badge badge-success shadow-success m-1">Published</span> :
-                                                                        <span className="badge badge-light shadow-light m-1">Pending</span>
+                                                                    contr.filesUpload.map((file) => (
+                                                                        <div className="card">
+                                                                            <div className="card-body">
+                                                                                <div style={{ cursor: 'pointer' }} onClick={() => { _downloadFile(file.fileName, contr._id, file._id) }}>{file.fileName} <i aria-hidden="true" className="fa fa-download pull-right"></i> </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    ))
                                                                 }
                                                             </div>
                                                         </li>
                                                     </ul>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))
-                                }
+                                        ))
+                                    }
+                                </div>
 
                             </div>
                         </div>
-                        <Modal
-                            id={'detailModal'}
-                            modaltitle={'Contribution Detail'}
-                        >
-                            <h4 className="mb-0">{author}</h4>
-                            <h4 className="mb-0">{title}</h4>
-                            <br />
-                            <p>{description}</p>
-                            {
-                                fileUpload.map((file) => (
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div style={{ cursor: 'pointer' }} onClick={() => { _downloadFile(file.fileName, file._id) }}>{file.fileName} <i aria-hidden="true" class="fa fa-download pull-right"></i> </div>
-                                        </div>
-                                    </div>
-                                ))
-                            }
-                        </Modal>
                     </div>
-
                 )
             }
 
@@ -460,60 +495,49 @@ const Contribution = () => {
                     <div className="content-wrapper">
                         <div className="container-fluid">
                             <div className="row">
+                                <div className="col-lg-12">
+                                    {
+                                        allContribution.filter(contr => contr.is_public === true && contr.facultyId === user.facultyId).map(contr => (
+                                            <div className="card">
+                                                <div className="card-body">
+                                                    <div className="user-profile">
+                                                        <img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
+                                                        <span><h5 className="mt-0 mb-0">{contr.user_info.lastName}</h5></span>
+                                                    </div>
 
-                                {
-                                    allContribution.filter(contr => contr.is_public === true && contr.facultyId === user.facultyId).map(contr => (
-                                        <div class="col-lg-4">
-                                            <div class="card">
-                                                <div class="card-header text-uppercase">Contributions</div>
-                                                <div class="card-body">
-                                                    <ul class="list-unstyled">
-                                                        <li class="media">
-                                                            <img class="mr-3 rounded" style={{ height: '185px', width: '200px' }} src={generatePublicUrl(contr.contributionImage[0].img)} alt="user avatar" />
-                                                            <div class="media-body">
-                                                                <h5 class="mt-0 mb-1">{contr.user_info.lastName}
-                                                                    <span>
-                                                                        <button data-toggle="modal" data-target="#detailModal" className="btn btn-light btn-sm waves-effect waves-light m-1 pull-right"
-                                                                            onClick={(e) => { handleShowDetailModal(contr._id) }}><i className="fa fa-edit"></i></button>
-                                                                    </span>
-                                                                </h5>
-                                                                <p>{contr.title}</p>
+                                                    <img className="rounded" style={{ height: '100%', width: '100%' }} src={generatePublicUrl(contr.contributionImage[0].img)} alt="user avatar" />
+                                                    <ul className="list-unstyled">
+                                                        <li className="media">
+                                                            <div className="media-body">
+                                                                <h4>{contr.title}
+                                                                    {
+                                                                        contr.is_public ?
+                                                                            <span className="badge badge-success shadow-success m-1">Published</span> :
+                                                                            <span className="badge badge-light shadow-light m-1">Pending</span>
+                                                                    }
+                                                                </h4>
+                                                                <p>{contr.description}</p>
                                                                 {
-                                                                    contr.is_public ?
-                                                                        <span className="badge badge-success shadow-success m-1">Published</span> :
-                                                                        <span className="badge badge-light shadow-light m-1">Pending</span>
+                                                                    contr.filesUpload.map((file) => (
+                                                                        <div className="card">
+                                                                            <div className="card-body">
+                                                                                <div style={{ cursor: 'pointer' }} onClick={() => { _downloadFile(file.fileName, contr._id, file._id) }}>{file.fileName} <i aria-hidden="true" className="fa fa-download pull-right"></i> </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    ))
                                                                 }
                                                             </div>
                                                         </li>
                                                     </ul>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))
-                                }
+                                        ))
+                                    }
+                                </div>
 
                             </div>
                         </div>
-                        <Modal
-                            id={'detailModal'}
-                            modaltitle={'Contribution Detail'}
-                        >
-                            <h4 className="mb-0">{author}</h4>
-                            <h4 className="mb-0">{title}</h4>
-                            <br />
-                            <p>{description}</p>
-                            {
-                                fileUpload.map((file) => (
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div style={{ cursor: 'pointer' }} onClick={() => { _downloadFile(file.fileName, file._id) }}>{file.fileName} <i aria-hidden="true" class="fa fa-download pull-right"></i> </div>
-                                        </div>
-                                    </div>
-                                ))
-                            }
-                        </Modal>
                     </div>
-
                 )
             }
 

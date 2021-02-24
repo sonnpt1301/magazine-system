@@ -7,9 +7,10 @@ import './style.css'
 
 const Layout = (props) => {
     return (
-        <div>
-            <Header />
+        <div id="wrapper">
             <LeftMenu />
+            <Header />
+            <div className="clearfix"></div>
             {props.children}
             <Footer />
         </div>

@@ -143,7 +143,7 @@ export default (state = initState, action) => {
             break;
         case contributionConstants.ADD_COMMENT_SUCCESS:
             newComment = [...state.comments]
-            newComment.push(action.payload.comment)
+            newComment.push(action.payload.comment[0])
             state = {
                 ...state,
                 comments: newComment,

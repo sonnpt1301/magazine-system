@@ -5,6 +5,7 @@ import { addFaculty, updateFaculty } from '../../actions/faculty.action'
 import Layout from '../../components/Layout'
 import Input from '../../components/UI/Input'
 import Modal from '../../components/UI/Modal'
+import swal from 'sweetalert'
 
 const Faculty = () => {
 
@@ -27,6 +28,9 @@ const Faculty = () => {
     }
 
     const createFaculty = (e) => {
+        if (facultyName === '') {
+            return swal('Oops!!', 'Please fill the bank', 'warning')
+        }
         const body = {
             name: facultyName
         }

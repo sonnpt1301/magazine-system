@@ -38,12 +38,11 @@ const Header = () => {
 
 
     return (
-        <div>
             <header className="topbar-nav">
                 <nav className="navbar navbar-expand fixed-top">
                     <ul className="navbar-nav mr-auto align-items-center">
                         <li className="nav-item">
-                            <a className="nav-link toggle-menu" href="javascript:void();">
+                            <a className="nav-link toggle-menu" href="#" onClick={(e) => e.preventDefault()}>
                                 <i className="icon-menu menu-icon"></i>
                             </a>
                         </li>
@@ -201,8 +200,6 @@ const Header = () => {
                     </ul>
                 </nav>
             </header>
-
-        </div>
     )
 }
 

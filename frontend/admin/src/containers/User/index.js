@@ -5,6 +5,8 @@ import { addUser, deleteUser, updateUser } from '../../actions'
 import Layout from '../../components/Layout'
 import Input from '../../components/UI/Input'
 import Modal from '../../components/UI/Modal'
+import swal from 'sweetalert'
+
 
 const User = (props) => {
     const dispatch = useDispatch()
@@ -48,6 +50,9 @@ const User = (props) => {
     }
 
     const createUser = (e) => {
+        if(firstName === '' || lastName === '' || email === '' || password === '' || role === '' || facultyId === '') {
+            return swal('Oops!!', 'Please fill the bank', 'warning')
+        }
         const body = {
             firstName,
             lastName,

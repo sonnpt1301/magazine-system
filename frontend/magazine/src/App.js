@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { isUserLoggedIn } from './actions';
 import { getAllContributions, listComment } from './actions/contribution.action';
 import { PrivateRoute } from './components/HOC/PrivateRoute';

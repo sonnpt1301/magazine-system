@@ -24,7 +24,27 @@ const Input = (props) => {
                 </select>
             </Form.Group>
             break;
-        case 'text':
+        case 'textarea':
+            input = <div class="form-group">
+                <label>{props.label}</label>
+                <textarea className="form-control"
+                    rows={props.rows}
+                    value={props.value}
+                    onChange={props.onChange}
+                    {...props}
+                >
+                </textarea>
+            </div>
+            break;
+        case 'file':
+            input = <div class="form-group">
+                <label>{props.label}</label>
+                <input type={props.type} className="form-control" placeholder={props.placeholder}
+                    name={props.name}
+                    onChange={props.onChange}
+                    {...props}
+                />
+            </div>
             break;
         default:
             input = <div class="form-group">

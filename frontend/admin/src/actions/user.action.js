@@ -2,9 +2,10 @@ import { userConstants } from './constants'
 import axios from '../helper/axios'
 import swal from 'sweetalert';
 
-const token = localStorage.getItem('token')
 
 export const getUsers = () => {
+    const token = localStorage.getItem('token')
+
     return async dispatch => {
         dispatch({ type: userConstants.GET_USERS_REQUEST })
         const res = await fetch('http://localhost:5000/api/user/get-users', {
@@ -31,6 +32,8 @@ export const getUsers = () => {
 }
 
 export const addUser = (body) => {
+    const token = localStorage.getItem('token')
+
     return async dispatch => {
         dispatch({ type: userConstants.ADD_USER_REQUEST })
         const res = await fetch('http://localhost:5000/api/auth/register', {
@@ -60,6 +63,8 @@ export const addUser = (body) => {
 }
 
 export const updateUser = (params, body) => {
+    const token = localStorage.getItem('token')
+
     return async dispatch => {
         dispatch({ type: userConstants.UPDATE_USER_REQUEST })
         const { userId } = params
@@ -91,6 +96,8 @@ export const updateUser = (params, body) => {
 }
 
 export const deleteUser = (params) => {
+    const token = localStorage.getItem('token')
+
     return async dispatch => {
         dispatch({ type: userConstants.DELETE_USER_REQUEST })
         const { userId } = params

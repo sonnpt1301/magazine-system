@@ -167,7 +167,10 @@ export const downloadFile = async (req, res) => {
 
 export const listComment = async (req, res) => {
     try {
-        const listComment = await Comment.find()
+        const listComment = await Comment.aggregate([
+            { $lookup: { from: 'users', localField: 'author', foreignField: '_id', as: 'user_info' } },
+            { $unwind: "$user_info" },
+        ])
         res.status(200).json({ listComment })
     } catch (error) {
         console.log(error)
@@ -183,7 +186,12 @@ export const addComment = async (req, res) => {
             content: req.body.content
         })
 
-        const comment = await newComment.save()
+        const cmt = await newComment.save()
+        const comment = await Comment.aggregate([
+            { $match: { _id: cmt._id } },
+            { $lookup: { from: 'users', localField: 'author', foreignField: '_id', as: 'user_info' } },
+            { $unwind: "$user_info" },
+        ])
         res.status(201).json({ comment })
     } catch (error) {
         console.log(error)
