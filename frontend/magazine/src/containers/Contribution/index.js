@@ -108,7 +108,6 @@ const Contribution = () => {
 
     const _downloadFile = (fileName, contributionId, fileId) => {
         const params = { fileName, contributionId, fileId }
-        console.log(params)
         dispatch(downloadFile(params))
     }
 
@@ -116,21 +115,29 @@ const Contribution = () => {
         const params = { contributionId: id }
         const body = { content: getCommentByIndex(index) }
         dispatch(addComment(params, body))
-        setContent(content.map(cmt => cmt.id === index ? { id: index, value: '' } : cmt))
+
+        const newArr = content.filter(cmt => cmt.id !== index)
+        setContent(newArr)
     }
 
     const handleCheckbox = () => {
         setCheckbox(!checkbox)
     }
 
-    const getCommentByIndex = (index) => content.find(({ id }) => id === index)?.value
+    const getCommentByIndex = (index) => content.find(({ id }) => id === index)?.value || ''
 
-    const onChangeComment = (index, text) => {
+    const onChangeComment = (id, value) => {
+        const comment = getCommentByIndex(id)
+        const newComment = comment ? content.map(cmt => cmt.id === id ? { id, value } : cmt) : content.concat({ id, value })
+
+        setContent(newComment)
+    }
+
+    const onDeleteComment = (index) => {
         const comment = getCommentByIndex(index)
-        if (comment) {
-            setContent(content.map(cmt => cmt.id === index ? { id: index, value: text } : cmt))
-        } else {
-            content.push({ id: index, value: text })
+        if (!comment) {
+            const newArr = content.filter(cmt => cmt.id !== index)
+            setContent(newArr)
         }
     }
 
@@ -224,9 +231,7 @@ const Contribution = () => {
                                                                     </span>
                                                                 </h5>
                                                                 <small>
-                                                                    {
-                                                                        moment([moment('2021-02-23T04:09:00.620Z').format()]).fromNow()
-                                                                    }
+
                                                                 </small>
                                                                 <p>{contr.description}</p>
                                                                 {
@@ -239,31 +244,32 @@ const Contribution = () => {
                                                                     ))
                                                                 }
                                                                 <hr />
-                                                                <div>Comments</div>
-                                                                <hr />
                                                                 <input type="text" className="form-control form-control-rounded mt-3"
                                                                     placeholder="Write comment here..."
                                                                     value={getCommentByIndex(index)}
                                                                     onChange={(e) => onChangeComment(index, e.target.value)}
-                                                                    onKeyPress={event => event.key === 'Enter' && _addComment(index, contr._id)}
+                                                                    onKeyUp={event => event.key === 'Enter' ? _addComment(index, contr._id) : (event.key === 'Backspace' && onDeleteComment(index))}
                                                                 >
                                                                 </input>
+                                                                <hr />
                                                                 {
                                                                     comment.filter(cmt => cmt.contributionId === contr._id).map(cmt => (
                                                                         <div>
-                                                                            <div className="user-profile"><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" /></div>
-                                                                            <span className="card">
-                                                                                <div className="card-body">
-                                                                                    <ul className="list-unstyled">
-                                                                                        <li className="media">
-                                                                                            <div className="media-body">
-                                                                                                <h5 className="mt-1 mb-1 ml-2">{cmt.user_info.lastName}</h5>
-                                                                                                <p style={{ paddingLeft: '7px' }}>{cmt.content}</p>
-                                                                                            </div>
-                                                                                        </li>
-                                                                                    </ul>
+                                                                            <div className="user-profile" style={{ display: 'flex', marginTop: '10px' }}><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
+                                                                                <div className="card ml-1" style={{ borderRadius: '15px' }}>
+                                                                                    <div className="card-body" style={{ padding: '5px 24px 3px 28px' }}>
+                                                                                        <ul className="list-unstyled">
+                                                                                            <li className="media">
+                                                                                                <div className="media-body">
+                                                                                                    <h6>{cmt.user_info.lastName}</h6>
+                                                                                                    <p>{cmt.content}</p>
+                                                                                                    <small>{moment(cmt.createdAt).fromNow()}</small>
+                                                                                                </div>
+                                                                                            </li>
+                                                                                        </ul>
+                                                                                    </div>
                                                                                 </div>
-                                                                            </span>
+                                                                            </div>
                                                                         </div>
                                                                     )).reverse()
                                                                 }
@@ -342,9 +348,9 @@ const Contribution = () => {
                                             <div className="card" key={index}>
                                                 <div className="card-body" >
                                                     <ul className="list-unstyled" >
-                                                        <div className="user-profile">
+                                                        <div className="user-profile" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                                             <img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
-                                                            <span><h5 className="mt-0 mb-1">{contr.user_info.lastName}</h5></span>
+                                                            <span><h5 className="mt-0 mb-1 ml-1">{contr.user_info.lastName}</h5></span>
                                                         </div>
 
                                                         <img className="rounded" style={{ height: '100%', width: '100%' }} src={generatePublicUrl(contr.contributionImage[0].img)} alt="user avatar" />
@@ -377,33 +383,33 @@ const Contribution = () => {
                                                                     ))
                                                                 }
                                                                 <hr />
-                                                                <div>Comments</div>
-                                                                <hr />
                                                                 <input type="text" className="form-control form-control-rounded mt-3"
                                                                     placeholder="Write comment here..."
                                                                     value={getCommentByIndex(index)}
                                                                     onChange={(e) => onChangeComment(index, e.target.value)}
-                                                                    onKeyPress={event => event.key === 'Enter' && _addComment(index, contr._id)}
+                                                                    onKeyUp={event => event.key === 'Enter' ? _addComment(index, contr._id) : (event.key === 'Backspace' && onDeleteComment(index))}
                                                                 >
                                                                 </input>
+                                                                <hr />
                                                                 {
                                                                     comment.filter(cmt => cmt.contributionId === contr._id).map(cmt => (
-                                                                        <>
-                                                                            <span className="user-profile"><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
-                                                                                <div className="card">
-                                                                                    <div className="card-body">
+                                                                        <div>
+                                                                            <div className="user-profile" style={{ display: 'flex', marginTop: '10px' }}><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
+                                                                                <div className="card ml-1" style={{ borderRadius: '15px' }}>
+                                                                                    <div className="card-body" style={{ padding: '5px 24px 3px 28px' }}>
                                                                                         <ul className="list-unstyled">
                                                                                             <li className="media">
                                                                                                 <div className="media-body">
-                                                                                                    <h5>{cmt.user_info.lastName}</h5>
+                                                                                                    <h6>{cmt.user_info.lastName}</h6>
                                                                                                     <p>{cmt.content}</p>
+                                                                                                    <small>{moment(cmt.createdAt).fromNow()}</small>
                                                                                                 </div>
                                                                                             </li>
                                                                                         </ul>
                                                                                     </div>
                                                                                 </div>
-                                                                            </span>
-                                                                        </>
+                                                                            </div>
+                                                                        </div>
                                                                     )).reverse()
                                                                 }
                                                             </div>
