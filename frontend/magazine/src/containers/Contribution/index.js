@@ -230,9 +230,7 @@ const Contribution = () => {
                                                                         </button>
                                                                     </span>
                                                                 </h5>
-                                                                <small>
-
-                                                                </small>
+                                                                <small>{moment(contr.createdAt).fromNow()}</small>
                                                                 <p>{contr.description}</p>
                                                                 {
                                                                     contr.filesUpload.map((file) => (
@@ -341,7 +339,7 @@ const Contribution = () => {
                     <div className="content-wrapper">
                         <div className="container-fluid">
                             <div className="row">
-                                <div className="col-lg-12">
+                                <div className="col-lg-8">
                                     {
                                         allContribution.filter(x => x.facultyId === user.facultyId).map((contr, index) =>
                                         (
@@ -364,7 +362,6 @@ const Contribution = () => {
                                                                     </button>
                                                                         </span> : null
                                                                 }
-
                                                                 <h4>{contr.title}
                                                                     {
                                                                         contr.is_public ?
@@ -372,6 +369,7 @@ const Contribution = () => {
                                                                             <span className="badge badge-light shadow-light m-1">Pending</span>
                                                                     }
                                                                 </h4>
+                                                                <small>{moment(contr.createdAt).fromNow()}</small>
                                                                 <p>{contr.description}</p>
                                                                 {
                                                                     contr.filesUpload.map((file) => (
@@ -419,6 +417,50 @@ const Contribution = () => {
                                             </div>
                                         )).reverse()
                                     }
+                                </div>
+
+                                <div className="col-lg-4">
+                                    <div className="card">
+                                        <div className="card-body">
+                                            <h6 className="text-uppercase mb-0 text-center text-white">Due Date</h6>
+                                            <h4 className="text-uppercase text-center text-white">05/04/2021</h4>
+                                            <div className="media align-items-center mt-5">
+                                                <div className="w-circle-icon rounded-circle bg-light"><i className="zmdi zmdi-edit text-white"></i></div>
+                                                <div className="media-body ml-3">
+                                                    <h6 className="mb-0 text-white">Edit Alarm</h6>
+                                                    <p className="mb-0 extra-small-font text-white">Lorem ipsum dolor sit amet consectetur adipiscing elit</p>
+                                                </div>
+                                            </div>
+                                            <div className="media align-items-center mt-3">
+                                                <div className="w-circle-icon rounded-circle bg-light"><i className="zmdi zmdi-settings text-white"></i></div>
+                                                <div className="media-body ml-3">
+                                                    <h6 className="mb-0 text-white">Setting</h6>
+                                                    <p className="mb-0 extra-small-font text-white">Lorem ipsum dolor sit amet consectetur adipiscing elit</p>
+                                                </div>
+                                            </div>
+                                            <div className="media align-items-center mt-3 mb-5">
+                                                <div className="w-circle-icon rounded-circle bg-light"><i className="zmdi zmdi-delete text-white"></i></div>
+                                                <div className="media-body ml-3">
+                                                    <h6 className="mb-0 text-white">Delete Alarm</h6>
+                                                    <p className="mb-0 extra-small-font text-white">Lorem ipsum dolor sit amet consectetur adipiscing elit</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="card-footer bg-transparent">
+                                            <div className="row align-items-center">
+                                                <div className="col">
+                                                    <ul className="list-inline mb-0">
+                                                        <li className="list-inline-item"><i className="zmdi zmdi-home text-white"></i></li>
+                                                        <li className="list-inline-item"><i className="zmdi zmdi-settings text-white"></i></li>
+                                                        <li className="list-inline-item"><i className="zmdi zmdi-brightness-7 text-white"></i></li>
+                                                    </ul>
+                                                </div>
+                                                <div className="col">
+                                                    <div className="w-circle-icon rounded-circle bg-light float-right"><i className="zmdi zmdi-notifications-active text-white"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

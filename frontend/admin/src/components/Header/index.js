@@ -42,7 +42,7 @@ const Header = () => {
                 <nav className="navbar navbar-expand fixed-top">
                     <ul className="navbar-nav mr-auto align-items-center">
                         <li className="nav-item">
-                            <a className="nav-link toggle-menu" href="#" onClick={(e) => e.preventDefault}>
+                            <a className="nav-link toggle-menu" href="javascript:void();">
                                 <i className="icon-menu menu-icon"></i>
                             </a>
                         </li>
