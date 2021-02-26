@@ -4,7 +4,7 @@ import Layout from '../../components/Layout'
 import { io } from 'socket.io-client'
 import moment from 'moment'
 import { afterSendMessage } from '../../actions/chat.action'
-
+import './style.css'
 let socket
 let messagesEnd
 const Chat = () => {
@@ -73,22 +73,21 @@ const Chat = () => {
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-lg-3">
-                            <div class="card">
-                                <div class="card-header text-uppercase">Friends</div>
-                                <div class="card-body">
+                            <div className="card">
+                                <div className="card-header text-uppercase">Friends</div>
+                                <div className="card-body" style={{ padding: '0'}}>
                                     {
                                         users.filter(usr => usr._id !== user._id && usr.role !== 'admin').map(usr => (
                                             <ul class="list-group">
 
-                                                <li class="list-group-item d-flex justify-content-between align-items-center"
-                                                    style={{ borderRadius: '30px', cursor: 'pointer' }}
+                                                <li className="list-group-item d-flex justify-content-between align-items-center"
+                                                    style={{ borderRadius: '10px', cursor: 'pointer' }}
                                                     onClick={() => handleShowBoxMessage(usr._id)}
                                                 >
                                                     <div className="user-profile" style={{ display: 'flex', alignItems: 'center' }}>
                                                         <img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
-                                                        <span><h6 className="mt-0 mb-1 ml-1">{usr.lastName}</h6></span>
+                                                        <span><h6 style={{ paddingLeft: '10px' }} className="mt-0 mb-1 ml-1">{usr.lastName}</h6></span>
                                                     </div>
-                                                    <span class="badge badge-secondary badge-pill">14</span>
                                                 </li>
                                             </ul>
                                         ))
@@ -98,15 +97,15 @@ const Chat = () => {
                             </div>
                         </div>
                         <div className="col-lg-9">
-                            <div class="card">
-                                <div class="card-header text-uppercase">
+                            <div className="card">
+                                <div className="card-header text-uppercase">
                                     <div className="user-profile" style={{ display: 'flex', alignItems: 'center' }}>
                                         <img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
-                                        <span><h6 className="mt-0 mb-1 ml-1">{receiverName}</h6></span>
+                                        <span><div className="mt-0 mb-1 ml-1">{receiverName}</div></span>
                                     </div>
                                 </div>
 
-                                <div class="card-body" style={{ height: '655px', overflowY: 'scroll' }}>
+                                <div class="card-body outer-message" >
                                     {
                                         receiverId ? messages.filter(msg => (msg.sender._id === user._id && msg.receiver._id === receiverId) || (msg.sender._id === receiverId && msg.receiver._id === user._id)).map(msg => (
                                             <div>
@@ -114,39 +113,37 @@ const Chat = () => {
                                                     msg.sender._id !== user._id ? (
                                                         <>
                                                             <div className="user-profile" style={{ display: 'flex', marginTop: '10px' }}><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
-                                                                <div className="card ml-1" style={{ borderRadius: '15px' }}>
-                                                                    <div className="card-body" style={{ padding: '5px 24px 3px 28px' }}>
-                                                                        <ul className="list-unstyled">
-                                                                            <li className="media">
-                                                                                <div className="media-body">
-                                                                                    <h6>{msg.sender.lastName}</h6>
-                                                                                    <p>{msg.message}</p>
-                                                                                    <small>{moment(msg.createdAt).fromNow()}</small>
+                                                                <div className="card ml-1" style={{ borderRadius: '15px', marginBottom: '0' }}>
+                                                                    <div className="card-body" style={{ padding: '5px 20px' }}>
+                                                                        <div className="list-unstyled">
+                                                                            <div className="media">
+                                                                                <div className="media-body" style={{ wordBreak: 'break-all' }}>
+                                                                                    {msg.message}
                                                                                 </div>
-                                                                            </li>
-                                                                        </ul>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            <div style={{ wordBreak: 'break-all' }}><small style={{ marginLeft: '60px', color: 'rgb(172 170 170)' }}>{moment(msg.createdAt).fromNow()}</small></div>
                                                         </>
                                                     ) : (
                                                             <>
-                                                                <div className="user-profile" style={{ display: 'flex', marginTop: '10px', justifyContent: 'flex-end'}}>
-                                                                    <div className="card ml-1" style={{ borderRadius: '15px', backgroundColor: 'rgb(0, 132, 255)' }}>
-                                                                        <div className="card-body" style={{ padding: '5px 24px 3px 28px' }}>
-                                                                            <ul className="list-unstyled">
-                                                                                <li className="media">
-                                                                                    <div className="media-body">
-                                                                                        <h6>{user.lastName}</h6>
-                                                                                        <p>{msg.message}</p>
-                                                                                        <small style={{color: '#e1e1e1'}}>{moment(msg.createdAt).fromNow()}</small>
+                                                                <div className="user-profile" style={{ display: 'flex', marginTop: '10px', justifyContent: 'flex-end' }}>
+                                                                    <div className="card ml-1" style={{ borderRadius: '15px', backgroundColor: 'rgb(0, 132, 255)', marginBottom: '0' }}>
+                                                                        <div className="card-body" style={{ padding: '5px 20px' }}>
+                                                                            <div className="list-unstyled">
+                                                                                <div className="media">
+                                                                                    <div className="media-body" style={{ wordBreak: 'break-all' }}>
+                                                                                        {msg.message}
                                                                                     </div>
-                                                                                </li>
-                                                                            </ul>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                    <img src="https://via.placeholder.com/110x110" style={{ marginLeft: '5px',}} className="img-circle user-profile" alt="user avatar" />
+                                                                    <img src="https://via.placeholder.com/110x110" style={{ marginLeft: '5px', }} className="img-circle user-profile" alt="user avatar" />
                                                                 </div>
+                                                                <div style={{ display: 'flex', justifyContent: 'flex-end' }}><small style={{ marginRight: '40px', color: 'rgb(172 170 170)' }}>{moment(msg.createdAt).fromNow()}</small></div>
                                                             </>
                                                         )
                                                 }

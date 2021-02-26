@@ -1112,15 +1112,6 @@ body.bg-theme15 {
     color: #ffffff;
 }
 
-.card-body p {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    /* number of lines to show */
-    -webkit-box-orient: vertical;
-}
-
 .card-action {
     float: right
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Spinner } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import swal from 'sweetalert'
@@ -7,6 +7,7 @@ import Layout from '../../components/Layout'
 import Input from '../../components/UI/Input'
 import Modal from '../../components/UI/Modal'
 import { generatePublicUrl } from '../../urlConfig'
+import './style.css'
 import moment from 'moment'
 import { io } from "socket.io-client"
 
@@ -33,6 +34,7 @@ const Contribution = () => {
     const [checkbox, setCheckbox] = useState(false)
 
 
+
     const handleUploadFile = (e) => {
         let file = e.target.files
         for (let i = 0; i < file.length; i++) {
@@ -42,6 +44,7 @@ const Contribution = () => {
             )
         }
     }
+
 
     const handleUploadBg = (e) => {
         let file = e.target.files
@@ -149,8 +152,8 @@ const Contribution = () => {
         setAllContribution(contribution.allContributions)
         setComment(contribution.comments)
     }, [contribution.allContributions, contribution.comments])
-    
-    
+
+
     if (contribution.load) {
         return <Spinner className="spinner" style={{ position: 'fixed', top: '50%', left: '50%' }} animation="border" variant="primary" />
     }
@@ -212,7 +215,8 @@ const Contribution = () => {
 
                             {/* List Contribution */}
                             <div className="row">
-                                <div className="col-lg-12">
+                                <div className="col-lg-3"></div>
+                                <div className="col-lg-6">
                                     {
                                         allContribution.filter((contr => contr.author === user._id && contr.facultyId === contr.user_info.facultyId)).map((contr, index) =>
                                         (
@@ -234,7 +238,7 @@ const Contribution = () => {
                                                                         </button>
                                                                     </span>
                                                                 </h5>
-                                                                <small>{moment(contr.createdAt).fromNow()}</small>
+                                                                <div style={{ paddingBottom: '25px' }}><small style={{ color: 'rgb(172 170 170)' }}>{moment(contr.createdAt).fromNow()}</small></div>
                                                                 <p>{contr.description}</p>
                                                                 {
                                                                     contr.filesUpload.map((file) => (
@@ -251,30 +255,33 @@ const Contribution = () => {
                                                                     value={getCommentByIndex(index)}
                                                                     onChange={(e) => onChangeComment(index, e.target.value)}
                                                                     onKeyUp={event => event.key === 'Enter' ? _addComment(index, contr._id) : (event.key === 'Backspace' && onDeleteComment(index))}
-                                                                >
-                                                                </input>
+                                                                />
                                                                 <hr />
-                                                                {
-                                                                    comment.filter(cmt => cmt.contributionId === contr._id).map(cmt => (
-                                                                        <div>
-                                                                            <div className="user-profile" style={{ display: 'flex', marginTop: '10px' }}><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
-                                                                                <div className="card ml-1" style={{ borderRadius: '15px' }}>
-                                                                                    <div className="card-body" style={{ padding: '5px 24px 3px 28px' }}>
-                                                                                        <ul className="list-unstyled">
-                                                                                            <li className="media">
-                                                                                                <div className="media-body">
-                                                                                                    <h6>{cmt.user_info.lastName}</h6>
-                                                                                                    <p>{cmt.content}</p>
-                                                                                                    <small>{moment(cmt.createdAt).fromNow()}</small>
+                                                                <div>
+                                                                    {
+                                                                        comment.filter(cmt => cmt.contributionId === contr._id).map(cmt => (
+                                                                            <div>
+                                                                                <div className="user-profile" style={{ display: 'flex', marginTop: '10px' }}><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
+                                                                                    <div className="card ml-1" style={{ borderRadius: '15px', marginBottom: '0' }}>
+                                                                                        <div className="card-body" style={{ padding: '5px 10px' }}>
+                                                                                            <div className="list-unstyled">
+                                                                                                <div className="media">
+                                                                                                    <div className="media-body">
+                                                                                                        <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>{cmt.user_info.lastName}</div>
+                                                                                                        <div style={{ wordBreak: 'break-all' }} >
+                                                                                                            {cmt.content}
+                                                                                                        </div>
+                                                                                                    </div>
                                                                                                 </div>
-                                                                                            </li>
-                                                                                        </ul>
+                                                                                            </div>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
+                                                                                <div><small style={{ marginLeft: '50px', color: 'rgb(172 170 170)' }}>{moment(cmt.createdAt).fromNow()}</small></div>
                                                                             </div>
-                                                                        </div>
-                                                                    )).reverse()
-                                                                }
+                                                                        )).reverse()
+                                                                    }
+                                                                </div>
                                                             </div>
                                                         </li>
                                                     </ul>
@@ -324,6 +331,7 @@ const Contribution = () => {
                                     </Modal>
 
                                 </div>
+                                <div className="col-lg-3"></div>
                             </div>
                         </div>
                     </div>
@@ -343,6 +351,7 @@ const Contribution = () => {
                     <div className="content-wrapper">
                         <div className="container-fluid">
                             <div className="row">
+                                <div className="col-lg-2"></div>
                                 <div className="col-lg-8">
                                     {
                                         allContribution.filter(x => x.facultyId === user.facultyId).map((contr, index) =>
@@ -351,7 +360,7 @@ const Contribution = () => {
                                                 <div className="card-body" >
                                                     <ul className="list-unstyled" >
                                                         <div className="user-profile" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                                                            <img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
+                                                            <div><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" /></div>
                                                             <span><h5 className="mt-0 mb-1 ml-1">{contr.user_info.lastName}</h5></span>
                                                         </div>
 
@@ -390,30 +399,33 @@ const Contribution = () => {
                                                                     value={getCommentByIndex(index)}
                                                                     onChange={(e) => onChangeComment(index, e.target.value)}
                                                                     onKeyUp={event => event.key === 'Enter' ? _addComment(index, contr._id) : (event.key === 'Backspace' && onDeleteComment(index))}
-                                                                >
-                                                                </input>
+                                                                />
                                                                 <hr />
-                                                                {
-                                                                    comment.filter(cmt => cmt.contributionId === contr._id).map(cmt => (
-                                                                        <div>
-                                                                            <div className="user-profile" style={{ display: 'flex', marginTop: '10px' }}><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
-                                                                                <div className="card ml-1" style={{ borderRadius: '15px' }}>
-                                                                                    <div className="card-body" style={{ padding: '5px 24px 3px 28px' }}>
-                                                                                        <ul className="list-unstyled">
-                                                                                            <li className="media">
-                                                                                                <div className="media-body">
-                                                                                                    <h6>{cmt.user_info.lastName}</h6>
-                                                                                                    <p>{cmt.content}</p>
-                                                                                                    <small>{moment(cmt.createdAt).fromNow()}</small>
+                                                                <div>
+                                                                    {
+                                                                        comment.filter(cmt => cmt.contributionId === contr._id).map(cmt => (
+                                                                            <div>
+                                                                                <div className="user-profile" style={{ display: 'flex', marginTop: '10px' }}><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
+                                                                                    <div className="card ml-1" style={{ borderRadius: '15px', marginBottom: '0' }}>
+                                                                                        <div className="card-body" style={{ padding: '5px 10px' }}>
+                                                                                            <div className="list-unstyled">
+                                                                                                <div className="media">
+                                                                                                    <div className="media-body">
+                                                                                                        <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>{cmt.user_info.lastName}</div>
+                                                                                                        <div style={{ wordBreak: 'break-all' }} >
+                                                                                                            {cmt.content}
+                                                                                                        </div>
+                                                                                                    </div>
                                                                                                 </div>
-                                                                                            </li>
-                                                                                        </ul>
+                                                                                            </div>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
+                                                                                <div><small style={{ marginLeft: '50px', color: 'rgb(172 170 170)' }}>{moment(cmt.createdAt).fromNow()}</small></div>
                                                                             </div>
-                                                                        </div>
-                                                                    )).reverse()
-                                                                }
+                                                                        )).reverse()
+                                                                    }
+                                                                </div>
                                                             </div>
                                                         </li>
                                                     </ul>
@@ -422,50 +434,7 @@ const Contribution = () => {
                                         )).reverse()
                                     }
                                 </div>
-
-                                <div className="col-lg-4">
-                                    <div className="card">
-                                        <div className="card-body">
-                                            <h6 className="text-uppercase mb-0 text-center text-white">Due Date</h6>
-                                            <h4 className="text-uppercase text-center text-white">05/04/2021</h4>
-                                            <div className="media align-items-center mt-5">
-                                                <div className="w-circle-icon rounded-circle bg-light"><i className="zmdi zmdi-edit text-white"></i></div>
-                                                <div className="media-body ml-3">
-                                                    <h6 className="mb-0 text-white">Edit Alarm</h6>
-                                                    <p className="mb-0 extra-small-font text-white">Lorem ipsum dolor sit amet consectetur adipiscing elit</p>
-                                                </div>
-                                            </div>
-                                            <div className="media align-items-center mt-3">
-                                                <div className="w-circle-icon rounded-circle bg-light"><i className="zmdi zmdi-settings text-white"></i></div>
-                                                <div className="media-body ml-3">
-                                                    <h6 className="mb-0 text-white">Setting</h6>
-                                                    <p className="mb-0 extra-small-font text-white">Lorem ipsum dolor sit amet consectetur adipiscing elit</p>
-                                                </div>
-                                            </div>
-                                            <div className="media align-items-center mt-3 mb-5">
-                                                <div className="w-circle-icon rounded-circle bg-light"><i className="zmdi zmdi-delete text-white"></i></div>
-                                                <div className="media-body ml-3">
-                                                    <h6 className="mb-0 text-white">Delete Alarm</h6>
-                                                    <p className="mb-0 extra-small-font text-white">Lorem ipsum dolor sit amet consectetur adipiscing elit</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="card-footer bg-transparent">
-                                            <div className="row align-items-center">
-                                                <div className="col">
-                                                    <ul className="list-inline mb-0">
-                                                        <li className="list-inline-item"><i className="zmdi zmdi-home text-white"></i></li>
-                                                        <li className="list-inline-item"><i className="zmdi zmdi-settings text-white"></i></li>
-                                                        <li className="list-inline-item"><i className="zmdi zmdi-brightness-7 text-white"></i></li>
-                                                    </ul>
-                                                </div>
-                                                <div className="col">
-                                                    <div className="w-circle-icon rounded-circle bg-light float-right"><i className="zmdi zmdi-notifications-active text-white"></i></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div className="col-lg-2"></div>
                             </div>
                         </div>
                     </div>
@@ -486,7 +455,8 @@ const Contribution = () => {
                     <div className="content-wrapper">
                         <div className="container-fluid">
                             <div className="row">
-                                <div className="col-lg-12">
+                                <div className="col-lg-2"></div>
+                                <div className="col-lg-8">
 
                                     {
                                         allContribution.filter(contr => contr.is_public === true).map(contr => (
@@ -526,7 +496,7 @@ const Contribution = () => {
                                         ))
                                     }
                                 </div>
-
+                                <div className="col-lg-2"></div>
                             </div>
                         </div>
                     </div>
@@ -547,6 +517,7 @@ const Contribution = () => {
                     <div className="content-wrapper">
                         <div className="container-fluid">
                             <div className="row">
+                                <div className="col-lg-2"></div>
                                 <div className="col-lg-12">
                                     {
                                         allContribution.filter(contr => contr.is_public === true && contr.facultyId === user.facultyId).map(contr => (
@@ -586,7 +557,7 @@ const Contribution = () => {
                                         ))
                                     }
                                 </div>
-
+                                <div className="col-lg-2"></div>
                             </div>
                         </div>
                     </div>
