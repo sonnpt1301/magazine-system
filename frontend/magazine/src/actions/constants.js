@@ -8,7 +8,16 @@ export const authConstants = {
 }
 
 export const userConstants = {
+    GET_USERS_REQUEST: 'GET_USERS_REQUEST',
+    GET_USERS_SUCCESS: 'GET_USERS_SUCCESS',
+    GET_USERS_FAILURE: 'GET_USERS_FAILURE',
+}
 
+export const chatConstants = {
+    GET_MESSAGES_REQUEST: 'GET_MESSAGES_REQUEST',
+    GET_MESSAGES_SUCCESS: 'GET_MESSAGES_SUCCESS',
+    GET_MESSAGES_FAILURE: 'GET_MESSAGES_REQUEST',
+    GET_MESSAGE_AFTER_SEND: 'GET_MESSAGE_AFTER_SEND'
 }
 
 export const contributionConstants = {
@@ -39,6 +48,6 @@ export const contributionConstants = {
     GET_COMMENT_REQUEST: 'GET_COMMENT_REQUEST',
     GET_COMMENT_SUCCESS: 'GET_COMMENT_SUCCESS',
     GET_COMMENT_FAILURE: 'GET_COMMENT_FAILURE',
-    
-    
+
+
 }

@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { isUserLoggedIn } from './actions';
+import { getMessage, getUsers, isUserLoggedIn } from './actions';
 import { getAllContributions, listComment } from './actions/contribution.action';
 import { PrivateRoute } from './components/HOC/PrivateRoute';
+import Chat from './containers/Chat';
 import Contribution from './containers/Contribution';
 import Home from './containers/Home';
 import Login from './containers/Login';
@@ -20,6 +21,8 @@ function App() {
     } else {
       dispatch(getAllContributions())
       dispatch(listComment())
+      dispatch(getMessage())
+      dispatch(getUsers())
     }
   }, [dispatch, auth.authenticate])
 
@@ -29,7 +32,8 @@ function App() {
         <PrivateRoute exact path="/" component={Home} />
         <PrivateRoute path="/contribution" component={Contribution} />
         <PrivateRoute path="/profile" component={Profile} />
-
+        <PrivateRoute path='/chat' component={Chat} />
+        
         <Route path="/login" component={Login} />
         <Route path="*" component={() => "404 NOT FOUND"} />
       </Switch>

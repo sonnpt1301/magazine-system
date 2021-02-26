@@ -4572,8 +4572,7 @@ table.grid td {
     -ms-flex-direction: column;
     flex-direction: column;
     padding-left: 0;
-    margin-bottom: 0;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, .075);
+    margin-bottom: 25px;
 }
 
 .list-group-item {

@@ -8,6 +8,10 @@ import Input from '../../components/UI/Input'
 import Modal from '../../components/UI/Modal'
 import { generatePublicUrl } from '../../urlConfig'
 import moment from 'moment'
+import { io } from "socket.io-client"
+
+let socket;
+
 const Contribution = () => {
 
     const auth = useSelector(state => state.auth)
@@ -141,12 +145,12 @@ const Contribution = () => {
         }
     }
 
-
     useEffect(() => {
         setAllContribution(contribution.allContributions)
         setComment(contribution.comments)
     }, [contribution.allContributions, contribution.comments])
-
+    
+    
     if (contribution.load) {
         return <Spinner className="spinner" style={{ position: 'fixed', top: '50%', left: '50%' }} animation="border" variant="primary" />
     }

@@ -33,7 +33,7 @@ const LeftMenu = () => {
                 </div>
                 <div id="user-dropdown" className="collapse">
                     <ul className="user-setting-menu">
-                        <li><a href="profile"><i className="icon-user"></i>  My Profile</a></li>
+                        <li><NavLink to="/profile" className="waves-effect"><i className="icon-user"></i>  My Profile</NavLink></li>
                         <li><a href="#"><i className="icon-settings"></i> Setting</a></li>
                         <li><a href="login" onClick={logout}><i className="icon-power"></i> Logout</a></li>
                     </ul>
