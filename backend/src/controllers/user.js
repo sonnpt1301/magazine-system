@@ -10,17 +10,42 @@ export const getUsers = async (req, res) => {
     }
 }
 
-export const updateUser = async (req, res) => {
+export const uploadAvatar = async (req, res) => {
     try {
-        const id = req.params.id;
+        const { id } = req.params
+        let profilePicture = []
+        req.files.length && (profilePicture = req.files.map(({ filename }) => ({ img: filename })))
         const user = await User.findOneAndUpdate({ _id: id }, {
             $set: {
-                ...req.body
+                ...req.body,
+                profilePicture
             }
         }, { new: true })
-        res.status(200).json({ user })
+        if (user) {
+            res.status(200).json({ user })
+        } else {
+            res.status(400).json({ error })
+        }
     } catch (error) {
-        res.status(400).json({ message: error.message })
+        console.log(error)
+    }
+}
+
+export const updateUser = async (req, res) => {
+    try {
+        const { id } = req.params
+        const user = await User.findOneAndUpdate({ _id: id }, {
+            $set: {
+                ...req.body,
+            }
+        }, { new: true })
+        if (user) {
+            res.status(200).json({ user })
+        } else {
+            res.status(400).json({ error })
+        }
+    } catch (error) {
+        console.log(error)
     }
 }
 

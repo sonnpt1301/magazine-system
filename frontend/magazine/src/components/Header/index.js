@@ -3,6 +3,7 @@ import { Container, Nav, Navbar } from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import { signOut } from '../../actions'
+import { generatePublicUrl } from '../../urlConfig'
 
 const Header = () => {
 
@@ -67,7 +68,9 @@ const Header = () => {
                                 <li className="list-group-item">
                                     <a href="javaScript:void();">
                                         <div className="media">
-                                            <div className="avatar"><img className="align-self-start mr-3" src="https://via.placeholder.com/110x110" alt="user avatar" /></div>
+                                            <div className="avatar"><img className="align-self-start mr-3" src={user.profilePicture.length ?
+                                                generatePublicUrl(user.profilePicture[0].img) :
+                                                "https://via.placeholder.com/110x110"} alt="user avatar" /></div>
                                             <div className="media-body">
                                                 <h6 className="mt-0 msg-title">Jhon Deo</h6>
                                                 <p className="msg-info">Lorem ipsum dolor sit amet...</p>
@@ -79,7 +82,9 @@ const Header = () => {
                                 <li className="list-group-item">
                                     <a href="javaScript:void();">
                                         <div className="media">
-                                            <div className="avatar"><img className="align-self-start mr-3" src="https://via.placeholder.com/110x110" alt="user avatar" /></div>
+                                            <div className="avatar"><img className="align-self-start mr-3" src={user.profilePicture.length ?
+                                                generatePublicUrl(user.profilePicture[0].img) :
+                                                "https://via.placeholder.com/110x110"} alt="user avatar" /></div>
                                             <div className="media-body">
                                                 <h6 className="mt-0 msg-title">Sara Jen</h6>
                                                 <p className="msg-info">Lorem ipsum dolor sit amet...</p>
@@ -91,7 +96,9 @@ const Header = () => {
                                 <li className="list-group-item">
                                     <a href="javaScript:void();">
                                         <div className="media">
-                                            <div className="avatar"><img className="align-self-start mr-3" src="https://via.placeholder.com/110x110" alt="user avatar" /></div>
+                                            <div className="avatar"><img className="align-self-start mr-3" src={user.profilePicture.length ?
+                                                generatePublicUrl(user.profilePicture[0].img) :
+                                                "https://via.placeholder.com/110x110"} alt="user avatar" /></div>
                                             <div className="media-body">
                                                 <h6 className="mt-0 msg-title">Dannish Josh</h6>
                                                 <p className="msg-info">Lorem ipsum dolor sit amet...</p>
@@ -103,7 +110,9 @@ const Header = () => {
                                 <li className="list-group-item">
                                     <a href="javaScript:void();">
                                         <div className="media">
-                                            <div className="avatar"><img className="align-self-start mr-3" src="https://via.placeholder.com/110x110" alt="user avatar" /></div>
+                                            <div className="avatar"><img className="align-self-start mr-3" src={user.profilePicture.length ?
+                                                generatePublicUrl(user.profilePicture[0].img) :
+                                                "https://via.placeholder.com/110x110"} alt="user avatar" /></div>
                                             <div className="media-body">
                                                 <h6 className="mt-0 msg-title">Katrina Mccoy</h6>
                                                 <p className="msg-info">Lorem ipsum dolor sit amet.</p>
@@ -173,13 +182,17 @@ const Header = () => {
                     </li>
                     <li className="nav-item">
                         <a className="nav-link dropdown-toggle dropdown-toggle-nocaret" data-toggle="dropdown" href="#">
-                            <span className="user-profile"><img src="https://via.placeholder.com/110x110" className="img-circle" alt="user avatar" /></span>
+                            <span className="user-profile"><img src={user.profilePicture.length ?
+                                generatePublicUrl(user.profilePicture[0].img) :
+                                "https://via.placeholder.com/110x110"} className="img-circle" alt="user avatar" /></span>
                         </a>
                         <ul className="dropdown-menu dropdown-menu-right">
                             <li className="dropdown-item user-details">
                                 <a href="javaScript:void();">
                                     <div className="media">
-                                        <div className="avatar"><img className="align-self-start mr-3" src="https://via.placeholder.com/110x110" alt="user avatar" /></div>
+                                        <div className="avatar"><img className="align-self-start mr-3" src={user.profilePicture.length ?
+                                            generatePublicUrl(user.profilePicture[0].img) :
+                                            "https://via.placeholder.com/110x110"} alt="user avatar" /></div>
                                         <div className="media-body">
                                             <h6 className="mt-2 user-title">Sarajhon Mccoy</h6>
                                             <p className="user-subtitle">mccoy@example.com</p>

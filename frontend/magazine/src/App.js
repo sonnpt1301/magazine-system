@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { getMessage, getUsers, isUserLoggedIn } from './actions';
 import { getAllContributions, listComment } from './actions/contribution.action';
+import { getFaculty } from './actions/faculty.action';
 import { PrivateRoute } from './components/HOC/PrivateRoute';
 import Chat from './containers/Chat';
 import Contribution from './containers/Contribution';
@@ -23,6 +24,7 @@ function App() {
       dispatch(listComment())
       dispatch(getMessage())
       dispatch(getUsers())
+      dispatch(getFaculty())
     }
   }, [dispatch, auth.authenticate])
 

@@ -1,5 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { authConstants } from '../actions/constants'
+import { userConstants } from '../actions/constants'
 
 const initState = {
     token: null,
@@ -58,6 +59,26 @@ export default (state = initState, action) => {
                 ...state,
                 error: action.payload.error,
                 loading: false
+            }
+            break;
+
+        case userConstants.UPDATE_USER_REQUEST:
+            state = {
+                ...state,
+                loading: true,
+            }
+            break;
+        case userConstants.UPDATE_USER_SUCCESS:
+            state = {
+                ...state,
+                user: action.payload.user,
+                loading: false,
+            }
+            break;
+        case userConstants.UPDATE_USER_FAILURE:
+            state = {
+                ...state,
+                loading: true,
             }
             break;
     }

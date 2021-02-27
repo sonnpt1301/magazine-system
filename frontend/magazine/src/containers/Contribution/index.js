@@ -351,8 +351,8 @@ const Contribution = () => {
                     <div className="content-wrapper">
                         <div className="container-fluid">
                             <div className="row">
-                                <div className="col-lg-2"></div>
-                                <div className="col-lg-8">
+                                <div className="col-lg-3"></div>
+                                <div className="col-lg-6">
                                     {
                                         allContribution.filter(x => x.facultyId === user.facultyId).map((contr, index) =>
                                         (
@@ -382,7 +382,7 @@ const Contribution = () => {
                                                                             <span className="badge badge-light shadow-light m-1">Pending</span>
                                                                     }
                                                                 </h4>
-                                                                <small>{moment(contr.createdAt).fromNow()}</small>
+                                                                <div style={{ paddingBottom: '25px' }}><small style={{ color: 'rgb(172 170 170)' }}>{moment(contr.createdAt).fromNow()}</small></div>
                                                                 <p>{contr.description}</p>
                                                                 {
                                                                     contr.filesUpload.map((file) => (
@@ -434,7 +434,7 @@ const Contribution = () => {
                                         )).reverse()
                                     }
                                 </div>
-                                <div className="col-lg-2"></div>
+                                <div className="col-lg-3"></div>
                             </div>
                         </div>
                     </div>
@@ -455,16 +455,16 @@ const Contribution = () => {
                     <div className="content-wrapper">
                         <div className="container-fluid">
                             <div className="row">
-                                <div className="col-lg-2"></div>
-                                <div className="col-lg-8">
+                                <div className="col-lg-3"></div>
+                                <div className="col-lg-6">
 
                                     {
                                         allContribution.filter(contr => contr.is_public === true).map(contr => (
                                             <div className="card">
                                                 <div className="card-body">
-                                                    <div className="user-profile">
-                                                        <img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
-                                                        <span><h5 className="mt-0 mb-0">{contr.user_info.lastName}</h5></span>
+                                                    <div className="user-profile" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                                                        <div><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" /></div>
+                                                        <span><h5 className="mt-0 mb-1 ml-1">{contr.user_info.lastName}</h5></span>
                                                     </div>
 
                                                     <img className="rounded" style={{ height: '100%', width: '100%' }} src={generatePublicUrl(contr.contributionImage[0].img)} alt="user avatar" />
@@ -478,6 +478,7 @@ const Contribution = () => {
                                                                             <span className="badge badge-light shadow-light m-1">Pending</span>
                                                                     }
                                                                 </h4>
+                                                                <div style={{ paddingBottom: '25px' }}><small style={{ color: 'rgb(172 170 170)' }}>{moment(contr.createdAt).fromNow()}</small></div>
                                                                 <p>{contr.description}</p>
                                                                 {
                                                                     contr.filesUpload.map((file) => (
@@ -496,7 +497,7 @@ const Contribution = () => {
                                         ))
                                     }
                                 </div>
-                                <div className="col-lg-2"></div>
+                                <div className="col-lg-3"></div>
                             </div>
                         </div>
                     </div>
@@ -517,15 +518,15 @@ const Contribution = () => {
                     <div className="content-wrapper">
                         <div className="container-fluid">
                             <div className="row">
-                                <div className="col-lg-2"></div>
-                                <div className="col-lg-12">
+                                <div className="col-lg-3"></div>
+                                <div className="col-lg-6">
                                     {
                                         allContribution.filter(contr => contr.is_public === true && contr.facultyId === user.facultyId).map(contr => (
                                             <div className="card">
                                                 <div className="card-body">
-                                                    <div className="user-profile">
-                                                        <img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
-                                                        <span><h5 className="mt-0 mb-0">{contr.user_info.lastName}</h5></span>
+                                                    <div className="user-profile" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                                                        <div><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" /></div>
+                                                        <span><h5 className="mt-0 mb-1 ml-1">{contr.user_info.lastName}</h5></span>
                                                     </div>
 
                                                     <img className="rounded" style={{ height: '100%', width: '100%' }} src={generatePublicUrl(contr.contributionImage[0].img)} alt="user avatar" />
@@ -539,6 +540,7 @@ const Contribution = () => {
                                                                             <span className="badge badge-light shadow-light m-1">Pending</span>
                                                                     }
                                                                 </h4>
+                                                                <div style={{ paddingBottom: '25px' }}><small style={{ color: 'rgb(172 170 170)' }}>{moment(contr.createdAt).fromNow()}</small></div>
                                                                 <p>{contr.description}</p>
                                                                 {
                                                                     contr.filesUpload.map((file) => (
@@ -557,7 +559,7 @@ const Contribution = () => {
                                         ))
                                     }
                                 </div>
-                                <div className="col-lg-2"></div>
+                                <div className="col-lg-3"></div>
                             </div>
                         </div>
                     </div>

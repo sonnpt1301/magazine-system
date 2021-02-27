@@ -1,4 +1,5 @@
 import { userConstants } from './constants'
+import swal from 'sweetalert'
 
 export const getUsers = () => {
     const token = localStorage.getItem('token')
@@ -25,5 +26,75 @@ export const getUsers = () => {
                 payload: { error }
             })
         }
+    }
+}
+
+export const updateUser = (params, body) => {
+    const token = localStorage.getItem('token')
+
+    return async dispatch => {
+        dispatch({ type: userConstants.UPDATE_USER_REQUEST })
+        const { userId } = params
+        const res = await fetch(`http://localhost:5000/api/user/update/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(body)
+        })
+        console.log(body)
+        const data = await res.json()
+        const { user, error } = data
+        console.log(user)
+        if (res.status === 200) {
+            localStorage.setItem('user', JSON.stringify(user))
+            dispatch({
+                type: userConstants.UPDATE_USER_SUCCESS,
+                payload: { user }
+            })
+            return await swal("Congratulation", "You have been updated successfully", "success")
+        } else {
+            dispatch({
+                type: userConstants.UPDATE_USER_FAILURE,
+                payload: { error }
+            })
+            return await swal("Failed", error, "error")
+        }
+
+    }
+}
+
+export const uploadAvatar = (params, form) => {
+    const token = localStorage.getItem('token')
+
+    return async dispatch => {
+        dispatch({ type: userConstants.UPDATE_USER_REQUEST })
+        const { userId } = params
+        const res = await fetch(`http://localhost:5000/api/user/uploadAvatar/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: form
+        })
+        const data = await res.json()
+        const { user, error } = data
+        console.log(user)
+        if (res.status === 200) {
+            localStorage.setItem('user', JSON.stringify(user))
+            dispatch({
+                type: userConstants.UPDATE_USER_SUCCESS,
+                payload: { user }
+            })
+            return await swal("Congratulation", "You have been updated successfully", "success")
+        } else {
+            dispatch({
+                type: userConstants.UPDATE_USER_FAILURE,
+                payload: { error }
+            })
+            return await swal("Failed", error, "error")
+        }
+
     }
 }

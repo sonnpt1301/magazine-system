@@ -40,9 +40,9 @@ const userSchema = new mongoose.Schema({
     contact: {
         type: String,
     },
-    profilePicture: {
-        type: String
-    },
+    profilePicture: [
+        { img: { type: String } }
+    ],
     facultyId: {
         type: mongoose.Schema.ObjectId, ref: 'Faculty'
     },

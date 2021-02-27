@@ -44,11 +44,11 @@ export const login = async (req, res) => {
         } else {
             if (user.comparePassword(req.body.password)) {
                 const token = jwt.sign({ _id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '365d' })
-                res.status(200).json({
+                res.cookie('token', token, { expiresIn: '3d' })
+                return res.status(200).json({
                     token,
                     user
                 })
-                res.cookie('token', token, { expiresIn: '3d'})
             } else {
                 return res.status(401).json({ message: 'Invalid password' })
             }

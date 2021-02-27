@@ -2,6 +2,7 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { signOut } from '../../actions'
+import { generatePublicUrl } from '../../urlConfig'
 
 
 
@@ -26,7 +27,13 @@ const LeftMenu = () => {
 
             <div className="user-details">
                 <div className="media align-items-center user-pointer collapsed" data-toggle="collapse" data-target="#user-dropdown">
-                    <div className="avatar"><img className="mr-3 side-user-img" src="https://via.placeholder.com/110x110" alt="user avatar" /></div>
+                    <div className="avatar">
+                        <img src={user.profilePicture.length ?
+                            generatePublicUrl(user.profilePicture[0].img) :
+                            "https://via.placeholder.com/110x110"}
+                            className="mr-3 side-user-img" alt="user avatar"
+                        />
+                    </div>
                     <div className="media-body">
                         <h6 className="side-user-name">{user.lastName}</h6>
                     </div>
