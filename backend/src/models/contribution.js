@@ -20,7 +20,12 @@ const contributionSchema = new mongoose.Schema({
         required: true
     },
     author: {
-        type: mongoose.Schema.ObjectId, ref: 'User'
+        type: mongoose.Schema.ObjectId, ref: 'User',
+        required: true
+    },
+    termId: {
+        type: mongoose.Schema.ObjectId, ref: 'Term',
+        required: true
     },
     is_public: {
         type: Boolean,

@@ -159,7 +159,7 @@ const Chat = () => {
                                                                 </div>
                                                                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}><small style={{ marginRight: '40px', color: 'rgb(172 170 170)' }}>{moment(msg.createdAt).fromNow()}</small></div>
                                                             </>
-                                                        )
+                                                        )   
                                                 }
                                             </div>
                                         )) : null

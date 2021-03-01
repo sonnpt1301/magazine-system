@@ -9,12 +9,14 @@ import Modal from '../../components/UI/Modal'
 import { generatePublicUrl } from '../../urlConfig'
 import './style.css'
 import moment from 'moment'
-import { io } from "socket.io-client"
+import TimeLimit from 'react-time-limit'
 
-let socket;
+
+let socket
 
 const Contribution = () => {
 
+    const term = useSelector(state => state.term)
     const auth = useSelector(state => state.auth)
     const { user } = auth
     const contribution = useSelector(state => state.contribution)
@@ -32,8 +34,20 @@ const Contribution = () => {
     const [contributionId, setContributionId] = useState('')
     const [content, setContent] = useState([])
     const [checkbox, setCheckbox] = useState(false)
+    const [terms, setTerms] = useState(term.terms)
+    const [termId, setTermId] = useState('')
+    const [startDate, setStartDate] = useState('')
+    const [endDate, setEndDate] = useState('')
 
 
+    const handleShowContribution = (id) => {
+        setTermId(id)
+        const term = terms.find(x => x._id === id)
+        const start = term.startDate.split('T')[0]
+        const end = term.endDate.split('T')[0]
+        setStartDate(start)
+        setEndDate(end)
+    }
 
     const handleUploadFile = (e) => {
         let file = e.target.files
@@ -44,7 +58,6 @@ const Contribution = () => {
             )
         }
     }
-
 
     const handleUploadBg = (e) => {
         let file = e.target.files
@@ -68,12 +81,13 @@ const Contribution = () => {
 
     const _uploadFile = (e) => {
         e.preventDefault()
-        if (title1 === '' || description1 === '' || fileUpload1 === []) {
+        if (title1 === '' || description1 === '' || fileUpload1 === [] || termId === '') {
             return swal('Oops!', 'Please fill the bank', 'warning')
         }
         const form = new FormData()
         form.append('title', title1)
         form.append('description', description1)
+        form.append('termId', termId)
         for (let file of fileUpload1) {
             form.append('filesUpload', file)
         }
@@ -151,8 +165,14 @@ const Contribution = () => {
     useEffect(() => {
         setAllContribution(contribution.allContributions)
         setComment(contribution.comments)
-    }, [contribution.allContributions, contribution.comments])
-
+        setTerms(term.terms)
+        console.log('Son vam', term.terms[0]?.startDate || Date.now())
+        if (term.terms.length) {
+            setTermId(term.terms[0]?._id)
+            setStartDate(term.terms[0]?.startDate.split('T')[0])
+            setEndDate(term.terms[0]?.endDate.split('T')[0])
+        }
+    }, [contribution, term.terms])
 
     if (contribution.load) {
         return <Spinner className="spinner" style={{ position: 'fixed', top: '50%', left: '50%' }} animation="border" variant="primary" />
@@ -169,7 +189,13 @@ const Contribution = () => {
                         <div className="container-fluid">
                             <div className="row">
                                 <div className="col-lg-12">
-                                    <button type="button" className="btn btn-light waves-effect waves-light m-1" data-toggle="modal" data-target="#uploadModal">Upload Contribution</button>
+                                    {termId &&
+                                        <TimeLimit from={startDate} to={endDate}>
+                                            <button type="button" className="btn btn-light waves-effect waves-light m-1" data-toggle="modal" data-target="#uploadModal">
+                                                Upload Contribution
+                                            </button>
+                                        </TimeLimit>
+                                    }
                                     <Modal id='uploadModal' modaltitle='Upload contribution'>
                                         <Input
                                             label='Title'
@@ -215,12 +241,30 @@ const Contribution = () => {
 
                             {/* List Contribution */}
                             <div className="row">
-                                <div className="col-lg-3"></div>
+                                <div className="col-lg-3">
+                                    <div className="card">
+                                        <div className="card-header text-uppercase">Topics</div>
+                                        <div className="card-body">
+                                            {
+                                                terms.map(term => (
+                                                    <div className="list-group">
+                                                        <div className="list-group-item d-flex justify-content-between align-items-center" >
+                                                            <div style={{ cursor: 'pointer' }} onClick={() => handleShowContribution(term._id)}>{term.topic}</div>
+                                                            <span className="badge badge-secondary badge-pill">14</span>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div>
                                 <div className="col-lg-6">
                                     {
-                                        allContribution.filter((contr => contr.author === user._id && contr.facultyId === contr.user_info.facultyId)).map((contr, index) =>
+                                        termId ? allContribution.filter((contr => contr.author === user._id && contr.facultyId === contr.user_info.facultyId && contr.termId === termId)).map((contr, index) =>
                                         (
                                             <div className="card">
+
                                                 <div className="card-body">
                                                     <img className="rounded" style={{ height: '100%', width: '100%' }} src={generatePublicUrl(contr.contributionImage[0].img)} alt="user avatar" />
                                                     <ul className="list-unstyled" key={index}>
@@ -287,7 +331,7 @@ const Contribution = () => {
                                                     </ul>
                                                 </div>
                                             </div>
-                                        )).reverse()
+                                        )).reverse() : null
                                     }
                                     <Modal
                                         id={'detailModal'}
@@ -331,7 +375,37 @@ const Contribution = () => {
                                     </Modal>
 
                                 </div>
-                                <div className="col-lg-3"></div>
+                                <div className="col-lg-3">
+                                    {termId &&
+                                        <TimeLimit from={moment(endDate).add(1, 'days')}>
+                                            <div class="alert alert-icon-info alert-dismissible" role="alert">
+                                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                                <div class="alert-icon icon-part-info">
+                                                    <i class="fa fa-bell"></i>
+                                                </div>
+                                                <div class="alert-message">
+                                                    <span><strong>Out of date!</strong> This topic is out of date. Can't submit any contribution</span>
+                                                </div>
+                                            </div>
+                                        </TimeLimit>
+                                    }
+
+                                    {
+                                        termId ? terms.filter(term => term._id === termId).map(term => (
+                                            <div className="card">
+                                                <div className="card-header text-uppercase">Description</div>
+                                                <div className="card-body">
+                                                    <div className="list-group">
+                                                        <div className="list-group-item d-flex justify-content-between align-items-center" >
+                                                            <div>{term.description}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )) : null
+                                    }
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -351,10 +425,27 @@ const Contribution = () => {
                     <div className="content-wrapper">
                         <div className="container-fluid">
                             <div className="row">
-                                <div className="col-lg-3"></div>
+                                <div className="col-lg-3">
+                                    <div className="card">
+                                        <div className="card-header text-uppercase">Topics</div>
+                                        <div className="card-body">
+                                            {
+                                                terms.map(term => (
+                                                    <div className="list-group">
+                                                        <div className="list-group-item d-flex justify-content-between align-items-center" >
+                                                            <div style={{ cursor: 'pointer' }} onClick={() => handleShowContribution(term._id)}>{term.topic}</div>
+                                                            <span className="badge badge-secondary badge-pill">14</span>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div>
                                 <div className="col-lg-6">
                                     {
-                                        allContribution.filter(x => x.facultyId === user.facultyId).map((contr, index) =>
+                                        termId ? allContribution.filter(x => x.facultyId === user.facultyId && x.termId === termId).map((contr, index) =>
                                         (
                                             <div className="card" key={index}>
                                                 <div className="card-body" >
@@ -431,10 +522,103 @@ const Contribution = () => {
                                                     </ul>
                                                 </div>
                                             </div>
-                                        )).reverse()
+                                        )).reverse() :
+                                            allContribution.filter(x => x.facultyId === user.facultyId && x.termId === terms[0]._id).map((contr, index) =>
+                                            (
+                                                <div className="card" key={index}>
+                                                    <div className="card-body" >
+                                                        <ul className="list-unstyled" >
+                                                            <div className="user-profile" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                                                                <div><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" /></div>
+                                                                <span><h5 className="mt-0 mb-1 ml-1">{contr.user_info.lastName}</h5></span>
+                                                            </div>
+
+                                                            <img className="rounded" style={{ height: '100%', width: '100%' }} src={generatePublicUrl(contr.contributionImage[0].img)} alt="user avatar" />
+                                                            <li className="media">
+                                                                <div className="media-body">
+                                                                    {
+                                                                        contr.is_public === false ?
+                                                                            <span>
+                                                                                <button data-toggle="modal" data-target="#detailModal" className="btn btn-light btn-sm waves-effect waves-light m-1 pull-right"
+                                                                                    onClick={(e) => { _publishContribution(contr._id) }}>Publish
+                                                                    </button>
+                                                                            </span> : null
+                                                                    }
+                                                                    <h4>{contr.title}
+                                                                        {
+                                                                            contr.is_public ?
+                                                                                <span className="badge badge-success shadow-success m-1">Published</span> :
+                                                                                <span className="badge badge-light shadow-light m-1">Pending</span>
+                                                                        }
+                                                                    </h4>
+                                                                    <div style={{ paddingBottom: '25px' }}><small style={{ color: 'rgb(172 170 170)' }}>{moment(contr.createdAt).fromNow()}</small></div>
+                                                                    <p>{contr.description}</p>
+                                                                    {
+                                                                        contr.filesUpload.map((file) => (
+                                                                            <div className="card">
+                                                                                <div className="card-body">
+                                                                                    <div style={{ cursor: 'pointer' }} onClick={() => { _downloadFile(file.fileName, contr._id, file._id) }}>{file.fileName} <i aria-hidden="true" className="fa fa-download pull-right"></i> </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        ))
+                                                                    }
+                                                                    <hr />
+                                                                    <input type="text" className="form-control form-control-rounded mt-3"
+                                                                        placeholder="Write comment here..."
+                                                                        value={getCommentByIndex(index)}
+                                                                        onChange={(e) => onChangeComment(index, e.target.value)}
+                                                                        onKeyUp={event => event.key === 'Enter' ? _addComment(index, contr._id) : (event.key === 'Backspace' && onDeleteComment(index))}
+                                                                    />
+                                                                    <hr />
+                                                                    <div>
+                                                                        {
+                                                                            comment.filter(cmt => cmt.contributionId === contr._id).map(cmt => (
+                                                                                <div>
+                                                                                    <div className="user-profile" style={{ display: 'flex', marginTop: '10px' }}><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
+                                                                                        <div className="card ml-1" style={{ borderRadius: '15px', marginBottom: '0' }}>
+                                                                                            <div className="card-body" style={{ padding: '5px 10px' }}>
+                                                                                                <div className="list-unstyled">
+                                                                                                    <div className="media">
+                                                                                                        <div className="media-body">
+                                                                                                            <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>{cmt.user_info.lastName}</div>
+                                                                                                            <div style={{ wordBreak: 'break-all' }} >
+                                                                                                                {cmt.content}
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div><small style={{ marginLeft: '50px', color: 'rgb(172 170 170)' }}>{moment(cmt.createdAt).fromNow()}</small></div>
+                                                                                </div>
+                                                                            )).reverse()
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            )).reverse()
                                     }
                                 </div>
-                                <div className="col-lg-3"></div>
+                                <div className="col-lg-3">
+                                    {
+                                        termId ? terms.filter(term => term._id === termId).map(term => (
+                                            <div className="card">
+                                                <div className="card-header text-uppercase">Description</div>
+                                                <div className="card-body">
+                                                    <div className="list-group">
+                                                        <div className="list-group-item d-flex justify-content-between align-items-center" >
+                                                            <div>{term.description}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )) : null
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>

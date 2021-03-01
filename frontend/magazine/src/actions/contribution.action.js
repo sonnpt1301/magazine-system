@@ -3,11 +3,15 @@ import swal from 'sweetalert';
 
 
 export const getAllContributions = () => {
+    const token = localStorage.getItem('token')
     
     return async dispatch => {
         dispatch({ type: contributionConstants.GET_ALL_CONTRIBUTION_REQUEST })
         const res = await fetch('http://localhost:5000/api/contribution/get-all-contributions', {
             method: 'GET',
+            headers: {
+                "Authorization": `Bearer ${token}`
+            },
         })
         const data = await res.json()
         const { contributions, error } = data
@@ -174,10 +178,14 @@ export const addComment = (params, body) => {
 }
 
 export const listComment = () => {
+    const token = localStorage.getItem('token')
     return async dispatch => {
         dispatch({ type: contributionConstants.GET_COMMENT_REQUEST })
         const res = await fetch('http://localhost:5000/api/contribution/list-comment', {
             method: 'GET',
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
         })
         const data = await res.json()
         const { listComment, error } = data

@@ -37,6 +37,7 @@ export const uploadFile = async (req, res) => {
             author: req.user._id,
             title: req.body.title,
             description: req.body.description,
+            termId: req.body.termId,
             filesUpload: filesUpload,
             contributionImage: bgUpload,
             facultyId: sender.facultyId

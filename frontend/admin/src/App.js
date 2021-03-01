@@ -4,7 +4,7 @@ import {
   BrowserRouter as Router,
   Route, Switch
 } from 'react-router-dom';
-import { getFaculty } from './actions';
+import { getFaculty, getTerms } from './actions';
 import { isUserLoggedIn } from './actions/auth.action';
 import { getUsers } from './actions/user.action';
 import './App.css';
@@ -12,6 +12,7 @@ import { PrivateRoute } from './components/HOC/PrivateRoute';
 import Faculty from './containers/Faculty';
 import Home from './containers/Home';
 import Login from './containers/Login';
+import Term from './containers/Term';
 import User from './containers/User';
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
     } else {
       dispatch(getFaculty())
       dispatch(getUsers())
+      dispatch(getTerms())
     }
   }, [dispatch, auth.authenticate])
 
@@ -34,6 +36,7 @@ function App() {
         <PrivateRoute exact path="/" component={Home} />
         <PrivateRoute path="/faculty" component={Faculty} />
         <PrivateRoute path="/user" component={User} />  
+        <PrivateRoute path="/term" component={Term} />  
 
         <Route path="/login" component={Login} />
         <Route path="*" component={() => "404 NOT FOUND"} />

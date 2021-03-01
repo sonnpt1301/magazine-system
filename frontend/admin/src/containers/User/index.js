@@ -24,6 +24,13 @@ const User = (props) => {
     const [facultyId, setFacultyId] = useState('')
     const [userId, setUserId] = useState('')
 
+    const roleBased = [
+        { name: 'manager' },
+        { name: 'coordinator' },
+        { name: 'student' },
+        { name: 'guest' },
+
+    ]
 
     const facultyById = (id) => {
         const faculty = faculties.find((fac) => fac._id === id)
@@ -50,7 +57,7 @@ const User = (props) => {
     }
 
     const createUser = (e) => {
-        if(firstName === '' || lastName === '' || email === '' || password === '' || role === '' || facultyId === '') {
+        if (firstName === '' || lastName === '' || email === '' || password === '' || role === '' || facultyId === '') {
             return swal('Oops!!', 'Please fill the bank', 'warning')
         }
         const body = {
@@ -199,9 +206,11 @@ const User = (props) => {
                                                 <Col sm={6}>
                                                     <Input
                                                         label="Role"
+                                                        type='select'
                                                         defaultValue={role}
-                                                        placeholder={'Role'}
+                                                        options={roleBased}
                                                         onChange={(e) => setRole(e.target.value)}
+                                                        placeholder={'Role'}
                                                     />
                                                 </Col>
                                             </Row>

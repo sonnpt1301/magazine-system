@@ -1,5 +1,9 @@
+/* eslint-disable no-script-url */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import swal from 'sweetalert'
 import { updateUser, uploadAvatar } from '../../actions/user.action'
 import Layout from '../../components/Layout'
 import Input from '../../components/UI/Input'
@@ -19,7 +23,8 @@ const Profile = () => {
     const [contact, setContact] = useState('')
     const [user, setUser] = useState(auth.user)
     const [fileUpload, setFileUpload] = useState([])
-
+    const [uploadIMG, setUploadIMG] = useState(true)
+    const [previewAvatar, setPreviewAvatar] = useState(null)
 
     const facultyById = (id) => {
         const faculty = faculties.find((fac) => fac._id === id)
@@ -57,6 +62,8 @@ const Profile = () => {
                 fileUpload
             )
         }
+        setPreviewAvatar(URL.createObjectURL(e.target.files[0]))
+        setUploadIMG(!uploadIMG)
     }
 
     const _uploadAvatar = () => {
@@ -65,8 +72,26 @@ const Profile = () => {
         for (let file of fileUpload) {
             form.append('profilePicture', file)
         }
-        dispatch(uploadAvatar(params, form))
-        setFileUpload([])
+        swal({
+            title: "Are you sure?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    dispatch(uploadAvatar(params, form))
+                    setPreviewAvatar(null)
+                    setUploadIMG(!uploadIMG)
+                    swal("Success! Your avatar has been changed", {
+                        icon: "success",
+                    });
+                } else {
+                    setPreviewAvatar(null)
+                    setUploadIMG(!uploadIMG)
+                }
+            });
+
     }
 
     useEffect(() => {
@@ -83,21 +108,30 @@ const Profile = () => {
 
                                 <div className="container-avatar" style={{ cursor: 'pointer' }}>
                                     <label for="file-input">
-                                        <img src={user.profilePicture.length ? generatePublicUrl(user.profilePicture[0].img) : "https://via.placeholder.com/800x500"} class="card-img-top" alt="Card image cap" />
+                                        {
+                                            previewAvatar ?
+                                                <img className="card-img-top" alt="Card image cap"
+                                                    src={previewAvatar} /> :
+                                                <img src={user.profilePicture.length ?
+                                                    generatePublicUrl(user.profilePicture[0].img) :
+                                                    "https://via.placeholder.com/800x500"}
+                                                    className="card-img-top" alt="Card image cap" />
+                                        }
+
                                         <i aria-hidden="true" for="input-upload-avatar" className="icon-camera fa fa-camera"></i>
                                     </label>
-                                    <input id="file-input" name={fileUpload} type="file" onChange={handleUploadFile} />
+                                    <input id="file-input" type="file" onChange={handleUploadFile} />
                                 </div>
-                                {fileUpload && <button className="btn btn-light waves-effect waves-light m-1" onClick={_uploadAvatar}>Save</button>}
-                                <div class="card-body">
-                                    <h5 class="card-title">{user.firstName + ' ' + user.lastName}</h5>
+                                <button className="btn btn-light waves-effect waves-light m-1" disabled={uploadIMG} style={uploadIMG ? {cursor: 'no-drop'} : null} onClick={_uploadAvatar}>Change avatar</button>
+                                <div className="card-body">
+                                    <h5 className="card-title">{user.firstName + ' ' + user.lastName}</h5>
                                     <h6>Faculty: <small>{facultyById(user.facultyId)}</small></h6>
-                                    <h class="card-text">{user.description}</h>
+                                    <h className="card-text">{user.description}</h>
                                 </div>
                                 <ul class="list-group list-group-flush list shadow-none">
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">Total Contribution<span class="badge badge-info badge-pill">14</span></li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">Total Published Contribution<span class="badge badge-success badge-pill">2</span></li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">Total Pending Contribution<span class="badge badge-danger badge-pill">1</span></li>
+                                    <li className="list-group-item d-flex justify-content-between align-items-center">Total Contribution<span class="badge badge-info badge-pill">14</span></li>
+                                    <li className="list-group-item d-flex justify-content-between align-items-center">Total Published Contribution<span class="badge badge-success badge-pill">2</span></li>
+                                    <li className="list-group-item d-flex justify-content-between align-items-center">Total Pending Contribution<span class="badge badge-danger badge-pill">1</span></li>
                                 </ul>
                                 <div class="card-body">
                                     <a href="javascript:void();" class="card-link">Card link</a>
