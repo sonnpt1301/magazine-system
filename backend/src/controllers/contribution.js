@@ -201,33 +201,21 @@ export const addComment = async (req, res) => {
 
 export const statistic = async (req, res) => {
     try {
-        const contribution = await Contribution.aggregate([{
-            $lookup: {
-                from: 'faculties', // other table name
-                localField: 'facultyId', // name of users table field
-                foreignField: '_id', // name of userinfo table field
-                as: 'faculty_info' // alias for userinfo table
-            }
-        }, {
-            $unwind: '$faculty_info'
-        }, {
-            $group: {
-                _id: {
-                    facultyId: '$facultyId',
-                    'Faculty Name': '$faculty_info.name'
-                },
-                count: {
-                    $sum: 1
+        const statistic = await Contribution.aggregate([
+            { $lookup: { from: 'faculties', localField: 'facultyId', foreignField: '_id', as: 'faculty_info' } },
+            { $unwind: '$faculty_info' },
+            {
+                $group: {
+                    _id: { termId: '$termId', facultyId: '$facultyId', 'facultyName': '$faculty_info.name' }, count: { $sum: 1 },
+                    is_public: {$sum: {$cond: ["$is_public", 1, 0]}},
                 }
-            }
-        }, {
-            $sort: {
-                'count': -1
-            }
-        },])
-        console.log(contribution)
+            },
+            { $sort: { 'count': -1 } },
+        ])
+
+        console.log(statistic)
         res.status(200).json({
-            contribution
+            statistic
         })
     } catch (error) {
         res.status(400).json({
@@ -235,3 +223,5 @@ export const statistic = async (req, res) => {
         })
     }
 }
+
+// facultyId: '$facultyId', 'Faculty Name': '$faculty_info.name'

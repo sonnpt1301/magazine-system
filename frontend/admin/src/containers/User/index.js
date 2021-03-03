@@ -189,6 +189,7 @@ const User = (props) => {
                                                         defaultValue={email}
                                                         placeholder={'Email'}
                                                         onChange={(e) => setEmail(e.target.value)}
+                                                        type="email"
                                                     />
                                                 </Col>
                                             </Row>

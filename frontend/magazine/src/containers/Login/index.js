@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import swal from 'sweetalert';
 import { login } from '../../actions';
 import './style.css';
 
@@ -13,6 +14,9 @@ const Login = () => {
     const auth = useSelector(state => state.auth)
 
     const userLogin = (e) => {
+        if (email === '' || password === '') {
+            swal('Oops!', 'Please fill the bank', 'warning')
+        }
         e.preventDefault()
         const user = {
             email,

@@ -45,19 +45,24 @@ export const addUser = (body) => {
             body: JSON.stringify(body)
         })
         const data = await res.json()
-        const { _user, message } = data
+        const { _user, errors, message } = data
         if (res.status === 201) {
             dispatch({
                 type: userConstants.ADD_USER_SUCCESS,
                 payload: { _user }
             })
-            return await swal("Congratulation", "You have been created successfully", "success")
+            return swal("Congratulation", "You have been created successfully", "success")
         } else {
             dispatch({
                 type: userConstants.ADD_USER_FAILURE,
-                payload: { message }
+                payload: { errors, message }
             })
-            return await swal("Failed", message, "error")
+            if(errors){
+                return swal("Failed", errors, "error")
+            } 
+            if(message){
+                return swal("Failed", message, "error")
+            }
         }
     }
 }

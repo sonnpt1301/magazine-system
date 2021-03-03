@@ -194,20 +194,20 @@ const Header = () => {
                                             generatePublicUrl(user.profilePicture[0].img) :
                                             "https://via.placeholder.com/110x110"} alt="user avatar" /></div>
                                         <div className="media-body">
-                                            <h6 className="mt-2 user-title">Sarajhon Mccoy</h6>
-                                            <p className="user-subtitle">mccoy@example.com</p>
+                                            <h6 className="mt-2 user-title">{user.firstName + ' ' + user.lastName}</h6>
+                                            <p className="user-subtitle">{user.email}</p>
                                         </div>
                                     </div>
                                 </a>
                             </li>
                             <li className="dropdown-divider"></li>
-                            <li className="dropdown-item"><i className="icon-envelope mr-2"></i> Inbox</li>
-                            <li className="dropdown-divider"></li>
-                            <li className="dropdown-item"><i className="icon-wallet mr-2"></i> Account</li>
-                            <li className="dropdown-divider"></li>
-                            <li className="dropdown-item"><i className="icon-settings mr-2"></i> Setting</li>
-                            <li className="dropdown-divider"></li>
-                            <li className="dropdown-item"><i className="icon-power mr-2"></i> Logout</li>
+                                <li className="dropdown-item"><a href=""><i className="icon-envelope mr-2"></i> Inbox</a></li>
+                                <li className="dropdown-divider"></li>
+                                <li className="dropdown-item"><a href=""><i className="icon-wallet mr-2"></i> Account</a></li>
+                                <li className="dropdown-divider"></li>
+                                <li className="dropdown-item"><a href=""><i className="icon-settings mr-2"></i> Setting</a></li>
+                                <li className="dropdown-divider"></li>
+                                <li className="dropdown-item"><a href="login" onClick={logout}><i className="icon-power mr-2"></i> Logout</a></li>
                         </ul>
                     </li>
                 </ul>

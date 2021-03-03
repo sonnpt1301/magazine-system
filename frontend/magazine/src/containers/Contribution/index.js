@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react'
+import moment from 'moment'
+import React, { useEffect, useState } from 'react'
 import { Spinner } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
+import TimeLimit from 'react-time-limit'
 import swal from 'sweetalert'
 import { addComment, addContribution, downloadFile, publishContribution, updateContribution } from '../../actions/contribution.action'
 import Layout from '../../components/Layout'
@@ -8,11 +10,6 @@ import Input from '../../components/UI/Input'
 import Modal from '../../components/UI/Modal'
 import { generatePublicUrl } from '../../urlConfig'
 import './style.css'
-import moment from 'moment'
-import TimeLimit from 'react-time-limit'
-
-
-let socket
 
 const Contribution = () => {
 
@@ -82,7 +79,7 @@ const Contribution = () => {
     const _uploadFile = (e) => {
         e.preventDefault()
         if (title1 === '' || description1 === '' || fileUpload1 === [] || termId === '') {
-            return swal('Oops!', 'Please fill the bank', 'warning')
+            swal('Oops!', 'Please fill the bank', 'warning')
         }
         const form = new FormData()
         form.append('title', title1)
@@ -163,16 +160,20 @@ const Contribution = () => {
     }
 
     useEffect(() => {
+        
+    }, [])
+
+    useEffect(() => {
         setAllContribution(contribution.allContributions)
         setComment(contribution.comments)
         setTerms(term.terms)
-        console.log('Son vam', term.terms[0]?.startDate || Date.now())
         if (term.terms.length) {
             setTermId(term.terms[0]?._id)
             setStartDate(term.terms[0]?.startDate.split('T')[0])
             setEndDate(term.terms[0]?.endDate.split('T')[0])
         }
-    }, [contribution, term.terms])
+    }, [contribution.allContributions, contribution.comments, term.terms])
+    
 
     if (contribution.load) {
         return <Spinner className="spinner" style={{ position: 'fixed', top: '50%', left: '50%' }} animation="border" variant="primary" />
@@ -189,7 +190,7 @@ const Contribution = () => {
                         <div className="container-fluid">
                             <div className="row">
                                 <div className="col-lg-12">
-                                    {termId &&
+                                    {
                                         <TimeLimit from={startDate} to={endDate}>
                                             <button type="button" className="btn btn-light waves-effect waves-light m-1" data-toggle="modal" data-target="#uploadModal">
                                                 Upload Contribution
@@ -250,21 +251,18 @@ const Contribution = () => {
                                                     <div className="list-group">
                                                         <div className="list-group-item d-flex justify-content-between align-items-center" >
                                                             <div style={{ cursor: 'pointer' }} onClick={() => handleShowContribution(term._id)}>{term.topic}</div>
-                                                            <span className="badge badge-secondary badge-pill">14</span>
                                                         </div>
                                                     </div>
                                                 ))
                                             }
-
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-lg-6">
                                     {
-                                        termId ? allContribution.filter((contr => contr.author === user._id && contr.facultyId === contr.user_info.facultyId && contr.termId === termId)).map((contr, index) =>
+                                        allContribution.filter((contr => contr.author === user._id && contr.facultyId === contr.user_info.facultyId && contr.termId === termId)).map((contr, index) =>
                                         (
                                             <div className="card">
-
                                                 <div className="card-body">
                                                     <img className="rounded" style={{ height: '100%', width: '100%' }} src={generatePublicUrl(contr.contributionImage[0].img)} alt="user avatar" />
                                                     <ul className="list-unstyled" key={index}>
@@ -277,9 +275,11 @@ const Contribution = () => {
                                                                             <span className="badge badge-light shadow-light m-1">Pending</span>
                                                                     }
                                                                     <span>
-                                                                        <button data-toggle="modal" data-target="#detailModal" className="btn btn-light btn-sm waves-effect waves-light m-1 pull-right"
-                                                                            onClick={(e) => handleShowDetailModal(contr._id)}><i className="fa fa-edit"></i>
-                                                                        </button>
+                                                                        <TimeLimit from={startDate} to={endDate}>
+                                                                            <button data-toggle="modal" data-target="#detailModal" className="btn btn-light btn-sm waves-effect waves-light m-1 pull-right"
+                                                                                onClick={(e) => handleShowDetailModal(contr._id)}><i className="fa fa-edit"></i>
+                                                                            </button>
+                                                                        </TimeLimit>
                                                                     </span>
                                                                 </h5>
                                                                 <div style={{ paddingBottom: '25px' }}><small style={{ color: 'rgb(172 170 170)' }}>{moment(contr.createdAt).fromNow()}</small></div>
@@ -331,7 +331,7 @@ const Contribution = () => {
                                                     </ul>
                                                 </div>
                                             </div>
-                                        )).reverse() : null
+                                        )).reverse()
                                     }
                                     <Modal
                                         id={'detailModal'}
@@ -376,22 +376,22 @@ const Contribution = () => {
 
                                 </div>
                                 <div className="col-lg-3">
-                                    {termId &&
-                                        <TimeLimit from={moment(endDate).add(1, 'days')}>
-                                            <div class="alert alert-icon-info alert-dismissible" role="alert">
-                                                <button type="button" class="close" data-dismiss="alert">×</button>
-                                                <div class="alert-icon icon-part-info">
-                                                    <i class="fa fa-bell"></i>
-                                                </div>
-                                                <div class="alert-message">
-                                                    <span><strong>Out of date!</strong> This topic is out of date. Can't submit any contribution</span>
-                                                </div>
+
+                                    <TimeLimit from={moment(endDate).add(1, 'days')}>
+                                        <div class="alert alert-icon-info alert-dismissible" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert">×</button>
+                                            <div class="alert-icon icon-part-info">
+                                                <i class="fa fa-bell"></i>
                                             </div>
-                                        </TimeLimit>
-                                    }
+                                            <div class="alert-message">
+                                                <span><strong>Out of date!</strong> This topic is out of date. Can't submit any contribution</span>
+                                            </div>
+                                        </div>
+                                    </TimeLimit>
+
 
                                     {
-                                        termId ? terms.filter(term => term._id === termId).map(term => (
+                                        terms.filter(term => term._id === termId).map(term => (
                                             <div className="card">
                                                 <div className="card-header text-uppercase">Description</div>
                                                 <div className="card-body">
@@ -402,7 +402,7 @@ const Contribution = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                        )) : null
+                                        ))
                                     }
                                 </div>
 

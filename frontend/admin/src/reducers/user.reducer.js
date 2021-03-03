@@ -4,7 +4,8 @@ import { userConstants } from '../actions/constants'
 const initState = {
     users: [],
     loading: false,
-    error: null
+    error: null,
+    message: null
 }
 
 let newUser = []
@@ -50,7 +51,8 @@ export default (state = initState, action) => {
         case userConstants.ADD_USER_FAILURE:
             state = {
                 ...state,
-                error: action.payload.error,
+                error: action.payload.errors,
+                message: action.payload.message,
                 loading: false
             }
             break;

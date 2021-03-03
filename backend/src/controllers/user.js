@@ -3,7 +3,7 @@ import shortid from 'shortid'
 
 export const getUsers = async (req, res) => {
     try {
-        const user = await User.find({ is_deleted: { $ne: true } })
+        const user = await User.find({ is_deleted: { $ne: true }, role: { $ne: 'admin' } })
         res.status(200).json({ user })
     } catch (error) {
         res.status(400).json({ message: error.message })

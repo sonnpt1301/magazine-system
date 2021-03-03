@@ -4,7 +4,7 @@ import {
   BrowserRouter as Router,
   Route, Switch
 } from 'react-router-dom';
-import { getFaculty, getTerms } from './actions';
+import { getFaculty, getStatistic, getTerms } from './actions';
 import { isUserLoggedIn } from './actions/auth.action';
 import { getUsers } from './actions/user.action';
 import './App.css';
@@ -27,6 +27,7 @@ function App() {
       dispatch(getFaculty())
       dispatch(getUsers())
       dispatch(getTerms())
+      dispatch(getStatistic())
     }
   }, [dispatch, auth.authenticate])
 

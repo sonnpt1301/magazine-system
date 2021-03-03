@@ -29,7 +29,7 @@ export const register = async (req, res) => {
         if (_user) {
             res.status(201).json({ _user, messages: 'User created successfully!!!' })
         } else {
-            res.status(400).json({ error })
+            res.status(10400).json({ error })
         }
     } catch (error) {
         res.status(400).json({ error })

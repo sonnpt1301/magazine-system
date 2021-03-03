@@ -78,8 +78,8 @@ const Profile = () => {
             buttons: true,
             dangerMode: true,
         })
-            .then((willDelete) => {
-                if (willDelete) {
+            .then((willChange) => {
+                if (willChange) {
                     dispatch(uploadAvatar(params, form))
                     setPreviewAvatar(null)
                     setUploadIMG(!uploadIMG)
@@ -122,21 +122,16 @@ const Profile = () => {
                                     </label>
                                     <input id="file-input" type="file" onChange={handleUploadFile} />
                                 </div>
-                                <button className="btn btn-light waves-effect waves-light m-1" disabled={uploadIMG} style={uploadIMG ? {cursor: 'no-drop'} : null} onClick={_uploadAvatar}>Change avatar</button>
+                                <button className="btn btn-light waves-effect waves-light m-1" disabled={uploadIMG} style={uploadIMG ? { cursor: 'no-drop' } : null} onClick={_uploadAvatar}>Change avatar</button>
                                 <div className="card-body">
                                     <h5 className="card-title">{user.firstName + ' ' + user.lastName}</h5>
                                     <h6>Faculty: <small>{facultyById(user.facultyId)}</small></h6>
-                                    <h className="card-text">{user.description}</h>
                                 </div>
                                 <ul class="list-group list-group-flush list shadow-none">
                                     <li className="list-group-item d-flex justify-content-between align-items-center">Total Contribution<span class="badge badge-info badge-pill">14</span></li>
                                     <li className="list-group-item d-flex justify-content-between align-items-center">Total Published Contribution<span class="badge badge-success badge-pill">2</span></li>
                                     <li className="list-group-item d-flex justify-content-between align-items-center">Total Pending Contribution<span class="badge badge-danger badge-pill">1</span></li>
                                 </ul>
-                                <div class="card-body">
-                                    <a href="javascript:void();" class="card-link">Card link</a>
-                                    <a href="javascript:void();" class="card-link">Another link</a>
-                                </div>
                             </div>
                         </div>
                         <div class="col-lg-8">
@@ -145,9 +140,6 @@ const Profile = () => {
                                     <ul class="nav nav-tabs nav-tabs-primary top-icon nav-justified">
                                         <li class="nav-item">
                                             <a href="javascript:void();" data-target="#profile" data-toggle="pill" class="nav-link active"><i class="icon-user"></i> <span class="hidden-xs">Profile</span></a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="javascript:void();" data-target="#messages" data-toggle="pill" class="nav-link"><i class="icon-envelope-open"></i> <span class="hidden-xs">Messages</span></a>
                                         </li>
                                         <li class="nav-item">
                                             <a href="javascript:void();" data-target="#edit" data-toggle="pill" class="nav-link" onClick={handleUpdateProfile}><i class="icon-note"></i> <span class="hidden-xs">Edit</span></a>
@@ -160,104 +152,9 @@ const Profile = () => {
                                                 <div class="col-md-6">
                                                     <h6>About</h6>
                                                     <p>
-                                                        Web Designer, UI/UX Engineer
-                            </p>
-                                                    <h6>Hobbies</h6>
-                                                    <p>
-                                                        Indie music, skiing and hiking. I love the great outdoors.
-                            </p>
+                                                        {user.description}
+                                                    </p>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <h6>Recent badges</h6>
-                                                    <a href="javascript:void();" class="badge badge-dark badge-pill">html5</a>
-                                                    <a href="javascript:void();" class="badge badge-dark badge-pill">react</a>
-                                                    <a href="javascript:void();" class="badge badge-dark badge-pill">codeply</a>
-                                                    <a href="javascript:void();" class="badge badge-dark badge-pill">angularjs</a>
-                                                    <a href="javascript:void();" class="badge badge-dark badge-pill">css3</a>
-                                                    <a href="javascript:void();" class="badge badge-dark badge-pill">jquery</a>
-                                                    <a href="javascript:void();" class="badge badge-dark badge-pill">bootstrap</a>
-                                                    <a href="javascript:void();" class="badge badge-dark badge-pill">responsive-design</a>
-                                                    <hr />
-                                                    <span class="badge badge-primary"><i class="fa fa-user"></i> 900 Followers</span>
-                                                    <span class="badge badge-success"><i class="fa fa-cog"></i> 43 Forks</span>
-                                                    <span class="badge badge-danger"><i class="fa fa-eye"></i> 245 Views</span>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <h5 class="mt-2 mb-3"><span class="fa fa-clock-o ion-clock float-right"></span> Recent Activity</h5>
-                                                    <div class="table-responsive">
-                                                        <table class="table table-hover table-striped">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td>
-                                                                        <strong>Abby</strong> joined ACME Project Team in <strong>`Collaboration`</strong>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <strong>Gary</strong> deleted My Board1 in <strong>`Discussions`</strong>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <strong>Kensington</strong> deleted MyBoard3 in <strong>`Discussions`</strong>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <strong>John</strong> deleted My Board1 in <strong>`Discussions`</strong>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <strong>Skell</strong> deleted his post Look at Why this is.. in <strong>`Discussions`</strong>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="tab-pane" id="messages">
-                                            <div class="alert alert-info alert-dismissible" role="alert">
-                                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                                <div class="alert-icon">
-                                                    <i class="icon-info"></i>
-                                                </div>
-                                                <div class="alert-message">
-                                                    <span><strong>Info!</strong> Lorem Ipsum is simply dummy text.</span>
-                                                </div>
-                                            </div>
-                                            <div class="table-responsive">
-                                                <table class="table table-hover table-striped">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>
-                                                                <span class="float-right font-weight-bold">3 hrs ago</span> Here is your a link to the latest summary report from the..
-                                </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <span class="float-right font-weight-bold">Yesterday</span> There has been a request on your account since that was..
-                                </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <span class="float-right font-weight-bold">9/10</span> Porttitor vitae ultrices quis, dapibus id dolor. Morbi venenatis lacinia rhoncus.
-                                </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <span class="float-right font-weight-bold">9/4</span> Vestibulum tincidunt ullamcorper eros eget luctus.
-                                </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <span class="float-right font-weight-bold">9/4</span> Maxamillion ais the fix for tibulum tincidunt ullamcorper eros.
-                                </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
                                             </div>
                                         </div>
                                         <div class="tab-pane" id="edit">
