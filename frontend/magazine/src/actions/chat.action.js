@@ -1,10 +1,11 @@
 import { chatConstants } from './constants'
+import { api } from '../urlConfig'
 
 export const getMessage = () => {
     const token = localStorage.getItem('token')
     return async dispatch => {
         dispatch({ type: chatConstants.GET_MESSAGES_REQUEST })
-        const res = await fetch('http://localhost:5000/api/chat/get-message', {
+        const res = await fetch(`${api}/chat/get-message`, {
             method: 'GET',
             headers: {
                 "Authorization": `Bearer ${token}`

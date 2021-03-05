@@ -1,10 +1,10 @@
 import { facultyConstants } from './constants'
-
+import { api } from '../urlConfig'
 export const getFaculty = () => {
     return async dispatch => {
         const token = localStorage.getItem('token')
         dispatch({ type: facultyConstants.GET_FACULTY_REQUEST })
-        const res = await fetch('http://localhost:5000/api/faculty/getFaculty', {
+        const res = await fetch(`${api}/faculty/getFaculty`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

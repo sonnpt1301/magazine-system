@@ -15,16 +15,17 @@ function App() {
   const auth = useSelector(state => state.auth)
 
   useEffect(() => {
-    if (!auth.authenticate) {
-      dispatch(isUserLoggedIn())
-    } else {
+    if (auth.authenticate) {
       dispatch(getAllContributions())
       dispatch(listComment())
       dispatch(getMessage())
       dispatch(getUsers())
       dispatch(getFaculty())
       dispatch(getTerms())
+    } else {
+      dispatch(isUserLoggedIn())
     }
+
   }, [dispatch, auth.authenticate])
 
   return (

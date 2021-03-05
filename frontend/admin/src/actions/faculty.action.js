@@ -69,7 +69,7 @@ export const updateFaculty = (params, body) => {
 
         dispatch({ type: facultyConstants.UPDATE_FACULTY_REQUEST })
         const { facultyId } = params
-        const res = await fetch(`http://localhost:5000/api/faculty/updateFaculty/${facultyId}`, {
+        const res = await fetch(`https://magazine-system-be.herokuapp.com/api/faculty/updateFaculty/${facultyId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ export const deleteFaculty = (params) => {
     return async dispatch => {
         dispatch({ type: facultyConstants.DELETE_FACULTY_REQUEST })
         const { facultyId } = params
-        const res = await fetch(`http://localhost:5000/api/faculty/deleteFaculty/${facultyId}`, {
+        const res = await fetch(`https://magazine-system-be.herokuapp.com/api/faculty/deleteFaculty/${facultyId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

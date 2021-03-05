@@ -14,7 +14,7 @@ export const uploadAvatar = async (req, res) => {
     try {
         const { id } = req.params
         let profilePicture = []
-        req.files.length && (profilePicture = req.files.map(({ filename }) => ({ img: filename })))
+        req.files.length && (profilePicture = req.files.map(({ location }) => ({ img: location })))
         const user = await User.findOneAndUpdate({ _id: id }, {
             $set: {
                 ...req.body,
@@ -22,7 +22,7 @@ export const uploadAvatar = async (req, res) => {
             }
         }, { new: true })
         if (user) {
-            res.status(200).json({ user })
+            res.status(200).json({ user, files: req.files })
         } else {
             res.status(400).json({ error })
         }

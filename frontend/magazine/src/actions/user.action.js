@@ -1,12 +1,12 @@
 import { userConstants } from './constants'
 import swal from 'sweetalert'
-
+import { api } from '../urlConfig'
 export const getUsers = () => {
     const token = localStorage.getItem('token')
 
     return async dispatch => {
         dispatch({ type: userConstants.GET_USERS_REQUEST })
-        const res = await fetch('http://localhost:5000/api/user/get-users', {
+        const res = await fetch(`${api}/user/get-users`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export const updateUser = (params, body) => {
     return async dispatch => {
         dispatch({ type: userConstants.UPDATE_USER_REQUEST })
         const { userId } = params
-        const res = await fetch(`http://localhost:5000/api/user/update/${userId}`, {
+        const res = await fetch(`${api}/user/update/${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ export const uploadAvatar = (params, form) => {
     return async dispatch => {
         dispatch({ type: userConstants.UPDATE_USER_REQUEST })
         const { userId } = params
-        const res = await fetch(`http://localhost:5000/api/user/uploadAvatar/${userId}`, {
+        const res = await fetch(`${api}/user/uploadAvatar/${userId}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`

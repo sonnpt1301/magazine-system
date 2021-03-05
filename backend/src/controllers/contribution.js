@@ -4,6 +4,7 @@ import Comment from '../models/comment.js'
 import nodemailer from 'nodemailer'
 import AdmZip from 'adm-zip'
 import mongoose from 'mongoose'
+import { s3Download } from '../upload.js'
 
 export const getAllContributions = async (req, res) => {
     try {
@@ -26,8 +27,8 @@ export const uploadFile = async (req, res) => {
         const sender = await User.findOne({
             _id: req.user._id
         })
-        const filesUpload = files.map(({ filename, path }) => ({ fileName: filename, filePath: path }))
-        const bgUpload = background.map(({ filename }) => ({ img: filename }))
+        const filesUpload = files.map(({ originalname, key }) => ({ fileName: originalname, filePath: key }))
+        const bgUpload = background.map(({ location }) => ({ img: location }))
         const receiver = await User.findOne({
             facultyId: sender.facultyId,
             role: 'coordinator'
@@ -72,7 +73,8 @@ export const uploadFile = async (req, res) => {
             html: `<b>Your Faculty has the contribution is submitted by ${fullName}</b>` // html body
         });
         res.status(201).json({
-            contribution
+            contribution,
+            files: req.files
         })
     } catch (error) {
         res.status(400).json({
@@ -85,7 +87,7 @@ export const updateContribution = async (req, res) => {
     try {
         const { id } = req.params
         const files = req.files
-        const filesUpload = files.map(({ filename, path }) => ({ fileName: filename, filePath: path }))
+        const filesUpload = files.map(({ originalname, key }) => ({ fileName: originalname, filePath: key }))
         const contri = await Contribution.findOneAndUpdate({ _id: id }, {
             $set: {
                 ...req.body,
@@ -136,8 +138,23 @@ export const publicContribution = async (req, res) => {
     }
 }
 
+const getObjectS3 = async (s3Client, params) => {
+    return await new Promise((resolve, reject) => {
+        s3Client.listObject(params, (err, data) => {
+            if (err) {
+                console.log(err)
+                reject(err)
+            } else {
+                resolve(data)
+            }
+        })
+    })
+}
+
 export const downloadFile = async (req, res) => {
     try {
+        const s3Client = s3Download.s3;
+        const params = s3Download.downloadParams
         const {
             contributionId, id
         } = req.params
@@ -145,21 +162,24 @@ export const downloadFile = async (req, res) => {
             _id: contributionId
         })
         const fileDownload = file.filesUpload.find(x => String(x._id) === id)
+        params.Key = fileDownload.filePath
 
-        console.log(file.fileName)
-        if (file) {
-            const zip = new AdmZip();
-            zip.addLocalFile(fileDownload.filePath);
+        const data = await getObjectS3(s3Client, params)
+        console.log(data)             
+        // if (data) {
+        //     const zip = new AdmZip();
+        //     zip.addLocalFile(data.Body);
             // Define zip file name
-            const downloadName = `${fileDownload.fileName}.zip`;
-            const data = zip.toBuffer();
+            // const downloadName = `${fileDownload.fileName}.zip`;
+            // const zipData = zip.toBuffer();
             // code to download zip file
             res.set('Content-Type', 'application/octet-stream');
-            res.set('Content-Disposition', `attachment; filename=${downloadName}`);
-            res.set('Content-Length', data.length);
-            res.send(data);
-        }
+            res.set('Content-Disposition', `attachment; filename=${fileDownload.fileName}`);
+            res.set('Content-Length', data.Body.length);
+            res.send(data.Body);
+        // }
     } catch (error) {
+        console.log(error)
         res.status(400).json({
             error: error.message
         })
@@ -207,7 +227,7 @@ export const statistic = async (req, res) => {
             {
                 $group: {
                     _id: { termId: '$termId', facultyId: '$facultyId', 'facultyName': '$faculty_info.name' }, count: { $sum: 1 },
-                    is_public: {$sum: {$cond: ["$is_public", 1, 0]}},
+                    is_public: { $sum: { $cond: ["$is_public", 1, 0] } },
                 }
             },
             { $sort: { 'count': -1 } },

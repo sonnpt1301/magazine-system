@@ -1,10 +1,10 @@
 import { termConstants } from './constants'
-
+import { api } from '../urlConfig'
 export const getTerms = () => {
     return async dispatch => {
         dispatch({ type: termConstants.GET_TERMS_REQUEST })
         const token = localStorage.getItem('token')
-        const res = await fetch('http://localhost:5000/api/term/getClosureDate', {
+        const res = await fetch(`${api}/term/getClosureDate`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`

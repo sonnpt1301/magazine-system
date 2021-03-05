@@ -1,13 +1,13 @@
 import { contributionConstants } from './constants'
 import swal from 'sweetalert';
-
+import { api } from '../urlConfig'
 
 export const getAllContributions = () => {
     const token = localStorage.getItem('token')
-    
+
     return async dispatch => {
         dispatch({ type: contributionConstants.GET_ALL_CONTRIBUTION_REQUEST })
-        const res = await fetch('http://localhost:5000/api/contribution/get-all-contributions', {
+        const res = await fetch(`${api}/contribution/get-all-contributions`, {
             method: 'GET',
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -34,7 +34,7 @@ export const addContribution = (form) => {
         const token = localStorage.getItem('token')
 
         dispatch({ type: contributionConstants.ADD_CONTRIBUTION_REQUEST })
-        const res = await fetch('http://localhost:5000/api/contribution//upload-file', {
+        const res = await fetch(`${api}/contribution//upload-file`, {
             method: 'POST',
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -65,7 +65,7 @@ export const updateContribution = (params, form) => {
     return async dispatch => {
         dispatch({ type: contributionConstants.UPDATE_CONTRIBUTION_REQUEST })
         const { id } = params
-        const res = await fetch(`http://localhost:5000/api/contribution/update-contribution/${id}`, {
+        const res = await fetch(`${api}contribution/update-contribution/${id}`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -95,7 +95,7 @@ export const publishContribution = (body) => {
 
     return async dispatch => {
         dispatch({ type: contributionConstants.PUBLISH_CONTRIBUTION_REQUEST })
-        const res = await fetch('http://localhost:5000/api/contribution/public-contribution', {
+        const res = await fetch(`${api}contribution/public-contribution`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ export const downloadFile = (params) => {
 
     return async dispatch => {
         const { contributionId, fileId, fileName } = params
-        const res = await fetch(`http://localhost:5000/api/contribution/${contributionId}/download/${fileId}`, {
+        const res = await fetch(`${api}/contribution/${contributionId}/download/${fileId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -153,7 +153,7 @@ export const addComment = (params, body) => {
     return async dispatch => {
         dispatch({ type: contributionConstants.ADD_COMMENT_REQUEST })
         const { contributionId } = params
-        const res = await fetch(`http://localhost:5000/api/contribution/${contributionId}/comment`, {
+        const res = await fetch(`${api}/contribution/${contributionId}/comment`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -181,7 +181,7 @@ export const listComment = () => {
     const token = localStorage.getItem('token')
     return async dispatch => {
         dispatch({ type: contributionConstants.GET_COMMENT_REQUEST })
-        const res = await fetch('http://localhost:5000/api/contribution/list-comment', {
+        const res = await fetch(`${api}/contribution/list-comment`, {
             method: 'GET',
             headers: {
                 "Authorization": `Bearer ${token}`

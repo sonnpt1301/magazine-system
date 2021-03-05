@@ -2,6 +2,7 @@ import { authConstants } from './constants';
 import axios from '../helper/axios'
 import swal from 'sweetalert';
 import { Redirect } from 'react-router-dom';
+import { api } from '../urlConfig'
 
 
 export const isUserLoggedIn = () => {
@@ -31,7 +32,7 @@ export const isUserLoggedIn = () => {
 export const login = (user) => {
     return async dispatch => {
         dispatch({ type: authConstants.LOGIN_REQUEST })
-        const res = await fetch('http://localhost:5000/api/auth/login', {
+        const res = await fetch(`${api}/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -74,9 +75,11 @@ export const signOut = () => {
             dispatch({
                 type: authConstants.LOGOUT_REQUEST
             })
-            const res = await axios.post('auth/logout')
+            const res = await fetch(`${api}/auth/logout`, {
+                method: 'POST',
+            })
             if (res.status === 200) {
-                localStorage.clear()
+                window.localStorage.clear()
                 dispatch({ type: authConstants.LOGOUT_SUCCESS })
             } else {
                 dispatch({

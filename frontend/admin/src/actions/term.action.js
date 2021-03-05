@@ -5,7 +5,7 @@ export const getTerms = () => {
     return async dispatch => {
         dispatch({ type: termConstants.GET_TERMS_REQUEST })
         const token = localStorage.getItem('token')
-        const res = await fetch('http://localhost:5000/api/term/getClosureDate', {
+        const res = await fetch('https://magazine-system-be.herokuapp.com/api/term/getClosureDate', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -31,7 +31,7 @@ export const setClosureDate = (body) => {
     return async dispatch => {
         const token = localStorage.getItem('token')
         dispatch({ type: termConstants.ADD_TERMS_REQUEST })
-        const res = await fetch('http://localhost:5000/api/term/setClosureDate', {
+        const res = await fetch('https://magazine-system-be.herokuapp.com/api/term/setClosureDate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ export const updateClosureDate = (params, body) => {
         const { termId } = params
         const token = localStorage.getItem('token')
         dispatch({ type: termConstants.UPDATE_TERMS_REQUEST })
-        const res = await fetch(`http://localhost:5000/api/term/editClosureDate/${termId}`, {
+        const res = await fetch(`https://magazine-system-be.herokuapp.com/api/term/editClosureDate/${termId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

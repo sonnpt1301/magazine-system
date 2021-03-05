@@ -36,7 +36,7 @@ export const addUser = (body) => {
 
     return async dispatch => {
         dispatch({ type: userConstants.ADD_USER_REQUEST })
-        const res = await fetch('http://localhost:5000/api/auth/register', {
+        const res = await fetch('https://magazine-system-be.herokuapp.com/api/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ export const updateUser = (params, body) => {
     return async dispatch => {
         dispatch({ type: userConstants.UPDATE_USER_REQUEST })
         const { userId } = params
-        const res = await fetch(`http://localhost:5000/api/user/update/${userId}`, {
+        const res = await fetch(`https://magazine-system-be.herokuapp.com/api/user/update/${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ export const deleteUser = (params) => {
     return async dispatch => {
         dispatch({ type: userConstants.DELETE_USER_REQUEST })
         const { userId } = params
-        const res = await fetch(`http://localhost:5000/api/user/delete/${userId}`, {
+        const res = await fetch(`https://magazine-system-be.herokuapp.com/api/user/delete/${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
