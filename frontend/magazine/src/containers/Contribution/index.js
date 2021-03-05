@@ -78,37 +78,45 @@ const Contribution = () => {
 
     const _uploadFile = (e) => {
         e.preventDefault()
-        if (title1 === '' || description1 === '' || fileUpload1 === [] || termId === '') {
+        if (title1 === '' || description1 === '' || termId === '') {
             return swal('Oops!', 'Please fill the bank', 'warning')
         }
-        const form = new FormData()
-        form.append('title', title1)
-        form.append('description', description1)
-        form.append('termId', termId)
-        for (let file of fileUpload1) {
-            form.append('filesUpload', file)
+        if (!fileUpload1.length) {
+            return swal('Oops!', 'Please choose file upload', 'warning')
+        } else {
+            const form = new FormData()
+            form.append('title', title1)
+            form.append('description', description1)
+            form.append('termId', termId)
+            for (let file of fileUpload1) {
+                form.append('filesUpload', file)
+            }
+            for (let file of backgroundContribution) {
+                form.append('contributionImage', file)
+            }
+            dispatch(addContribution(form))
+            setTitle1('')
+            setDescription1('')
+            setFileUpload1([])
+            setBackgroundContribution([])
+            setCheckbox(!checkbox)
         }
-        for (let file of backgroundContribution) {
-            form.append('contributionImage', file)
-        }
-        dispatch(addContribution(form))
-        setTitle1('')
-        setDescription1('')
-        setFileUpload1([])
-        setBackgroundContribution([])
-        setCheckbox(!checkbox)
     }
 
     const _updateContribution = (id) => {
         const form = new FormData()
         const params = { id }
-        form.append('title', title)
-        form.append('description', description)
-        for (let file of updateFileUpload) {
-            form.append('filesUpload', file)
+        if (!updateFileUpload.length) {
+            return swal('Oops!', 'Please choose file upload', 'warning')
+        } else {
+            form.append('title', title)
+            form.append('description', description)
+            for (let file of updateFileUpload) {
+                form.append('filesUpload', file)
+            }
+            dispatch(updateContribution(params, form))
+            setUpdateFileUpload([])
         }
-        dispatch(updateContribution(params, form))
-        setUpdateFileUpload([])
     }
 
     const handleShowDetailModal = (id) => {
@@ -158,10 +166,6 @@ const Contribution = () => {
             setContent(newArr)
         }
     }
-
-    useEffect(() => {
-
-    }, [])
 
     useEffect(() => {
         setAllContribution(contribution.allContributions)

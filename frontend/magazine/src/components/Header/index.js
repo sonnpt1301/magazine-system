@@ -10,7 +10,8 @@ const Header = () => {
     const auth = useSelector(state => state.auth)
     const dispatch = useDispatch()
 
-    const logout = () => {
+    const logout = (e) => {
+        e.preventDefault()
         dispatch(signOut())
     }
 

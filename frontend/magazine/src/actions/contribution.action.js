@@ -65,7 +65,7 @@ export const updateContribution = (params, form) => {
     return async dispatch => {
         dispatch({ type: contributionConstants.UPDATE_CONTRIBUTION_REQUEST })
         const { id } = params
-        const res = await fetch(`${api}contribution/update-contribution/${id}`, {
+        const res = await fetch(`${api}/contribution/update-contribution/${id}`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -95,7 +95,7 @@ export const publishContribution = (body) => {
 
     return async dispatch => {
         dispatch({ type: contributionConstants.PUBLISH_CONTRIBUTION_REQUEST })
-        const res = await fetch(`${api}contribution/public-contribution`, {
+        const res = await fetch(`${api}/contribution/public-contribution`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

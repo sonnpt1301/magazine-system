@@ -9,7 +9,8 @@ const LeftMenu = () => {
 
     const { user } = auth
 
-    const logout = () => {
+    const logout = (e) => {
+        e.preventDefault()
         dispatch(signOut())
     }
 

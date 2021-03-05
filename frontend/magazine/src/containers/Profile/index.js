@@ -83,9 +83,6 @@ const Profile = () => {
                     dispatch(uploadAvatar(params, form))
                     setPreviewAvatar(null)
                     setUploadIMG(!uploadIMG)
-                    swal("Success! Your avatar has been changed", {
-                        icon: "success",
-                    });
                 } else {
                     setPreviewAvatar(null)
                     setUploadIMG(!uploadIMG)

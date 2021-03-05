@@ -87,7 +87,7 @@ export const uploadAvatar = (params, form) => {
                 type: userConstants.UPDATE_USER_SUCCESS,
                 payload: { user }
             })
-            return await swal("Congratulation", "You have been updated successfully", "success")
+            return await swal("Congratulation", "Your avatar has been changed", "success")
         } else {
             dispatch({
                 type: userConstants.UPDATE_USER_FAILURE,

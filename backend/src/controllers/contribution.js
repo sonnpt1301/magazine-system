@@ -87,7 +87,7 @@ export const updateContribution = async (req, res) => {
     try {
         const { id } = req.params
         const files = req.files
-        const filesUpload = files.map(({ filename, path }) => ({ fileName: filename, filePath: path }))
+        const filesUpload = files.map(({ originalname, key }) => ({ fileName: originalname, filePath: key }))
         const contri = await Contribution.findOneAndUpdate({ _id: id }, {
             $set: {
                 ...req.body,

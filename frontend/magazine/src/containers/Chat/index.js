@@ -52,13 +52,11 @@ const Chat = () => {
         socket.emit('room', room);
 
         socket.on('Output chat message', (msg) => {
-            console.log(msg)
             dispatch(afterSendMessage(msg))
         })
 
         return () => {
             socket.emit("disconnection");
-
             socket.off();
         };
     }, [])
@@ -73,15 +71,17 @@ const Chat = () => {
         if (msg.messages.length && msg.messages[0].sender._id === user._id) {
             setReceiverId(msg.messages[0]?.receiver._id)
             const user = users.find(usr => usr._id === msg.messages[0]?.receiver._id)
-            console.log(user)
-            setReceiverName(user?.lastName)
-            setReceiverAvatar(user?.profilePicture[0]?.img)
+            if (user) {
+                setReceiverName(user.firstName + " " + user.lastName)
+                setReceiverAvatar(user.profilePicture[0].img)
+            }
         } else {
             setReceiverId(msg.messages[0]?.sender._id)
             const user = users.find(usr => usr._id === msg.messages[0]?.sender._id)
-            console.log(user)
-            setReceiverName(user?.lastName)
-            setReceiverAvatar(user?.profilePicture[0]?.img)
+            if (user) {
+                setReceiverName(user.firstName + " " + user.lastName)
+                setReceiverAvatar(user.profilePicture[0].img)
+            }
         }
 
     }, [msg.messages, userStore.users])
@@ -110,7 +110,7 @@ const Chat = () => {
                                                             "https://via.placeholder.com/110x110"}
                                                             className="img-circle user-profile" alt="user avatar"
                                                         />
-                                                        <div style={{ paddingLeft: '10px' }} className="mt-0 mb-1 ml-1">{usr.lastName}</div>
+                                                        <div style={{ paddingLeft: '10px' }} className="mt-0 mb-1 ml-1">{usr.firstName + ' ' + usr.lastName}</div>
                                                     </div>
                                                 </li>
                                             </ul>
@@ -157,28 +157,28 @@ const Chat = () => {
                                                             <div style={{ wordBreak: 'break-all' }}><small style={{ marginLeft: '60px', color: 'rgb(172 170 170)' }}>{moment(msg.createdAt).fromNow()}</small></div>
                                                         </>
                                                     ) : (
-                                                            <>
-                                                                <div className="user-profile" style={{ display: 'flex', marginTop: '10px', justifyContent: 'flex-end' }}>
-                                                                    <div className="card ml-1" style={{ borderRadius: '15px', backgroundColor: 'rgb(0, 132, 255)', marginBottom: '0', marginRight: '5px' }}>
-                                                                        <div className="card-body" style={{ padding: '5px 20px' }}>
-                                                                            <div className="list-unstyled">
-                                                                                <div className="media">
-                                                                                    <div className="media-body" style={{ wordBreak: 'break-all' }}>
-                                                                                        {msg.message}
-                                                                                    </div>
+                                                        <>
+                                                            <div className="user-profile" style={{ display: 'flex', marginTop: '10px', justifyContent: 'flex-end' }}>
+                                                                <div className="card ml-1" style={{ borderRadius: '15px', backgroundColor: 'rgb(0, 132, 255)', marginBottom: '0', marginRight: '5px' }}>
+                                                                    <div className="card-body" style={{ padding: '5px 20px' }}>
+                                                                        <div className="list-unstyled">
+                                                                            <div className="media">
+                                                                                <div className="media-body" style={{ wordBreak: 'break-all' }}>
+                                                                                    {msg.message}
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <img src={user.profilePicture.length ?
-                                                                        generatePublicUrl(user.profilePicture[0].img) :
-                                                                        "https://via.placeholder.com/110x110"}
-                                                                        className="img-circle user-profile" alt="user avatar"
-                                                                    />
                                                                 </div>
-                                                                <div style={{ display: 'flex', justifyContent: 'flex-end' }}><small style={{ marginRight: '40px', color: 'rgb(172 170 170)' }}>{moment(msg.createdAt).fromNow()}</small></div>
-                                                            </>
-                                                        )
+                                                                <img src={user.profilePicture.length ?
+                                                                    generatePublicUrl(user.profilePicture[0].img) :
+                                                                    "https://via.placeholder.com/110x110"}
+                                                                    className="img-circle user-profile" alt="user avatar"
+                                                                />
+                                                            </div>
+                                                            <div style={{ display: 'flex', justifyContent: 'flex-end' }}><small style={{ marginRight: '40px', color: 'rgb(172 170 170)' }}>{moment(msg.createdAt).fromNow()}</small></div>
+                                                        </>
+                                                    )
                                                 }
                                             </div>
                                         ))
