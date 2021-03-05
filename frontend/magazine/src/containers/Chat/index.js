@@ -40,7 +40,7 @@ const Chat = () => {
         const user = users.find(usr => usr._id === id)
         console.log(user)
         if (user) {
-            setReceiverName(user.lastName)
+            setReceiverName(user.firstName + " " + user.lastName)
             setReceiverAvatar(user.profilePicture[0]?.img)
         }
     }
@@ -68,6 +68,9 @@ const Chat = () => {
     useEffect(() => {
         setMessages(msg.messages)
         setUsers(userStore.users)
+    }, [msg.messages, userStore.users])
+
+    useEffect(() => {
         if (msg.messages.length && msg.messages[0].sender._id === user._id) {
             setReceiverId(msg.messages[0]?.receiver._id)
             const user = users.find(usr => usr._id === msg.messages[0]?.receiver._id)
@@ -83,9 +86,7 @@ const Chat = () => {
                 setReceiverAvatar(user.profilePicture[0].img)
             }
         }
-
-    }, [msg.messages, userStore.users])
-
+    }, [])
 
     return (
         <Layout>

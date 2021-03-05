@@ -16,8 +16,8 @@ import aws from 'aws-sdk'
 // export const upload = multer({ storage })
 
 const s3 = new aws.S3({
-  accessKeyId: 'AKIAIJCIKN4KXHOY4XJQ',
-  secretAccessKey: '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'
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_KEY
 })
 
 export const uploadS3 = multer({

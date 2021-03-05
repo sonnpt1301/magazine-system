@@ -51,12 +51,17 @@ const LeftMenu = () => {
                 <li className="sidebar-header">MAIN NAVIGATION</li>
                 <li>
                     <NavLink to="/" className="waves-effect">
-                        <i className="zmdi zmdi-view-dashboard"></i> <span>Dashboard</span>
+                        <i className="fa fa-dashboard"></i> <span>Dashboard</span>
                     </NavLink>
                 </li>
                 <li>
                     <NavLink to="/contribution" className="waves-effect">
-                        <i className="zmdi zmdi-view-dashboard"></i> <span>Contribution</span>
+                        <i className="fa fa-book"></i> <span>Contribution</span>
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink to="/about" className="waves-effect">
+                        <i className="fa fa-exclamation-circle"></i> <span>About</span>
                     </NavLink>
                 </li>
             </ul>

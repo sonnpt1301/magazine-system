@@ -243,11 +243,10 @@ const Contribution = () => {
                                     </Modal>
                                 </div>
                             </div>
-
                             {/* List Contribution */}
                             <div className="row">
                                 <div className="col-lg-3">
-                                    <div className="card">
+                                    <div className="card card-left">
                                         <div className="card-header text-uppercase">Topics</div>
                                         <div className="card-body">
                                             {
@@ -380,7 +379,6 @@ const Contribution = () => {
 
                                 </div>
                                 <div className="col-lg-3">
-
                                     <TimeLimit from={moment(endDate).add(1, 'days')}>
                                         <div class="alert alert-icon-info alert-dismissible" role="alert">
                                             <button type="button" class="close" data-dismiss="alert">×</button>
@@ -392,11 +390,9 @@ const Contribution = () => {
                                             </div>
                                         </div>
                                     </TimeLimit>
-
-
                                     {
                                         terms.filter(term => term._id === termId).map(term => (
-                                            <div className="card">
+                                            <div className="card card-right">
                                                 <div className="card-header text-uppercase">Description</div>
                                                 <div className="card-body">
                                                     <div className="list-group">
@@ -409,7 +405,6 @@ const Contribution = () => {
                                         ))
                                     }
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -438,7 +433,6 @@ const Contribution = () => {
                                                     <div className="list-group">
                                                         <div className="list-group-item d-flex justify-content-between align-items-center" >
                                                             <div style={{ cursor: 'pointer' }} onClick={() => handleShowContribution(term._id)}>{term.topic}</div>
-                                                            <span className="badge badge-secondary badge-pill">14</span>
                                                         </div>
                                                     </div>
                                                 ))
@@ -456,7 +450,7 @@ const Contribution = () => {
                                                     <ul className="list-unstyled" >
                                                         <div className="user-profile" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                                             <div><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" /></div>
-                                                            <span><h5 className="mt-0 mb-1 ml-1">{contr.user_info.lastName}</h5></span>
+                                                            <span><h5 className="mt-0 mb-1 ml-1">{contr.user_info.firstName + " " + contr.user_info.lastName}</h5></span>
                                                         </div>
 
                                                         <img className="rounded" style={{ height: '100%', width: '100%' }} src={generatePublicUrl(contr.contributionImage[0].img)} alt="user avatar" />
@@ -607,22 +601,7 @@ const Contribution = () => {
                                             )).reverse()
                                     }
                                 </div>
-                                <div className="col-lg-3">
-                                    {
-                                        termId ? terms.filter(term => term._id === termId).map(term => (
-                                            <div className="card">
-                                                <div className="card-header text-uppercase">Description</div>
-                                                <div className="card-body">
-                                                    <div className="list-group">
-                                                        <div className="list-group-item d-flex justify-content-between align-items-center" >
-                                                            <div>{term.description}</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )) : null
-                                    }
-                                </div>
+                                <div className="col-lg-3"></div>
                             </div>
                         </div>
                     </div>
@@ -643,16 +622,31 @@ const Contribution = () => {
                     <div className="content-wrapper">
                         <div className="container-fluid">
                             <div className="row">
-                                <div className="col-lg-3"></div>
+                                <div className="col-lg-3">
+                                    <div className="card card-left">
+                                        <div className="card-header text-uppercase">Topics</div>
+                                        <div className="card-body">
+                                            {
+                                                terms.map(term => (
+                                                    <div className="list-group">
+                                                        <div className="list-group-item d-flex justify-content-between align-items-center" >
+                                                            <div style={{ cursor: 'pointer' }} onClick={() => handleShowContribution(term._id)}>{term.topic}</div>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
                                 <div className="col-lg-6">
 
                                     {
-                                        allContribution.filter(contr => contr.is_public === true).map(contr => (
+                                        allContribution.filter(contr => contr.is_public === true && contr.termId === termId).map(contr => (
                                             <div className="card">
                                                 <div className="card-body">
                                                     <div className="user-profile" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                                         <div><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" /></div>
-                                                        <span><h5 className="mt-0 mb-1 ml-1">{contr.user_info.lastName}</h5></span>
+                                                        <span><h5 className="mt-0 mb-1 ml-1">{contr.user_info.firstName + " " + contr.user_info.lastName}</h5></span>
                                                     </div>
 
                                                     <img className="rounded" style={{ height: '100%', width: '100%' }} src={generatePublicUrl(contr.contributionImage[0].img)} alt="user avatar" />
@@ -706,15 +700,30 @@ const Contribution = () => {
                     <div className="content-wrapper">
                         <div className="container-fluid">
                             <div className="row">
-                                <div className="col-lg-3"></div>
+                                <div className="col-lg-3">
+                                    <div className="card card-left">
+                                        <div className="card-header text-uppercase">Topics</div>
+                                        <div className="card-body">
+                                            {
+                                                terms.map(term => (
+                                                    <div className="list-group">
+                                                        <div className="list-group-item d-flex justify-content-between align-items-center" >
+                                                            <div style={{ cursor: 'pointer' }} onClick={() => handleShowContribution(term._id)}>{term.topic}</div>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
                                 <div className="col-lg-6">
                                     {
-                                        allContribution.filter(contr => contr.is_public === true && contr.facultyId === user.facultyId).map(contr => (
+                                        allContribution.filter(contr => contr.is_public === true && contr.facultyId === user.facultyId && contr.termId === termId).map(contr => (
                                             <div className="card">
                                                 <div className="card-body">
                                                     <div className="user-profile" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                                         <div><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" /></div>
-                                                        <span><h5 className="mt-0 mb-1 ml-1">{contr.user_info.lastName}</h5></span>
+                                                        <span><h5 className="mt-0 mb-1 ml-1">{contr.user_info.firstName + " " + contr.user_info.lastName}</h5></span>
                                                     </div>
 
                                                     <img className="rounded" style={{ height: '100%', width: '100%' }} src={generatePublicUrl(contr.contributionImage[0].img)} alt="user avatar" />
@@ -747,7 +756,8 @@ const Contribution = () => {
                                         ))
                                     }
                                 </div>
-                                <div className="col-lg-3"></div>
+                                <div className="col-lg-3"> 
+                                </div>
                             </div>
                         </div>
                     </div>

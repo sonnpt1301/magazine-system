@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { getMessage, getTerms, getUsers, isUserLoggedIn, getAllContributions, listComment, getFaculty } from './actions';
 import { PrivateRoute } from './components/HOC/PrivateRoute';
+import About from './containers/About';
 import Chat from './containers/Chat';
 import Contribution from './containers/Contribution';
 import Home from './containers/Home';
@@ -35,7 +36,9 @@ function App() {
         <PrivateRoute path="/contribution" component={Contribution} />
         <PrivateRoute path="/profile" component={Profile} />
         <PrivateRoute path='/chat' component={Chat} />
+        
 
+        <Route path='/about' component={About}/>
         <Route path="/login" component={Login} />
         <Route path="*" component={() => "404 NOT FOUND"} />
       </Switch>

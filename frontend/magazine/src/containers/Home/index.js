@@ -10,7 +10,7 @@ const Home = (props) => {
                 <div className="container-fluid">
                     <div className="row">
                         <div class="col-lg-12">
-                            Home
+                            
                         </div>
                     </div>
                 </div>
