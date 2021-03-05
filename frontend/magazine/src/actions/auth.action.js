@@ -72,9 +72,7 @@ export const login = (user) => {
 export const signOut = () => {
     return async dispatch => {
         try {
-            dispatch({
-                type: authConstants.LOGOUT_REQUEST
-            })
+            dispatch({ type: authConstants.LOGOUT_REQUEST })
             const res = await fetch(`${api}/auth/logout`, {
                 method: 'POST',
             })

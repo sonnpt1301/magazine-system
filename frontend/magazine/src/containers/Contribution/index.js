@@ -79,7 +79,7 @@ const Contribution = () => {
     const _uploadFile = (e) => {
         e.preventDefault()
         if (title1 === '' || description1 === '' || fileUpload1 === [] || termId === '') {
-            swal('Oops!', 'Please fill the bank', 'warning')
+            return swal('Oops!', 'Please fill the bank', 'warning')
         }
         const form = new FormData()
         form.append('title', title1)

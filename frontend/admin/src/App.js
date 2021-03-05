@@ -21,14 +21,15 @@ function App() {
   const auth = useSelector(state => state.auth)
 
   useEffect(() => {
-    if (auth.authenticate) {
+    if (!auth.authenticate) {
+      dispatch(isUserLoggedIn())
+    } else {
       dispatch(getFaculty())
       dispatch(getUsers())
       dispatch(getTerms())
       dispatch(getStatistic())
-      // dispatch(isUserLoggedIn())
     } 
-  }, [dispatch, auth.authenticate])
+  }, [])
 
   return (
     <Router>

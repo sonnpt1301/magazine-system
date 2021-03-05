@@ -3,17 +3,17 @@ import path from 'path'
 import multerS3 from 'multer-s3'
 import aws from 'aws-sdk'
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const __dirname = path.resolve();
-    cb(null, path.join(__dirname, 'src/uploads'))
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname)
-  }
-})
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     const __dirname = path.resolve();
+//     cb(null, path.join(__dirname, 'src/uploads'))
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, Date.now() + '-' + file.originalname)
+//   }
+// })
 
-export const upload = multer({ storage })
+// export const upload = multer({ storage })
 
 const s3 = new aws.S3({
   accessKeyId: 'AKIAIJCIKN4KXHOY4XJQ',

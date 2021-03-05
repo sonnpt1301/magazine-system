@@ -22,7 +22,7 @@ const Chat = () => {
 
     const { user } = auth
 
-    const endpoint = "http://localhost:5000"
+    const endpoint = "https://magazine-system-be.herokuapp.com"
 
     const _submitChatMessage = (e) => {
         // e.preventDefault()
