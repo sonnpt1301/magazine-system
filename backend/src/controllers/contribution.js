@@ -5,6 +5,7 @@ import nodemailer from 'nodemailer'
 import AdmZip from 'adm-zip'
 import mongoose from 'mongoose'
 import { s3Download } from '../upload.js'
+import fs from 'fs'
 
 export const getAllContributions = async (req, res) => {
     try {
@@ -73,8 +74,7 @@ export const uploadFile = async (req, res) => {
             html: `<b>Your Faculty has the contribution is submitted by ${fullName}</b>` // html body
         });
         res.status(201).json({
-            contribution,
-            files: req.files
+            contribution
         })
     } catch (error) {
         res.status(400).json({
@@ -87,7 +87,7 @@ export const updateContribution = async (req, res) => {
     try {
         const { id } = req.params
         const files = req.files
-        const filesUpload = files.map(({ originalname, key }) => ({ fileName: originalname, filePath: key }))
+        const filesUpload = files.map(({ filename, path }) => ({ fileName: filename, filePath: path }))
         const contri = await Contribution.findOneAndUpdate({ _id: id }, {
             $set: {
                 ...req.body,
@@ -140,7 +140,7 @@ export const publicContribution = async (req, res) => {
 
 const getObjectS3 = async (s3Client, params) => {
     return await new Promise((resolve, reject) => {
-        s3Client.listObject(params, (err, data) => {
+        s3Client.getObject(params, (err, data) => {
             if (err) {
                 console.log(err)
                 reject(err)
@@ -152,6 +152,7 @@ const getObjectS3 = async (s3Client, params) => {
 }
 
 export const downloadFile = async (req, res) => {
+    let fileName
     try {
         const s3Client = s3Download.s3;
         const params = s3Download.downloadParams
@@ -165,25 +166,34 @@ export const downloadFile = async (req, res) => {
         params.Key = fileDownload.filePath
 
         const data = await getObjectS3(s3Client, params)
-        console.log(data)             
-        // if (data) {
-        //     const zip = new AdmZip();
-        //     zip.addLocalFile(data.Body);
+        if (data) {
+            const zip = new AdmZip();
+            fileName = fileDownload.fileName
+            fs.writeFileSync(fileName, data.Body);
+            zip.addFile(fileName, data.Body);
+
             // Define zip file name
-            // const downloadName = `${fileDownload.fileName}.zip`;
-            // const zipData = zip.toBuffer();
+            const downloadName = `${fileDownload.fileName}.zip`;
+            const zipData = zip.toBuffer();
             // code to download zip file
-            res.set('Content-Type', 'application/octet-stream');
-            res.set('Content-Disposition', `attachment; filename=${fileDownload.fileName}`);
-            res.set('Content-Length', data.Body.length);
-            res.send(data.Body);
-        // }
+            res.set({
+                'Content-Type': 'application/zip',
+                'Content-Disposition': `attachment; filename=${downloadName}`,
+                'Content-Length': zipData.length,
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': 0
+            })
+
+            res.send(zipData);
+        }
     } catch (error) {
-        console.log(error)
         res.status(400).json({
             error: error.message
         })
     }
+
+    fs.unlinkSync(fileName)
 }
 
 export const listComment = async (req, res) => {

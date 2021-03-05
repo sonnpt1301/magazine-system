@@ -1,4 +1,4 @@
-export const api = 'http://localhost:5000/api'
+export const api = 'https://magazine-system-be.herokuapp.com/api'
 export const generatePublicUrl = (fileName) => {
     return fileName
 }

@@ -160,7 +160,7 @@ const Contribution = () => {
     }
 
     useEffect(() => {
-        
+
     }, [])
 
     useEffect(() => {
@@ -173,7 +173,7 @@ const Contribution = () => {
             setEndDate(term.terms[0]?.endDate.split('T')[0])
         }
     }, [contribution.allContributions, contribution.comments, term.terms])
-    
+
 
     if (contribution.load) {
         return <Spinner className="spinner" style={{ position: 'fixed', top: '50%', left: '50%' }} animation="border" variant="primary" />

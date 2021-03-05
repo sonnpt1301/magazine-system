@@ -1,13 +1,13 @@
 import { facultyConstants } from './constants';
 import swal from 'sweetalert';
-
+import { api } from '../urlConfig'
 
 
 export const getFaculty = () => {
     return async dispatch => {
         const token = localStorage.getItem('token')
         dispatch({ type: facultyConstants.GET_FACULTY_REQUEST })
-        const res = await fetch('http://localhost:5000/api/faculty/getFaculty', {
+        const res = await fetch(`${api}/faculty/getFaculty`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export const addFaculty = (body) => {
         const token = localStorage.getItem('token')
 
         dispatch({ type: facultyConstants.ADD_FACULTY_REQUEST })
-        const res = await fetch('http://localhost:5000/api/faculty/createFaculty', {
+        const res = await fetch(`${api}/faculty/createFaculty`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ export const updateFaculty = (params, body) => {
 
         dispatch({ type: facultyConstants.UPDATE_FACULTY_REQUEST })
         const { facultyId } = params
-        const res = await fetch(`https://magazine-system-be.herokuapp.com/api/faculty/updateFaculty/${facultyId}`, {
+        const res = await fetch(`${api}/faculty/updateFaculty/${facultyId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ export const deleteFaculty = (params) => {
     return async dispatch => {
         dispatch({ type: facultyConstants.DELETE_FACULTY_REQUEST })
         const { facultyId } = params
-        const res = await fetch(`https://magazine-system-be.herokuapp.com/api/faculty/deleteFaculty/${facultyId}`, {
+        const res = await fetch(`${api}/faculty/deleteFaculty/${facultyId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

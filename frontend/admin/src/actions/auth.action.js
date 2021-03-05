@@ -2,7 +2,7 @@ import { authConstants } from './constants';
 import axios from '../helper/axios'
 import swal from 'sweetalert';
 import { Redirect } from 'react-router-dom';
-
+import { api } from '../urlConfig'
 
 export const isUserLoggedIn = () => {
     return async dispatch => {
@@ -31,7 +31,7 @@ export const isUserLoggedIn = () => {
 export const login = (user) => {
     return async dispatch => {
         dispatch({ type: authConstants.LOGIN_REQUEST })
-        const res = await fetch('https://magazine-system-be.herokuapp.com/api/auth/login', {
+        const res = await fetch(`${api}/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ export const signOut = () => {
             dispatch({
                 type: authConstants.LOGOUT_REQUEST
             })
-            const res = await axios.post('auth/logout')
+            const res = await axios.post(`${api}/auth/logout`)
             if (res.status === 200) {
                 localStorage.clear()
                 dispatch({ type: authConstants.LOGOUT_SUCCESS })

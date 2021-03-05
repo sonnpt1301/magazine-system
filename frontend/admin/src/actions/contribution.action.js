@@ -1,10 +1,11 @@
 import { contributionConstants } from '../actions/constants'
+import { api } from '../urlConfig'
 
 export const getStatistic = () => {
     return async dispatch => {
         dispatch({ type: contributionConstants.GET_STATISTIC_REQUEST })
         const token = localStorage.getItem('token')
-        const res = await fetch('https://magazine-system-be.herokuapp.com/api/contribution/statistic', {
+        const res = await fetch(`${api}/contribution/statistic`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`

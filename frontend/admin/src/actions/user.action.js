@@ -1,14 +1,13 @@
 import { userConstants } from './constants'
-import axios from '../helper/axios'
 import swal from 'sweetalert';
-
+import { api } from '../urlConfig'
 
 export const getUsers = () => {
     const token = localStorage.getItem('token')
 
     return async dispatch => {
         dispatch({ type: userConstants.GET_USERS_REQUEST })
-        const res = await fetch('http://localhost:5000/api/user/get-users', {
+        const res = await fetch(`${api}/user/get-users`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -36,7 +35,7 @@ export const addUser = (body) => {
 
     return async dispatch => {
         dispatch({ type: userConstants.ADD_USER_REQUEST })
-        const res = await fetch('https://magazine-system-be.herokuapp.com/api/auth/register', {
+        const res = await fetch(`${api}/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -57,10 +56,10 @@ export const addUser = (body) => {
                 type: userConstants.ADD_USER_FAILURE,
                 payload: { errors, message }
             })
-            if(errors){
+            if (errors) {
                 return swal("Failed", errors, "error")
-            } 
-            if(message){
+            }
+            if (message) {
                 return swal("Failed", message, "error")
             }
         }
@@ -73,7 +72,7 @@ export const updateUser = (params, body) => {
     return async dispatch => {
         dispatch({ type: userConstants.UPDATE_USER_REQUEST })
         const { userId } = params
-        const res = await fetch(`https://magazine-system-be.herokuapp.com/api/user/update/${userId}`, {
+        const res = await fetch(`${api}/user/update/${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -106,7 +105,7 @@ export const deleteUser = (params) => {
     return async dispatch => {
         dispatch({ type: userConstants.DELETE_USER_REQUEST })
         const { userId } = params
-        const res = await fetch(`https://magazine-system-be.herokuapp.com/api/user/delete/${userId}`, {
+        const res = await fetch(`${api}/user/delete/${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
