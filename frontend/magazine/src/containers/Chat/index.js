@@ -101,8 +101,7 @@ const Chat = () => {
                                         users.filter(usr => usr._id !== user._id && usr.role !== 'admin').map(usr => (
                                             <ul class="list-group">
 
-                                                <li className="list-group-item d-flex justify-content-between align-items-center"
-                                                    style={{ borderRadius: '10px', cursor: 'pointer' }}
+                                                <li className="d-flex justify-content-between align-items-center list-friend-css"
                                                     onClick={() => handleShowBoxMessage(usr._id)}
                                                 >
                                                     <div className="user-profile" style={{ display: 'flex', alignItems: 'center' }}>

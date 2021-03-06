@@ -1,4 +1,5 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 import Layout from '../../components/Layout'
 
 const About = () => {
@@ -12,7 +13,7 @@ const About = () => {
 
                                 <h4 class="coming-soon-title text-white">THANKS FOR USING OUR SERVICES</h4>
                                 <h6 class="text-white text-uppercase">Lets Join and work with us</h6>
-                                <p class="text-white">All comments from you will be recognized and used by us to continuously improve and improve service quality.</p>
+                                <p class="text-white"><i>All feedbacks from you will be recognized and used by us to continuously improve service quality.</i></p>
                                 <address>
                                     <strong>University of Greenwich</strong><br />
                                                 15 Dong Quan<br />
@@ -30,8 +31,11 @@ const About = () => {
                                 </form>
 
                                 <div class="mt-4">
-                                    <a href="/" onClick={(e) => { e.preventDefault() }} class="btn btn-light btn-round m-1">Go To Home </a>
-                                    <a href="javascript:void();" class="btn btn-light btn-round m-1">Previous Page </a>
+                                    <NavLink to='/' className="waves-effect">
+                                        <button class="btn btn-light btn-round m-1">
+                                            <i className="fa fa-star mr-1"></i> <span>Go To Home</span>
+                                        </button>
+                                    </NavLink>
                                 </div>
 
                                 <div class="mt-4">
@@ -39,10 +43,9 @@ const About = () => {
                                 </div>
                                 <hr class="w-50 border-light" />
                                 <div class="mt-2">
-                                    <a href="javascript:void()" class="btn-social btn-social-circle waves-effect waves-light m-1"><i class="fa fa-facebook"></i></a>
-                                    <a href="javascript:void()" class="btn-social btn-social-circle waves-effect waves-light m-1"><i class="fa fa-google-plus"></i></a>
-                                    <a href="javascript:void()" class="btn-social btn-social-circle waves-effect waves-light m-1"><i class="fa fa-behance"></i></a>
-                                    <a href="javascript:void()" class="btn-social btn-social-circle waves-effect waves-light m-1"><i class="fa fa-dribbble"></i></a>
+                                    <a href="https://facebook.com/Jokerboy1412" target="_blank" rel="noopener noreferrer" class="btn-social btn-social-circle waves-effect waves-light m-1"><i class="fa fa-facebook"></i></a>
+                                    <a href="https://www.instagram.com/jokerboy__1412/" target="_blank" rel="noopener noreferrer" class="btn-social btn-social-circle waves-effect waves-light m-1"><i class="fa fa-instagram"></i></a>
+                                    <a href="https://www.youtube.com/channel/UCoNJe5xt8QNNoWGFfvLJEFQ" target="_blank" rel="noopener noreferrer" class="btn-social btn-social-circle waves-effect waves-light m-1"><i class="fa fa-youtube"></i></a>
                                 </div>
                             </div>
                         </div>

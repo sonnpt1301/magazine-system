@@ -1,23 +1,36 @@
-.outer-message{
+.outer-message {
     overflow-y: scroll;
     height: 650px;
 }
 
 .outer-message::-webkit-scrollbar {
     width: 4px;
-  }
+}
 
-  /* Track */
-  .outer-message::-webkit-scrollbar-track {
-    background: #f1f1f1; 
-  }
-   
-  /* Handle */
-  .outer-message::-webkit-scrollbar-thumb {
-    background: #888; 
-  }
-  
-  /* Handle on hover */
-  .outer-message::-webkit-scrollbar-thumb:hover {
-    background: #555; 
-  }
+
+/* Track */
+
+.outer-message::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+
+/* Handle */
+
+.outer-message::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+
+/* Handle on hover */
+
+.outer-message::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.list-friend-css {
+    cursor: pointer;
+    margin-bottom: -25px;
+    padding-left: 10px;
+    padding-bottom: 15px;
+}

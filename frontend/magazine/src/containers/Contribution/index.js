@@ -252,7 +252,7 @@ const Contribution = () => {
                                             {
                                                 terms.map(term => (
                                                     <div className="list-group">
-                                                        <div className="list-group-item d-flex justify-content-between align-items-center" >
+                                                        <div className="list-group-item d-flex justify-content-between align-items-center">
                                                             <div style={{ cursor: 'pointer' }} onClick={() => handleShowContribution(term._id)}>{term.topic}</div>
                                                         </div>
                                                     </div>
@@ -464,7 +464,7 @@ const Contribution = () => {
                                                                     </button>
                                                                         </span> : null
                                                                 }
-                                                                <h4>{contr.title}
+                                                                <h4 style={{ marginBottom: 0 }}>{contr.title}
                                                                     {
                                                                         contr.is_public ?
                                                                             <span className="badge badge-success shadow-success m-1">Published</span> :
@@ -542,7 +542,7 @@ const Contribution = () => {
                                                                     </button>
                                                                             </span> : null
                                                                     }
-                                                                    <h4>{contr.title}
+                                                                    <h4 style={{ marginBottom: 0 }}>{contr.title}
                                                                         {
                                                                             contr.is_public ?
                                                                                 <span className="badge badge-success shadow-success m-1">Published</span> :
@@ -653,7 +653,7 @@ const Contribution = () => {
                                                     <ul className="list-unstyled">
                                                         <li className="media">
                                                             <div className="media-body">
-                                                                <h4>{contr.title}
+                                                                <h4 style={{ marginBottom: 0 }}>{contr.title}
                                                                     {
                                                                         contr.is_public ?
                                                                             <span className="badge badge-success shadow-success m-1">Published</span> :
@@ -730,7 +730,7 @@ const Contribution = () => {
                                                     <ul className="list-unstyled">
                                                         <li className="media">
                                                             <div className="media-body">
-                                                                <h4>{contr.title}
+                                                                <h4 style={{ marginBottom: 0 }}>{contr.title}
                                                                     {
                                                                         contr.is_public ?
                                                                             <span className="badge badge-success shadow-success m-1">Published</span> :
@@ -756,7 +756,7 @@ const Contribution = () => {
                                         ))
                                     }
                                 </div>
-                                <div className="col-lg-3"> 
+                                <div className="col-lg-3">
                                 </div>
                             </div>
                         </div>
