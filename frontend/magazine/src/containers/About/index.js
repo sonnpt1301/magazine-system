@@ -9,7 +9,7 @@ const About = () => {
                 <div className="container-fluid">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="text-center coming-soon">
+                            <div class="text-center coming-soon" style={{ marginTop: '50px' }}>
 
                                 <h4 class="coming-soon-title text-white">THANKS FOR USING OUR SERVICES</h4>
                                 <h6 class="text-white text-uppercase">Lets Join and work with us</h6>

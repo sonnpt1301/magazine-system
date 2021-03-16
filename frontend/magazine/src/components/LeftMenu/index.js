@@ -37,7 +37,7 @@ const LeftMenu = () => {
                     </div>
                     <div className="media-body">
                         <h6 className="side-user-name">{user.firstName + " " + user.lastName}</h6>
-                    </div>  
+                    </div>
                 </div>
                 <div id="user-dropdown" className="collapse">
                     <ul className="user-setting-menu">
@@ -49,11 +49,21 @@ const LeftMenu = () => {
             </div>
             <ul className="sidebar-menu">
                 <li className="sidebar-header">MAIN NAVIGATION</li>
+                {
+                    user.role === 'manager' && (
+                        <li>
+                            <NavLink to="/statistic" className="waves-effect">
+                                <i className="fa fa-bar-chart-o"></i> <span>Statistic</span>
+                            </NavLink>
+                        </li>
+                    )
+                }
                 <li>
                     <NavLink to="/" className="waves-effect">
-                        <i className="fa fa-dashboard"></i> <span>Dashboard</span>
+                        <i className="fa fa-dashboard"></i> <span>Home</span>
                     </NavLink>
                 </li>
+
                 <li>
                     <NavLink to="/contribution" className="waves-effect">
                         <i className="fa fa-book"></i> <span>Contribution</span>
@@ -64,6 +74,7 @@ const LeftMenu = () => {
                         <i className="fa fa-exclamation-circle"></i> <span>About</span>
                     </NavLink>
                 </li>
+
             </ul>
         </div>
     )

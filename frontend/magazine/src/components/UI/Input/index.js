@@ -18,7 +18,7 @@ const Input = (props) => {
                     {
                         props.options.length > 0 ?
                             props.options.map((option, index) =>
-                                <option key={option.index} value={option._id}>{option.name}</option>
+                                <option key={option.index} value={option._id}>{option.name || option.topic}</option>
                             ) : null
                     }
                 </select>

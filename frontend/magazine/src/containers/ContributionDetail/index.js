@@ -39,7 +39,8 @@ const ContributionDetail = (props) => {
                                     <div className="card">
                                         <div className="card-body">
                                             <div className="user-profile" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                                                <div><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" /></div>
+                                                <div><img src={contr.user_info.profilePicture.length ? contr.user_info.profilePicture[0].img : "https://via.placeholder.com/110x110"}
+                                                    className="img-circle user-profile" alt="user avatar" /></div>
                                                 <span><h5 className="mt-0 mb-1 ml-1">{contr.user_info.firstName + " " + contr.user_info.lastName}</h5></span>
                                             </div>
 

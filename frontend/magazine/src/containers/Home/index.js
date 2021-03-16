@@ -35,10 +35,6 @@ const Home = (props) => {
                                         src="https://magazine-system.s3-ap-southeast-1.amazonaws.com/1614969064731-313.jpg"
                                         alt="First slide"
                                     />
-                                    <Carousel.Caption>
-                                        <h3>First slide label</h3>
-                                        <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-                                    </Carousel.Caption>
                                 </Carousel.Item>
                                 <Carousel.Item>
                                     <img
@@ -46,11 +42,6 @@ const Home = (props) => {
                                         src="https://magazine-system.s3-ap-southeast-1.amazonaws.com/1614969359476-sell-digital-magazine.png"
                                         alt="Second slide"
                                     />
-
-                                    <Carousel.Caption>
-                                        <h3>Second slide label</h3>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                    </Carousel.Caption>
                                 </Carousel.Item>
                                 <Carousel.Item>
                                     <img
@@ -58,18 +49,12 @@ const Home = (props) => {
                                         src="https://magazine-system.s3-ap-southeast-1.amazonaws.com/1614969065842-7c8ce152836901.591f7981c7ab3.png"
                                         alt="Third slide"
                                     />
-
-                                    <Carousel.Caption>
-                                        <h3>Third slide label</h3>
-                                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-                                    </Carousel.Caption>
                                 </Carousel.Item>
                             </Carousel>
                             <br />
                             <h6 class="text-uppercase">All Contributions</h6>
                             <hr />
                             <div class="row">
-
                                 {
                                     contributions.filter(contr => contr.is_public === true).map(contr => (
                                         <div class="col-sm-4">
@@ -100,7 +85,6 @@ const Home = (props) => {
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </Layout>

@@ -5,6 +5,7 @@ import messageReducer from './chat.reducer'
 import userReducer from './user.reducer'
 import facultyReducer from './faculty.reducer'
 import termReducer from './term.reducer'
+
 const rootReducer = combineReducers({
     auth: authReducer,
     faculty: facultyReducer,

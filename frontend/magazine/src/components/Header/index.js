@@ -59,12 +59,10 @@ const Header = () => {
                 <ul className="navbar-nav align-items-center right-nav-link">
                     <li className="nav-item dropdown-lg">
                         <NavLink to='/chat' className="nav-link dropdown-toggle dropdown-toggle-nocaret waves-effect" data-toggle="dropdown" href="javascript:void();">
-                            <i className="fa fa-envelope-open-o"></i><span className="badge badge-light badge-up">12</span></NavLink>
+                            <i className="fa fa-envelope-open-o"></i><span className="badge badge-light badge-up"></span></NavLink>
                         <div className="dropdown-menu dropdown-menu-right">
                             <ul className="list-group list-group-flush">
                                 <li className="list-group-item d-flex justify-content-between align-items-center">
-                                    You have 12 new messages
-          <span className="badge badge-light">12</span>
                                 </li>
                                 <li className="list-group-item">
                                     <a href="javaScript:void();">
@@ -126,61 +124,7 @@ const Header = () => {
                             </ul>
                         </div>
                     </li>
-                    <li className="nav-item dropdown-lg">
-                        <a className="nav-link dropdown-toggle dropdown-toggle-nocaret waves-effect" data-toggle="dropdown" href="javascript:void();">
-                            <i className="fa fa-bell-o"></i><span className="badge badge-info badge-up">14</span></a>
-                        <div className="dropdown-menu dropdown-menu-right">
-                            <ul className="list-group list-group-flush">
-                                <li className="list-group-item d-flex justify-content-between align-items-center">
-                                    You have 14 Notifications
-          <span className="badge badge-info">14</span>
-                                </li>
-                                <li className="list-group-item">
-                                    <a href="javaScript:void();">
-                                        <div className="media">
-                                            <i className="zmdi zmdi-accounts fa-2x mr-3 text-info"></i>
-                                            <div className="media-body">
-                                                <h6 className="mt-0 msg-title">New Registered Users</h6>
-                                                <p className="msg-info">Lorem ipsum dolor sit amet...</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li className="list-group-item">
-                                    <a href="javaScript:void();">
-                                        <div className="media">
-                                            <i className="zmdi zmdi-coffee fa-2x mr-3 text-warning"></i>
-                                            <div className="media-body">
-                                                <h6 className="mt-0 msg-title">New Received Orders</h6>
-                                                <p className="msg-info">Lorem ipsum dolor sit amet...</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li className="list-group-item">
-                                    <a href="javaScript:void();">
-                                        <div className="media">
-                                            <i className="zmdi zmdi-notifications-active fa-2x mr-3 text-danger"></i>
-                                            <div className="media-body">
-                                                <h6 className="mt-0 msg-title">New Updates</h6>
-                                                <p className="msg-info">Lorem ipsum dolor sit amet...</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li className="list-group-item text-center"><a href="javaScript:void();">See All Notifications</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li className="nav-item language">
-                        <a className="nav-link dropdown-toggle dropdown-toggle-nocaret waves-effect" data-toggle="dropdown" href="javascript:void();"><i className="fa fa-flag"></i></a>
-                        <ul className="dropdown-menu dropdown-menu-right">
-                            <li className="dropdown-item"> <i className="flag-icon flag-icon-gb mr-2"></i> English</li>
-                            <li className="dropdown-item"> <i className="flag-icon flag-icon-fr mr-2"></i> French</li>
-                            <li className="dropdown-item"> <i className="flag-icon flag-icon-cn mr-2"></i> Chinese</li>
-                            <li className="dropdown-item"> <i className="flag-icon flag-icon-de mr-2"></i> German</li>
-                        </ul>
-                    </li>
+                    
                     <li className="nav-item">
                         <a className="nav-link dropdown-toggle dropdown-toggle-nocaret" data-toggle="dropdown" href="#">
                             <span className="user-profile"><img src={user.profilePicture.length ?

@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useEffect, useState } from 'react'
+import { Spinner } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import swal from 'sweetalert'
 import { updateUser, uploadAvatar } from '../../actions/user.action'
@@ -14,7 +15,6 @@ const Profile = () => {
     const dispatch = useDispatch()
     const auth = useSelector(state => state.auth)
     const { faculties } = useSelector(state => state.faculty)
-
 
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
@@ -91,10 +91,16 @@ const Profile = () => {
 
     }
 
+
     useEffect(() => {
         setUser(auth.user)
     }, [auth.user])
 
+    if (auth.loading) {
+        return (
+            <Spinner className="spinner" style={{ position: 'fixed', top: '50%', left: '50%' }} animation="border" variant="primary" />
+        )
+    }
     return (
         <Layout>
             <div className="content-wrapper">
@@ -124,11 +130,11 @@ const Profile = () => {
                                     <h5 className="card-title">{user.firstName + ' ' + user.lastName}</h5>
                                     <h6>Faculty: <small>{facultyById(user.facultyId)}</small></h6>
                                 </div>
-                                <ul class="list-group list-group-flush list shadow-none">
+                                {/* <ul class="list-group list-group-flush list shadow-none">
                                     <li className="list-group-item d-flex justify-content-between align-items-center">Total Contribution<span class="badge badge-info badge-pill">14</span></li>
                                     <li className="list-group-item d-flex justify-content-between align-items-center">Total Published Contribution<span class="badge badge-success badge-pill">2</span></li>
                                     <li className="list-group-item d-flex justify-content-between align-items-center">Total Pending Contribution<span class="badge badge-danger badge-pill">1</span></li>
-                                </ul>
+                                </ul> */}
                             </div>
                         </div>
                         <div class="col-lg-8">

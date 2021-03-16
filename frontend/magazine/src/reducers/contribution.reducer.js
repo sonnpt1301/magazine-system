@@ -1,7 +1,9 @@
+/* eslint-disable default-case */
 import { contributionConstants } from '../actions/constants'
 
 /* eslint-disable import/no-anonymous-default-export */
 const initState = {
+    statistic: [],
     allContributions: [],
     comments: [],
     loading: false,
@@ -157,7 +159,26 @@ export default (state = initState, action) => {
                 error: action.payload.error
             }
             break;
-        default:
+            
+        //GET_STATISTIC
+        case contributionConstants.GET_STATISTIC_REQUEST:
+            state = {
+                ...state,
+                loading: true
+            }
+            break;
+        case contributionConstants.GET_STATISTIC_SUCCESS:
+            state = {
+                ...state,
+                statistic: action.payload.statistic,
+                loading: false
+            }
+            break;
+        case contributionConstants.GET_STATISTIC_FAILURE:
+            state = {
+                ...state,
+                loading: false
+            }
             break;
     }
     return state

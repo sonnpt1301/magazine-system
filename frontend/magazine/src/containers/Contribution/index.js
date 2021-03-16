@@ -40,10 +40,12 @@ const Contribution = () => {
     const handleShowContribution = (id) => {
         setTermId(id)
         const term = terms.find(x => x._id === id)
-        const start = term.startDate.split('T')[0]
-        const end = term.endDate.split('T')[0]
-        setStartDate(start)
-        setEndDate(end)
+        if (term) {
+            const start = term.startDate.split('T')[0]
+            const end = term.endDate.split('T')[0]
+            setStartDate(start)
+            setEndDate(end)
+        }
     }
 
     const handleUploadFile = (e) => {
@@ -171,12 +173,16 @@ const Contribution = () => {
         setAllContribution(contribution.allContributions)
         setComment(contribution.comments)
         setTerms(term.terms)
+    }, [contribution.allContributions, contribution.comments, term.terms])
+
+    useEffect(() => {
         if (term.terms.length) {
             setTermId(term.terms[0]?._id)
             setStartDate(term.terms[0]?.startDate.split('T')[0])
             setEndDate(term.terms[0]?.endDate.split('T')[0])
         }
-    }, [contribution.allContributions, contribution.comments, term.terms])
+    }, [])
+
 
 
     if (contribution.load) {
@@ -237,7 +243,8 @@ const Contribution = () => {
                                             <label for="terms_and_conditions">I have read and agree to Terms and Conditions</label>
                                         </div>
                                         <div className="form-footer">
-                                            <button type="submit" id="btn-upload" disabled={checkbox ? false : true} data-dismiss="modal" aria-label="Close" aria-hidden="true" className="btn btn-success"
+                                            <button type="submit" id="btn-upload" disabled={checkbox ? false : true}
+                                                data-dismiss="modal" aria-label="Close" aria-hidden="true" className="btn btn-success"
                                                 onClick={_uploadFile}><i className="fa fa-check-square-o"></i> Upload</button>
                                         </div>
                                     </Modal>
@@ -246,20 +253,39 @@ const Contribution = () => {
                             {/* List Contribution */}
                             <div className="row">
                                 <div className="col-lg-3">
-                                    <div className="card card-left">
-                                        <div className="card-header text-uppercase">Topics</div>
-                                        <div className="card-body">
-                                            {
-                                                terms.map(term => (
+                                    <Input
+                                        label="Term"
+                                        type='select'
+                                        value={termId}
+                                        onChange={(e) => handleShowContribution(e.target.value)}
+                                        options={terms}
+                                        placeholder={'Select Term'}
+                                    />
+                                    <TimeLimit from={moment(endDate).add(1, 'days')}>
+                                        <div class="alert alert-icon-info alert-dismissible" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert">×</button>
+                                            <div class="alert-icon icon-part-info">
+                                                <i class="fa fa-bell"></i>
+                                            </div>
+                                            <div class="alert-message">
+                                                <span><strong>Out of date!</strong> This topic is out of date. Can't submit any contribution</span>
+                                            </div>
+                                        </div>
+                                    </TimeLimit>
+                                    {
+                                        terms.filter(term => term._id === termId).map(term => (
+                                            <div className="card card-right">
+                                                <div className="card-header text-uppercase">Description</div>
+                                                <div className="card-body">
                                                     <div className="list-group">
-                                                        <div className="list-group-item d-flex justify-content-between align-items-center">
-                                                            <div style={{ cursor: 'pointer' }} onClick={() => handleShowContribution(term._id)}>{term.topic}</div>
+                                                        <div className="list-group-item d-flex justify-content-between align-items-center" >
+                                                            <div>{term.description}</div>
                                                         </div>
                                                     </div>
-                                                ))
-                                            }
-                                        </div>
-                                    </div>
+                                                </div>
+                                            </div>
+                                        ))
+                                    }
                                 </div>
                                 <div className="col-lg-6">
                                     {
@@ -308,7 +334,11 @@ const Contribution = () => {
                                                                     {
                                                                         comment.filter(cmt => cmt.contributionId === contr._id).map(cmt => (
                                                                             <div>
-                                                                                <div className="user-profile" style={{ display: 'flex', marginTop: '10px' }}><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
+                                                                                <div className="user-profile" style={{ display: 'flex', marginTop: '10px' }}>
+                                                                                    <img src={cmt.user_info.profilePicture.length ?
+                                                                                        cmt.user_info.profilePicture[0].img :
+                                                                                        "https://via.placeholder.com/110x110"}
+                                                                                        className="img-circle user-profile" alt="user avatar" />
                                                                                     <div className="card ml-1" style={{ borderRadius: '15px', marginBottom: '0' }}>
                                                                                         <div className="card-body" style={{ padding: '5px 10px' }}>
                                                                                             <div className="list-unstyled">
@@ -324,7 +354,11 @@ const Contribution = () => {
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
-                                                                                <div><small style={{ marginLeft: '50px', color: 'rgb(172 170 170)' }}>{moment(cmt.createdAt).fromNow()}</small></div>
+                                                                                <div>
+                                                                                    <small style={{ marginLeft: '50px', color: 'rgb(172 170 170)' }}>
+                                                                                        {moment(cmt.createdAt).fromNow()}
+                                                                                    </small>
+                                                                                </div>
                                                                             </div>
                                                                         )).reverse()
                                                                     }
@@ -367,18 +401,56 @@ const Contribution = () => {
                                             fileUpload.map((file) => (
                                                 <div className="card">
                                                     <div className="card-body">
-                                                        <div style={{ cursor: 'pointer' }} onClick={() => { _downloadFile(file.fileName, contributionId, file._id) }}>{file.fileName} <i aria-hidden="true" className="fa fa-download pull-right"></i> </div>
+                                                        <div style={{ cursor: 'pointer' }}
+                                                            onClick={() => { _downloadFile(file.fileName, contributionId, file._id) }}>
+                                                            {file.fileName}
+                                                            <i aria-hidden="true" className="fa fa-download pull-right"></i>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             ))
                                         }
                                         <div className="form-group">
-                                            <button type="submit" className="btn btn-light px-5" onClick={() => { _updateContribution(contributionId) }} data-dismiss="modal" aria-label="Close" aria-hidden="true"><i className="icon-lock"></i> Update</button>
+                                            <button type="submit" className="btn btn-light px-5"
+                                                onClick={() => { _updateContribution(contributionId) }}
+                                                data-dismiss="modal" aria-label="Close" aria-hidden="true">
+                                                <i className="icon-lock"></i> Update
+                                            </button>
                                         </div>
                                     </Modal>
 
                                 </div>
                                 <div className="col-lg-3">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+            {/* -------------------------------------------------------------------------------------------------------------------------------------------------------- */}
+            {/* End Student Display */}
+            {/* -------------------------------------------------------------------------------------------------------------------------------------------------------- */}
+
+            {/* -------------------------------------------------------------------------------------------------------------------------------------------------------- */}
+
+            {/* -------------------------------------------------------------------------------------------------------------------------------------------------------- */}
+            {/* Start Coordinator Display */}
+            {/* -------------------------------------------------------------------------------------------------------------------------------------------------------- */}
+            {
+                user.role === 'coordinator' && (
+                    <div className="content-wrapper">
+                        <div className="container-fluid">
+                            <div className="row">
+                                <div className="col-lg-3">
+                                    <Input
+                                        label="Term"
+                                        type='select'
+                                        value={termId}
+                                        onChange={(e) => handleShowContribution(e.target.value)}
+                                        options={terms}
+                                        placeholder={'Select Term'}
+                                    />
                                     <TimeLimit from={moment(endDate).add(1, 'days')}>
                                         <div class="alert alert-icon-info alert-dismissible" role="alert">
                                             <button type="button" class="close" data-dismiss="alert">×</button>
@@ -405,42 +477,6 @@ const Contribution = () => {
                                         ))
                                     }
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                )
-            }
-            {/* -------------------------------------------------------------------------------------------------------------------------------------------------------- */}
-            {/* End Student Display */}
-            {/* -------------------------------------------------------------------------------------------------------------------------------------------------------- */}
-
-            {/* -------------------------------------------------------------------------------------------------------------------------------------------------------- */}
-
-            {/* -------------------------------------------------------------------------------------------------------------------------------------------------------- */}
-            {/* Start Coordinator Display */}
-            {/* -------------------------------------------------------------------------------------------------------------------------------------------------------- */}
-            {
-                user.role === 'coordinator' && (
-                    <div className="content-wrapper">
-                        <div className="container-fluid">
-                            <div className="row">
-                                <div className="col-lg-3">
-                                    <div className="card">
-                                        <div className="card-header text-uppercase">Topics</div>
-                                        <div className="card-body">
-                                            {
-                                                terms.map(term => (
-                                                    <div className="list-group">
-                                                        <div className="list-group-item d-flex justify-content-between align-items-center" >
-                                                            <div style={{ cursor: 'pointer' }} onClick={() => handleShowContribution(term._id)}>{term.topic}</div>
-                                                        </div>
-                                                    </div>
-                                                ))
-                                            }
-
-                                        </div>
-                                    </div>
-                                </div>
                                 <div className="col-lg-6">
                                     {
                                         termId ? allContribution.filter(x => x.facultyId === user.facultyId && x.termId === termId).map((contr, index) =>
@@ -449,9 +485,18 @@ const Contribution = () => {
                                                 <div className="card-body" >
                                                     <ul className="list-unstyled" >
                                                         <div className="user-profile" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                                                            <div><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" /></div>
+                                                            <div>
+                                                                <img src=
+                                                                    {
+                                                                        contr.user_info.profilePicture.length ?
+                                                                            contr.user_info.profilePicture[0].img :
+                                                                            "https://via.placeholder.com/110x110"
+                                                                    }
+                                                                    className="img-circle user-profile" alt="user avatar" />
+                                                            </div>
                                                             <span><h5 className="mt-0 mb-1 ml-1">{contr.user_info.firstName + " " + contr.user_info.lastName}</h5></span>
                                                         </div>
+
 
                                                         <img className="rounded" style={{ height: '100%', width: '100%' }} src={generatePublicUrl(contr.contributionImage[0].img)} alt="user avatar" />
                                                         <li className="media">
@@ -494,7 +539,11 @@ const Contribution = () => {
                                                                     {
                                                                         comment.filter(cmt => cmt.contributionId === contr._id).map(cmt => (
                                                                             <div>
-                                                                                <div className="user-profile" style={{ display: 'flex', marginTop: '10px' }}><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
+                                                                                <div className="user-profile" style={{ display: 'flex', marginTop: '10px' }}>
+                                                                                    <img src={cmt.user_info.profilePicture.length ?
+                                                                                        cmt.user_info.profilePicture[0].img :
+                                                                                        "https://via.placeholder.com/110x110"}
+                                                                                        className="img-circle user-profile" alt="user avatar" />
                                                                                     <div className="card ml-1" style={{ borderRadius: '15px', marginBottom: '0' }}>
                                                                                         <div className="card-body" style={{ padding: '5px 10px' }}>
                                                                                             <div className="list-unstyled">
@@ -572,7 +621,11 @@ const Contribution = () => {
                                                                         {
                                                                             comment.filter(cmt => cmt.contributionId === contr._id).map(cmt => (
                                                                                 <div>
-                                                                                    <div className="user-profile" style={{ display: 'flex', marginTop: '10px' }}><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" />
+                                                                                    <div className="user-profile" style={{ display: 'flex', marginTop: '10px' }}>
+                                                                                        <img src={cmt.user_info.profilePicture.length ?
+                                                                                            cmt.user_info.profilePicture[0].img :
+                                                                                            "https://via.placeholder.com/110x110"}
+                                                                                            className="img-circle user-profile" alt="user avatar" />
                                                                                         <div className="card ml-1" style={{ borderRadius: '15px', marginBottom: '0' }}>
                                                                                             <div className="card-body" style={{ padding: '5px 10px' }}>
                                                                                                 <div className="list-unstyled">
@@ -623,20 +676,14 @@ const Contribution = () => {
                         <div className="container-fluid">
                             <div className="row">
                                 <div className="col-lg-3">
-                                    <div className="card card-left">
-                                        <div className="card-header text-uppercase">Topics</div>
-                                        <div className="card-body">
-                                            {
-                                                terms.map(term => (
-                                                    <div className="list-group">
-                                                        <div className="list-group-item d-flex justify-content-between align-items-center" >
-                                                            <div style={{ cursor: 'pointer' }} onClick={() => handleShowContribution(term._id)}>{term.topic}</div>
-                                                        </div>
-                                                    </div>
-                                                ))
-                                            }
-                                        </div>
-                                    </div>
+                                    <Input
+                                        label="Term"
+                                        type='select'
+                                        value={termId}
+                                        onChange={(e) => handleShowContribution(e.target.value)}
+                                        options={terms}
+                                        placeholder={'Select Term'}
+                                    />
                                 </div>
                                 <div className="col-lg-6">
 
@@ -645,7 +692,15 @@ const Contribution = () => {
                                             <div className="card">
                                                 <div className="card-body">
                                                     <div className="user-profile" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                                                        <div><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" /></div>
+                                                        <div>
+                                                            <img src=
+                                                                {
+                                                                    contr.user_info.profilePicture.length ?
+                                                                        contr.user_info.profilePicture[0].img :
+                                                                        "https://via.placeholder.com/110x110"
+                                                                }
+                                                                className="img-circle user-profile" alt="user avatar" />
+                                                        </div>
                                                         <span><h5 className="mt-0 mb-1 ml-1">{contr.user_info.firstName + " " + contr.user_info.lastName}</h5></span>
                                                     </div>
 
@@ -701,20 +756,14 @@ const Contribution = () => {
                         <div className="container-fluid">
                             <div className="row">
                                 <div className="col-lg-3">
-                                    <div className="card card-left">
-                                        <div className="card-header text-uppercase">Topics</div>
-                                        <div className="card-body">
-                                            {
-                                                terms.map(term => (
-                                                    <div className="list-group">
-                                                        <div className="list-group-item d-flex justify-content-between align-items-center" >
-                                                            <div style={{ cursor: 'pointer' }} onClick={() => handleShowContribution(term._id)}>{term.topic}</div>
-                                                        </div>
-                                                    </div>
-                                                ))
-                                            }
-                                        </div>
-                                    </div>
+                                    <Input
+                                        label="Term"
+                                        type='select'
+                                        value={termId}
+                                        onChange={(e) => handleShowContribution(e.target.value)}
+                                        options={terms}
+                                        placeholder={'Select Term'}
+                                    />
                                 </div>
                                 <div className="col-lg-6">
                                     {
@@ -722,7 +771,15 @@ const Contribution = () => {
                                             <div className="card">
                                                 <div className="card-body">
                                                     <div className="user-profile" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                                                        <div><img src="https://via.placeholder.com/110x110" className="img-circle user-profile" alt="user avatar" /></div>
+                                                        <div>
+                                                            <img src=
+                                                                {
+                                                                    contr.user_info.profilePicture.length ?
+                                                                        contr.user_info.profilePicture[0].img :
+                                                                        "https://via.placeholder.com/110x110"
+                                                                }
+                                                                className="img-circle user-profile" alt="user avatar" />
+                                                        </div>
                                                         <span><h5 className="mt-0 mb-1 ml-1">{contr.user_info.firstName + " " + contr.user_info.lastName}</h5></span>
                                                     </div>
 
