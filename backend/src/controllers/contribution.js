@@ -107,6 +107,9 @@ export const updateContribution = async (req, res) => {
 
 export const publicContribution = async (req, res) => {
     try {
+
+        const contribution = await Contribution.findOne({ _id: req.body.ids })
+
         let {
             ids
         } = req.body
@@ -115,7 +118,7 @@ export const publicContribution = async (req, res) => {
                 $in: ids
             }
         }, {
-            is_public: true
+            $set: { is_public: !contribution.is_public }
         }, {
             multi: true
         });

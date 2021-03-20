@@ -507,7 +507,12 @@ const Contribution = () => {
                                                                             <button data-toggle="modal" data-target="#detailModal" className="btn btn-light btn-sm waves-effect waves-light m-1 pull-right"
                                                                                 onClick={(e) => { _publishContribution(contr._id) }}>Publish
                                                                     </button>
-                                                                        </span> : null
+                                                                        </span> :
+                                                                        <span>
+                                                                            <button data-toggle="modal" data-target="#detailModal" className="btn btn-light btn-sm waves-effect waves-light m-1 pull-right"
+                                                                                onClick={(e) => { _publishContribution(contr._id) }}>Unpublish
+                                                                </button>
+                                                                        </span>
                                                                 }
                                                                 <h4 style={{ marginBottom: 0 }}>{contr.title}
                                                                     {
