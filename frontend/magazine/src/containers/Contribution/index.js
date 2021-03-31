@@ -43,6 +43,7 @@ const Contribution = () => {
         if (term) {
             const start = term.startDate.split('T')[0]
             const end = term.endDate.split('T')[0]
+            console.log(start, end)
             setStartDate(start)
             setEndDate(end)
         }
@@ -201,6 +202,7 @@ const Contribution = () => {
                             <div className="row">
                                 <div className="col-lg-12">
                                     {
+                                        
                                         <TimeLimit from={startDate} to={endDate}>
                                             <button type="button" className="btn btn-light waves-effect waves-light m-1" data-toggle="modal" data-target="#uploadModal">
                                                 Upload Contribution

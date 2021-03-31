@@ -1,6 +1,8 @@
 import User from '../models/user.js'
+import Faculty from '../models/faculty.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import nodemailer from 'nodemailer'
 
 export const register = async (req, res) => {
     try {
@@ -8,6 +10,7 @@ export const register = async (req, res) => {
         if (user) {
             return res.status(400).json({ message: 'User already existed' })
         }
+        const faculty = await Faculty.findOne({ _id: req.body.facultyId })
         const newUser = {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
@@ -24,7 +27,35 @@ export const register = async (req, res) => {
         if (req.file) {
             newUser.profilePicture = process.env.API + '/public/' + req.file.filename
         }
+
         const _user = new User(newUser)
+        let transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            service: "Gmail",
+            auth: {
+                user: process.env.USER,
+                pass: process.env.PASS
+            }
+        });
+        await transporter.sendMail({
+            from: '"Magazine System" <jokerboy1412@gmail.com>', // sender address
+            to: req.body.email, // list of receivers
+            subject: "Invitation to Magazine System ✔", // Subject line 
+            text: "Hello world?", // plain text body
+            html: `
+                <p>You have invited to Magazine System. Your account information detail below</p>
+                <br>
+                <strong>Email</strong>: ${req.body.email}
+                <br>
+                <strong>Password</strong>: ${req.body.password}
+                <br>
+                <strong>Role</strong>: ${req.body.role}
+                <br>
+                <strong>Faculty</strong>: ${faculty.name}
+            ` // html body
+        });
         await _user.save()
         if (_user) {
             res.status(201).json({ _user, messages: 'User created successfully!!!' })
@@ -33,6 +64,7 @@ export const register = async (req, res) => {
         }
     } catch (error) {
         res.status(400).json({ error })
+        console.log(error)
     }
 }
 
